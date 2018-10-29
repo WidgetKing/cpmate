@@ -5,8 +5,14 @@
  * Time: 12:03 PM
  * To change this template use File | Settings | File Templates.
  */
-describe("Thingo", function () {
-   it("Should work", function () {
-       expect(true).toBe(true);
-   });
-});
+window.unitTests = {
+    "moduleList":{},
+    "registerModule":function (name, method) {
+        unitTests.moduleList[name] = method;
+    },
+    "requestModule": function(name) {
+        return unitTests.moduleList[name];
+    }
+};
+
+window.X = window.unitTests;

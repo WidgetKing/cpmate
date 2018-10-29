@@ -5,6 +5,6 @@
  * Time: 10:24 AM
  * To change this template use File | Settings | File Templates.
  */
-(function () {
-        console.log("has method: " + define);
-}());
+X.registerModule("preferences/disableIFrameBorder", ["preferences/preferenceManager"], function () {
+
+});
