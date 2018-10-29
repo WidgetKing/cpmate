@@ -1,7 +1,7 @@
 {
   "name": "cpmate",
   "version": "0.0.1",
-  "build": 2,
+  "build": 4,
   "description": "A javascript library loaded into Animate CC HTML5 export to allow it to interact with Adobe Captivate and its CpExtra plugin.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,12 @@
     "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.0.0",
     "gulp-uglify": "^3.0.1",
-    "gulp-util": "^3.0.8"
+    "gulp-util": "^3.0.8",
+    "jasmine-core": "^3.3.0",
+    "karma": "^3.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.2",
+    "karma-jasmine": "^1.1.2",
+    "path": "^0.12.7"
   }
 }

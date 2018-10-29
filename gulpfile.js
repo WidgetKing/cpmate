@@ -22,11 +22,19 @@
         gglob = require("glob"),
         uglify = require("gulp-uglify"),
         gjsoneditor = require("gulp-json-editor"),
-        jsonPackage = require("./package.json");
+
+
+        jsonPackage = require("./package.json"),
+
+        path = require("path"),
+        karma = require("karma"),
+        karmaParseConfig = require("karma/lib/config").parseConfig,
+        karmaConfig = "karma.conf.js";
 
     var compiledFileName = "Infosemantics_CpMate.js",
         compiledFileLocation = "builds/development",
         jsSources = [
+            "components/scripts/libs/require.js",
             "components/scripts/js/dev/main.js",
             "components/scripts/js/dev/**/"
         ];
@@ -165,8 +173,44 @@
     });
 
     ///////////////////////////////////////////////////////////////////////
+    /////////////// KARMA
+    ///////////////////////////////////////////////////////////////////////
+    function runKarma(configFilePath, options, cb) {
+        configFilePath = path.resolve(configFilePath);
+
+        var log = gutil.log,
+            colours = gutil.colors,
+            config = karmaParseConfig(configFilePath, {}),
+            server;
+
+        Object.keys(options).forEach(function (key) {
+            config[key] = options[key];
+        });
+
+        server = new karma.Server(config, function(exitCode) {
+            log("Karma has exited with " + colours.red(exitCode));
+            cb();
+            process.exit(exitCode);
+        });
+        server.start();
+    }
+
+    gulp.task("test", function(cb) {
+        runKarma(karmaConfig, {
+            autoWatch: false,
+            singleRun: true
+        }, cb);
+    });
+
+    gulp.task("test-dev", function(cb) {
+        runKarma(karmaConfig, {
+            autoWatch: true,
+            singleRun: false
+        }, cb);
+    });
+    ///////////////////////////////////////////////////////////////////////
     /////////////// DEFAULT
     ///////////////////////////////////////////////////////////////////////
-    gulp.task("default", ["updateTests-CpMate", "connect", "watch"]);
+    gulp.task("default", ["updateTests-CpMate", "connect", "watch", "test-dev"]);
 
 }());

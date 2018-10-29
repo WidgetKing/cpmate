@@ -2,9 +2,11 @@
  * Created with IntelliJ IDEA.
  * User: Tristan
  * Date: 10/29/18
- * Time: 10:24 AM
+ * Time: 12:03 PM
  * To change this template use File | Settings | File Templates.
  */
-(function () {
-        console.log("has method: " + define);
-}());
+describe("Thingo", function () {
+   it("Should work", function () {
+       expect(true).toBe(true);
+   });
+});
