@@ -7,7 +7,10 @@
  */
 window.unitTests = {
     "moduleList":{},
-    "registerModule":function (name, method) {
+    "registerModule":function (name, method, otherMethod) {
+        if (otherMethod) {
+            method = otherMethod;
+        }
         unitTests.moduleList[name] = method;
     },
     "requestModule": function(name) {

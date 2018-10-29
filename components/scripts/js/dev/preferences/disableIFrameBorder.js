@@ -7,4 +7,16 @@
  */
 X.registerModule("preferences/disableIFrameBorder", ["preferences/preferenceManager"], function () {
 
+    X.preferences("disableIFrameBorder", function (value) {
+
+        if (value) {
+
+
+        } else {
+
+
+        }
+
+    });
+
 });

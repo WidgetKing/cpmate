@@ -6,11 +6,30 @@
  * To change this template use File | Settings | File Templates.
  */
 X.registerModule("preferences/preferenceManager", function () {
-    X.preferences = {
 
+    function Preferences() {
+
+    }
+
+    X.preferences = {
+        "define":function (name, setMethod) {
+
+            var value;
+
+            Object.defineProperty(Preferences.prototype, name, {
+                "get":function () {
+                    return value;
+                },
+                "set":function (incomingValue) {
+                    value = incomingValue;
+                    setMethod(value);
+                }
+            });
+
+        }
     };
 
     return function () {
-        console.log("After load!");
+        X.preferences = new Preferences();
     };
 });
