@@ -10,4 +10,8 @@
     "url": "?.git"
   },
   "author": "Tristan Ward",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.8"
+  }
 }
