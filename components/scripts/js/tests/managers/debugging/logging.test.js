@@ -62,7 +62,7 @@ describe("A test suite for managers/debugging/logging and errors", function () {
 
         X.alert("foobar");
 
-        expect(X.captivate.alert).toHaveBeenCalledWith("foobar");
+        expect(X.captivate.alert).toHaveBeenCalledWith("foobar", undefined);
 
     });
 

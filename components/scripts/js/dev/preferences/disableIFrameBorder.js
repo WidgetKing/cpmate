@@ -5,18 +5,35 @@
  * Time: 10:24 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("preferences/disableIFrameBorder", ["preferences/preferenceManager"], function () {
+X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "elements/slideObject"], function () {
 
-    X.preferences.define("disableIFrameBorder", function (value) {
+    X.preferences.define({
+        "name":"disableIFrameBorder",
+        "method":function (value) {
 
-        if (value) {
+            if (!X.captivate.isLoaded()) {
+                return;
+            }
 
+            if (value) {
 
-        } else {
+                disableBorder();
 
+            } else {
 
-        }
+                enableBorder();
 
+            }
+
+        },
+        "default":true
     });
 
+    function disableBorder () {
+        X.slideObject.div.style.border = "0px";
+    }
+
+    function enableBorder () {
+        X.slideObject.div.style.border = "1px";
+    }
 });

@@ -9,6 +9,17 @@ X.registerModule("managers/debugging/errors", function () {
 
     X.errors = {
 
+        ///////////////////////////////////////////////////////////////////////
+        /////////////// GENERAL ERRORS (GE)
+        ///////////////////////////////////////////////////////////////////////
+
+        "GE001":function () {
+            return "You have not loaded CpExtra into Captivate. CpMate cannot work if CpExtra is not installed in Captivate. Either install CpExtra or remove CpMate.";
+        },
+
+        "GE002": function (currentVersion, minimumVersion) {
+            return "CPEXTRA NEEDS TO BE UPGRADED. The current version of CpExtra is " + currentVersion + ". But the minimum version of CpExtra needed to work with CpMate is " + minimumVersion + ". PLEASE UPGRADE CPEXTRA NOW."
+        }
     };
 
 });

@@ -11,7 +11,10 @@
         return;
     }
 
-    window.X = {};
+    window.X = {
+        "version":"$$VERSION_NUMBER$$",
+        "build":"$$BUILD_NUMBER$$"
+    };
 
     var moduleRegistry = {},
     // This is only used in headless export where we might need to wait before initializing certain modules

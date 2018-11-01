@@ -11,15 +11,17 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], fu
         console.log(message);
     };
 
-    X.alert = function (message) {
+    X.alert = function (message, title) {
         if (X.captivate.isLoaded()) {
-            X.captivate.alert(message);
+            X.captivate.alert(message, title);
         } else {
             alert(message);
         }
     };
 
     X.error = function (errorCode, message) {
+
+        var title = "CpMate Error";
 
         if (X.errors.hasOwnProperty(errorCode)) {
 
@@ -30,13 +32,15 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], fu
 
             message = X.errors[errorCode].apply(this, args);
 
+            title += ": " + errorCode;
+
         } else {
 
             message = errorCode;
 
         }
 
-        X.alert(message);
+        X.alert(message, title);
 
     };
 
