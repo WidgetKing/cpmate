@@ -7,7 +7,7 @@
  */
 X.registerModule("preferences/disableIFrameBorder", ["preferences/preferenceManager"], function () {
 
-    X.preferences("disableIFrameBorder", function (value) {
+    X.preferences.define("disableIFrameBorder", function (value) {
 
         if (value) {
 
