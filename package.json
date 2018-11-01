@@ -1,7 +1,7 @@
 {
   "name": "cpmate",
   "version": "0.0.1",
-  "build": 107,
+  "build": 191,
   "description": "A javascript library loaded into Animate CC HTML5 export to allow it to interact with Adobe Captivate and its CpExtra plugin.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

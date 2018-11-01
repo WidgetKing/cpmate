@@ -26,7 +26,7 @@ X.registerModule("elements/captivate", ["managers/debugging/logging"], function 
 
     function getCaptivateElements () {
 
-        if (X.captivate.isLoaded) {
+        if (X.captivate.isLoaded()) {
 
             X.captivate.window = window.parent;
             X.captivate.base   = X.captivate.window.cp;
