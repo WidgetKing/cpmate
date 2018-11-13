@@ -34,7 +34,6 @@
     var compiledFileName = "Infosemantics_CpMate.js",
         compiledFileLocation = "builds/development",
         jsSources = [
-            "components/scripts/libs/require.js",
             "components/scripts/js/dev/entrypoint.js",
             "components/scripts/js/dev/**/"
         ];

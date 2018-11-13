@@ -67,14 +67,14 @@ describe("test suite for elements/captivate", function () {
     it("should locate CpExtra's public interface", function () {
 
         module();
-        expect(X.captivate.extra.publicInterface).toBeDefined();
+        expect(X.captivate.extraPublicInterface).toBeDefined();
 
     });
 
     it("should identify CpExtra's version", function () {
 
         module();
-        expect(X.captivate.extra.version).toBe("1.4.2");
+        expect(X.captivate.extraVersion).toBe("1.4.2");
 
     });
 

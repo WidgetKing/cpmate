@@ -46,11 +46,12 @@ X.registerModule("elements/captivate", ["managers/debugging/logging"], function 
 
     function getCpExtraElements () {
 
-        X.captivate.extra.publicInterface = X.captivate.window.X;
-        X.captivate.extra.version = X.captivate.extra.publicInterface.version;
+        X.captivate.extra = X.captivate.window._extra;
+        X.captivate.extraPublicInterface = X.captivate.window.X;
+        X.captivate.extraVersion = X.captivate.extraPublicInterface.version;
 
-        if (X.captivate.extra.version < MINIMUM_CP_EXTRA_VERSION) {
-            X.error("GE002", X.captivate.extra.version, MINIMUM_CP_EXTRA_VERSION);
+        if (X.captivate.extraVersion < MINIMUM_CP_EXTRA_VERSION) {
+            X.error("GE002", X.captivate.extraVersion, MINIMUM_CP_EXTRA_VERSION);
         }
 
     }
