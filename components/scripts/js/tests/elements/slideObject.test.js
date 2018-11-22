@@ -5,7 +5,7 @@
  * Time: 10:26 AM
  * To change this template use File | Settings | File Templates.
  */
-xdescribe("test suite for elements/slideObject", function () {
+describe("test suite for elements/slideObject", function () {
 
     var module = unitTests.requestModule("elements/slideObject");
 
@@ -30,6 +30,7 @@ xdescribe("test suite for elements/slideObject", function () {
         delete window.X;
     });
 
+    /*
     it("should define X.slideObject", function () {
 
         expect(X.slideObject).toBeDefined();
@@ -41,5 +42,6 @@ xdescribe("test suite for elements/slideObject", function () {
         expect(X.slideObject.name).toBe("foobar")
 
     });
+    */
 
 });

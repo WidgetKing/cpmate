@@ -40,8 +40,9 @@ describe("A test suite for managers/cpExtraActions", function () {
         delete window._extra;
     });
 
-    it("should register with cpExtra broadcaster", function () {
-        expect(X.captivate.extra.cpMate.register).toHaveBeenCalled();
+    it("should register with cpExtra broadcaster for personal and global events", function () {
+        expect(X.captivate.extra.cpMate.register).toHaveBeenCalledWith("slideObjectName", jasmine.anything());
+        expect(X.captivate.extra.cpMate.register).toHaveBeenCalledWith("*", jasmine.anything());
     });
 
     it("should define the cpExtraActions list", function () {
@@ -72,7 +73,8 @@ describe("A test suite for managers/cpExtraActions", function () {
 
         X.cpExtraActions.unload();
 
-        expect(X.captivate.extra.cpMate.deregister).toHaveBeenCalledWith("slideObjectName");
+        expect(X.captivate.extra.cpMate.deregister).toHaveBeenCalledWith("slideObjectName", jasmine.anything());
+        expect(X.captivate.extra.cpMate.deregister).toHaveBeenCalledWith("*", jasmine.anything());
 
     });
 });
