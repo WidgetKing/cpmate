@@ -5,7 +5,7 @@
  * Time: 10:45 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/movie", ["elements/animate"], function () {
+X.registerModule("managers/movie", ["elements/animate", "managers/hook"], function () {
 
     var rootTimeline = (function () {
 
@@ -45,11 +45,15 @@ X.registerModule("managers/movie", ["elements/animate"], function () {
         "play": function () {
             rootTimeline.play();
         },
-        "stop": function () {
-            rootTimeline.stop();
+        "stop": function (reason) {
+            rootTimeline.stop(reason);
         },
         "gotoAndPlay": function (frame) {
             rootTimeline.gotoAndPlay(frame);
+            rootTimeline.play();
+        },
+        "isPaused": function () {
+            return rootTimeline.paused;
         },
 
         "getLabels": function () {
@@ -70,6 +74,8 @@ X.registerModule("managers/movie", ["elements/animate"], function () {
             if (oldTimeline.isMock) {
                 oldTimeline.enact();
             }
+
+            X.movie.pause.setRootTimeline(timeline);
 
         }
     };

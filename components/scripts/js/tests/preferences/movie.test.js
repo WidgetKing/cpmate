@@ -29,6 +29,12 @@ describe("A test suite for managers/movie", function () {
         };
 
         module();
+
+        X.movie.pause = {
+            "setRootTimeline": function () {
+
+            }
+        }
     });
 
     afterEach(function () {
