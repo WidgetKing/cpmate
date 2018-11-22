@@ -26,8 +26,11 @@ X.registerModule("elements/slideObject", ["elements/captivate"], function () {
 
         X.slideObject = {};
         X.slideObject.iframe = window.frameElement;
-        X.slideObject.div = recursiveParentSearch(X.slideObject.iframe, "class", "cp-frameset");
+        X.slideObject.div = recursiveParentSearch(X.slideObject.iframe, "class", "cp-WebObject");
         X.slideObject.name = X.slideObject.div.getAttribute("id");
+        // Remove the 'c' from end of name
+        // Eg. change 'Web_1c' to 'Web_1';
+        X.slideObject.name = X.slideObject.name.substring(0, X.slideObject.name.length - 1);
 
     }
 

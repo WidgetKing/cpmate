@@ -64,7 +64,14 @@ X.registerModule("elements/animate", function () {
 
     X.animate.callWhenLoaded(function () {
 
+        X.animate.stage = stage;
         X.animate.mainTimeline = stage.children[0];
+
+        if (window.AdobeAn) {
+
+            X.animate.library = AdobeAn.getComposition(AdobeAn.bootcompsLoaded[0]).getLibrary();
+
+        }
 
     });
 

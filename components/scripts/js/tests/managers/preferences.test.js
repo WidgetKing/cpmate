@@ -13,7 +13,13 @@ describe("A test suite for X.preferences", function () {
         onLoadCallback;
 
     beforeEach(function () {
-        window.X = {};
+        window.X = {
+            "animate":{
+                "callWhenLoaded": function () {
+
+                }
+            }
+        };
 
         onLoadCallback = module();
     });
@@ -78,6 +84,45 @@ describe("A test suite for X.preferences", function () {
         });
 
         expect(setPreference).toHaveBeenCalledWith("bar");
+
+    });
+
+    it("should ensure animate is loaded if the preference requires it", function () {
+
+        // ---- Setup
+
+        var setPreference = jasmine.createSpy(),
+            isAnimateLoaded;
+
+        X.preferences.define({
+            "name":"foo",
+            "method":setPreference,
+
+            // THE KEY PROPERTY
+            "animateRequired": true
+        });
+
+        X.animate.callWhenLoaded = function (method) {
+            if (isAnimateLoaded) {
+                method();
+            }
+        };
+
+        onLoadCallback();
+
+        // ---- Test 1
+        isAnimateLoaded = false;
+
+        X.preferences.foo = "call_1";
+
+        expect(setPreference).not.toHaveBeenCalled();
+
+        // ---- Test 2
+        isAnimateLoaded = true;
+
+        X.preferences.foo = "call_2";
+
+        expect(setPreference).toHaveBeenCalledWith("call_2");
 
     });
 

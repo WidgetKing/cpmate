@@ -20,7 +20,18 @@ X.registerModule("managers/preferences", function () {
                     if (value !== incomingValue) {
 
                         value = incomingValue;
-                        data.method(value);
+
+                        if (data.animateRequired) {
+
+                            X.animate.callWhenLoaded(function () {
+
+                                data.method(value);
+
+                            });
+
+                        } else {
+                            data.method(value);
+                        }
 
                     }
 
