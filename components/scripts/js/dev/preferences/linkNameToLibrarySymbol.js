@@ -5,7 +5,7 @@
  * Time: 9:01 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences", "elements/slideObject", "managers/movie"], function () {
+X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences", "elements/slideObject", "managers/movie", "elements/animate"], function () {
 
     X.preferences.define({
         "name":"linkNameToLibrarySymbol",

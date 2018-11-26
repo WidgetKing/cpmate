@@ -16,25 +16,28 @@ X.registerModule("elements/animate", function () {
         return window.hasOwnProperty("stage");
     }
 
-    function setUpAnimateLoadInterval () {
+    function animateLoadIntervalHandler () {
 
-        waitingForAnimateLoadInterval = window.setInterval(function () {
+        if (isAnimateLoaded()) {
 
-            if (window.stage) {
+            window.clearInterval(waitingForAnimateLoadInterval);
 
-                window.clearInterval(waitingForAnimateLoadInterval);
+            for (var i = 0; i < callWhenLoadedList.length; i += 1) {
 
-                for (var i = 0; i < callWhenLoadedList.length; i += 1) {
-
-                    callWhenLoadedList[i]();
-
-                }
-
-                callWhenLoadedList = null;
+                callWhenLoadedList[i]();
 
             }
 
-        }, 10);
+            waitingForAnimateLoadInterval = null;
+            callWhenLoadedList = null;
+
+        }
+
+    }
+
+    function setUpAnimateLoadInterval () {
+
+        waitingForAnimateLoadInterval = window.setInterval(animateLoadIntervalHandler, 10);
 
     }
 
@@ -44,12 +47,23 @@ X.registerModule("elements/animate", function () {
 
             if (isAnimateLoaded()) {
 
-                method();
+                if (waitingForAnimateLoadInterval) {
+
+                    // Oh, the interval has not discovered animate is loaded
+                    // Strange as it may seem, I've actually had this happen.
+                    callWhenLoadedList.push(method);
+                    animateLoadIntervalHandler();
+
+                } else {
+
+                    method();
+
+                }
+
 
             } else {
 
                 callWhenLoadedList.push(method);
-
 
                 if (!waitingForAnimateLoadInterval) {
 
