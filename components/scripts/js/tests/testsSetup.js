@@ -6,12 +6,22 @@
  * To change this template use File | Settings | File Templates.
  */
 window.unitTests = {
+    "classes":{
+        "register": function(className, classConstructor) {
+            unitTests.classes[className] = classConstructor;
+        }
+    },
     "moduleList":{},
-    "registerModule":function (name, method, otherMethod) {
-        if (otherMethod) {
-            method = otherMethod;
+    "registerModule":function (name, dependancies, method, isClass) {
+        if (!Array.isArray(dependancies)) {
+            method = dependancies;
+            isClass = method;
         }
         unitTests.moduleList[name] = method;
+
+        if (isClass === "class") {
+            method();
+        }
     },
     "requestModule": function(name) {
         return unitTests.moduleList[name];

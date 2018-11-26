@@ -5,7 +5,7 @@
  * Time: 10:25 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("elements/slideObject", ["elements/captivate"], function () {
+X.registerModule("elements/slideObject", ["elements/captivate", "managers/broadcast"], function () {
 
     function recursiveParentSearch (tag, property, value) {
 
@@ -32,6 +32,16 @@ X.registerModule("elements/slideObject", ["elements/captivate"], function () {
         // Eg. change 'Web_1c' to 'Web_1';
         X.slideObject.name = X.slideObject.name.substring(0, X.slideObject.name.length - 1);
 
+        if (X.captivate.extra) {
+            X.slideObject.proxy = X.captivate.extra.slideObjects.getSlideObjectByName(X.slideObject.name);
+        }
+
     }
+
+    X.broadcast.addCallback("unload", function () {
+        if (X.slideObject) {
+            delete X.slideObject.proxy;
+        }
+    });
 
 });

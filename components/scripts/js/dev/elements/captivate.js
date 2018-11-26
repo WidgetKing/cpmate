@@ -11,7 +11,7 @@ X.registerModule("elements/captivate", ["managers/debugging/logging"], function 
 
     X.captivate = {
         "isLoaded":function () {
-            return window.parent.hasOwnProperty("cp");
+            return window.parent && window.parent.hasOwnProperty("cp");
         },
         "hasCpExtra": function () {
             if (X.captivate.window) {

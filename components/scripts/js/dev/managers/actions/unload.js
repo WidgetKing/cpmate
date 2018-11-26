@@ -9,10 +9,17 @@ X.registerModule("managers/actions/unload", ["managers/cpExtraActions"], functio
 
     "use strict";
 
-    X.cpExtraActions.register("unload", function () {
+    X.cpExtraActions.register("unload", handleUnload);
+
+    window.addEventListener("unload", handleUnload);
+
+    function handleUnload () {
+
+        window.removeEventListener("unload", handleUnload);
 
         X.cpExtraActions.unload();
 
-    });
+        X.broadcast.sendToCallback("unload");
+    }
 
 });
