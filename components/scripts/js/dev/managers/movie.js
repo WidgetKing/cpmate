@@ -66,7 +66,7 @@ X.registerModule("managers/movie", ["elements/animate", "managers/hook"], functi
         ///////////////////////////////////////////////////////////////////////
         /////////////// Get root timeline
         ///////////////////////////////////////////////////////////////////////
-        "setRootTimeline": function (timeline) {
+        "_setRootTimeline": function (timeline) {
 
             var oldTimeline = rootTimeline;
             rootTimeline = timeline;
@@ -83,7 +83,7 @@ X.registerModule("managers/movie", ["elements/animate", "managers/hook"], functi
     X.animate.callWhenLoaded(function () {
 
         if (rootTimeline.isMock) {
-            X.movie.setRootTimeline(X.animate.mainTimeline);
+            X.movie._setRootTimeline(X.animate.mainTimeline);
         }
 
     });

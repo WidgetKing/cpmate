@@ -32,7 +32,9 @@ describe("A test suite for preferences/linkNameToLibrarySymbol", function () {
                 "name": "slideObjectName"
             },
             "movie":{
-                "setRootTimeline":jasmine.createSpy()
+                "rootTimeline":{
+                    "set":jasmine.createSpy("movie.rootTimeline.set")
+                }
             },
             "log": jasmine.createSpy("X.log")
         };
@@ -50,31 +52,22 @@ describe("A test suite for preferences/linkNameToLibrarySymbol", function () {
         linkNameToLibrarySymbol(true);
 
         expect(X.log).toHaveBeenCalled();
-        expect(X.movie.setRootTimeline).not.toHaveBeenCalled();
+        expect(X.movie.rootTimeline.set).not.toHaveBeenCalled();
     });
 
-    it("should create an instance of the library symbol and pass it on", function () {
+    it("should detect correct symbol in the library symbol and pass name to X.movie.rootTimeline.set", function () {
 
         // ---- Setup
-        var instantiated = false,
-            instance;
 
         X.slideObject.name = "foo";
         X.animate.library.foo = function () {
-            instantiated = true;
+
         };
 
-        X.movie.setRootTimeline.and.callFake(function (i) {
-            instance = i;
-        }) ;
-
         // ---- Test
-        linkNameToLibrarySymbol(true);
 
-        expect(instantiated).toBe(true);
-        expect(X.movie.setRootTimeline).toHaveBeenCalled();
-        expect(X.animate.mainTimeline.addChild).toHaveBeenCalled();
-        expect(instance.constructor).toBe(X.animate.library.foo);
+        linkNameToLibrarySymbol(true);
+        expect(X.movie.rootTimeline.set).toHaveBeenCalledWith("foo");
 
     });
 
@@ -88,7 +81,7 @@ describe("A test suite for preferences/linkNameToLibrarySymbol", function () {
         // ---- Test
         linkNameToLibrarySymbol(true);
 
-        expect(X.movie.setRootTimeline).toHaveBeenCalled();
+        expect(X.movie.rootTimeline.set).toHaveBeenCalledWith("foo_bar");
 
     });
 });

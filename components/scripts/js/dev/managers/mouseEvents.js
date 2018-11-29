@@ -11,7 +11,7 @@ X.registerModule("managers/mouseEvents", ["elements/slideObject"], function () {
 
     var listeners = [];
 
-    if (!X.slideObject.proxy) {
+    if (!X.slideObject || !X.slideObject.proxy) {
         return;
     }
 

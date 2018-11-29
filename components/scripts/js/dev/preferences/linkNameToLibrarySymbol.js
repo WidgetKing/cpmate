@@ -16,17 +16,16 @@ X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences",
                 return;
             }
 
-            var libraryInstance = getLibraryInstance();
+            var name = getSlideObjectClassName();
 
-            if (!libraryInstance) {
+            if (!name) {
                 X.log("Could not find a symbol by the name of '" + getSlideObjectClassName() +
                       "'. Perhaps this animation is only included to preload other animations?");
 
                 return;
             }
 
-            addToStage(libraryInstance);
-            X.movie.setRootTimeline(libraryInstance);
+            X.movie.rootTimeline.set(name);
 
         },
         "default":false
@@ -39,14 +38,6 @@ X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences",
         return !value || !X.slideObject
     }
 
-    function getLibraryInstance () {
-        var name = getSlideObjectClassName(),
-            SymbolClass = X.animate.library[name];
-
-        if (SymbolClass) {
-            return new SymbolClass();
-        }
-    }
 
     function getSlideObjectClassName () {
 
@@ -68,12 +59,15 @@ X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences",
 
         }
 
-        // If this is not valid, the function we are returning this to will pick it up.
-        return name;
-    }
+        if (X.animate.library[name]) {
 
-    function addToStage (instance) {
-        X.animate.mainTimeline.addChild(instance);
+            // If this is not valid, the function we are returning this to will pick it up.
+            return name;
+
+        }
+
+        return false;
+
     }
 
 });

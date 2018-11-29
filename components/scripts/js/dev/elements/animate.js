@@ -13,7 +13,7 @@ X.registerModule("elements/animate", function () {
         waitingForAnimateLoadInterval;
 
     function isAnimateLoaded () {
-        return window.hasOwnProperty("stage");
+        return window.stage;
     }
 
     function animateLoadIntervalHandler () {

@@ -11,23 +11,17 @@ X.registerModule("managers/cpExtraActions", ["elements/captivate", "elements/sli
 
     var cpExtraActions = {};
 
-    // If neither captivate or CpExtra has been loaded, then do not continue.
-    if (!X.captivate || !X.captivate.extra) {
-
-        return;
-
-    }
-
     function init () {
-        registerWithCpExtra();
         createCpExtraActionsArchitecture();
-    }
 
-    function registerWithCpExtra () {
+        // If neither captivate or CpExtra has been loaded, then do not continue.
+        if (!X.captivate || !X.captivate.extra) {
 
-        X.captivate.extra.cpMate.register(X.slideObject.name, cpExtraBroadcastReceiver);
-        X.captivate.extra.cpMate.register("*", cpExtraBroadcastReceiver);
+            return;
 
+        }
+
+        registerWithCpExtra();
     }
 
     function createCpExtraActionsArchitecture () {
@@ -47,6 +41,12 @@ X.registerModule("managers/cpExtraActions", ["elements/captivate", "elements/sli
     }
 
 
+    function registerWithCpExtra () {
+
+        X.captivate.extra.cpMate.register(X.slideObject.name, cpExtraBroadcastReceiver);
+        X.captivate.extra.cpMate.register("*", cpExtraBroadcastReceiver);
+
+    }
 
     ///////////////////////////////////////////////////////////////////////
     /////////////// Receiver
