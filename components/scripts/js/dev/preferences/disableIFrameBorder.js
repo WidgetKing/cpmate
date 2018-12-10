@@ -7,6 +7,9 @@
  */
 X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "elements/slideObject"], function () {
 
+    // This setting was created because I didn't know Captivate supplied settings to turn off its
+    // default scrollbar and border when viewing web objects.
+
     X.preferences.define({
         "name":"disableIFrameBorder",
         "method":function (value) {
@@ -26,7 +29,7 @@ X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "el
             }
 
         },
-        "default":true
+        "default":false
     });
 
     function disableBorder () {
