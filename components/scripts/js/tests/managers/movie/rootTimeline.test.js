@@ -77,4 +77,31 @@ describe("A test suite for X.movie.rootTimeline", function () {
 
     });
 
+    it("should set a mock object as the root timeline", function () {
+
+        var mock = {
+
+        };
+
+        X.movie.rootTimeline.set(mock);
+
+        expect(X.movie._setRootTimeline).toHaveBeenCalledWith(mock);
+
+    });
+
+    it("should activate X.movie.rootTimeline.changeCallback when timeline changed", function () {
+
+        var timeline = {
+
+            },
+            callback = jasmine.createSpy("callback");
+
+        X.movie.rootTimeline.changeCallback.addCallback("*", callback);
+        X.movie.rootTimeline.set(timeline);
+
+        expect(callback).toHaveBeenCalledWith(timeline);
+
+
+    });
+
 });

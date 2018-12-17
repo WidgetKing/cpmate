@@ -5,11 +5,13 @@
  * Time: 10:39 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/movie/rootTimeline", ["managers/movie"], function () {
+X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Callback"], function () {
 
     "use strict";
 
     X.movie.rootTimeline = {
+
+        "changeCallback": new X.classes.Callback(),
 
         "set":function (symbolName) {
 
@@ -21,7 +23,7 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie"], function () 
             if (typeof symbolName !== "string") {
 
                 // We're not processing a symbol name, we're processing a full timeline
-                X.movie._setRootTimeline(symbolName);
+                setTimeline(symbolName);
                 return;
 
             }
@@ -35,7 +37,13 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie"], function () 
 
             var instance = new X.animate.library[symbolName]();
             X.animate.mainTimeline.addChild(instance);
-            X.movie._setRootTimeline(instance);
+            setTimeline(instance);
+
+
+            function setTimeline (timeline) {
+                X.movie._setRootTimeline(timeline);
+                X.movie.rootTimeline.changeCallback.sendToCallback("*", timeline);
+            }
 
 
         }

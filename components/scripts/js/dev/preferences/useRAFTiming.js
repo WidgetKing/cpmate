@@ -14,8 +14,10 @@ X.registerModule("useRAFTiming", ["managers/preferences"], function () {
         "animateRequired": true,
         "method":function (value) {
 
-            if (!createjs || createjs.Ticker) {
-                console.log("Tried to change createjs.Ticker timing mode before it was loaded");
+            if (!createjs || !createjs.Ticker) {
+                console.error("Tried to change createjs.Ticker timing mode before it was loaded");
+
+                return;
             }
 
             if (value) {

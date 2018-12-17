@@ -42,11 +42,14 @@ X.registerModule("managers/movie", ["elements/animate", "managers/hook"], functi
     }());
 
     X.movie = {
+        "changeCallback": new X.classes.Callback(),
         "play": function () {
             rootTimeline.play();
+            X.movie.changeCallback.sendToCallback("play");
         },
         "stop": function (reason) {
             rootTimeline.stop(reason);
+            X.movie.changeCallback.sendToCallback("stop", reason);
         },
         "gotoAndPlay": function (frame) {
             rootTimeline.gotoAndPlay(frame);
@@ -82,8 +85,8 @@ X.registerModule("managers/movie", ["elements/animate", "managers/hook"], functi
 
     X.animate.callWhenLoaded(function () {
 
-        if (rootTimeline.isMock) {
-            X.movie._setRootTimeline(X.animate.mainTimeline);
+        if (rootTimeline.isMock && X.movie.rootTimeline) {
+            X.movie.rootTimeline.set(X.animate.mainTimeline);
         }
 
     });

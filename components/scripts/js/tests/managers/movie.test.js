@@ -34,7 +34,13 @@ describe("A test suite for managers/movie", function () {
             "setRootTimeline": function () {
 
             }
-        }
+        };
+
+        X.movie.rootTimeline = {
+            "set" : function (t) {
+                X.movie._setRootTimeline(t);
+            }
+        };
     });
 
     afterEach(function () {
@@ -54,6 +60,22 @@ describe("A test suite for managers/movie", function () {
         callWhenLoaded();
 
         expect(X.animate.mainTimeline.play).toHaveBeenCalled();
+
+    });
+    
+    it("should send a callback when play/pause happens", function () {
+
+        var play = jasmine.createSpy("play"),
+            stop = jasmine.createSpy("stop");
+
+        X.movie.changeCallback.addCallback("play", play);
+        X.movie.changeCallback.addCallback("stop", stop);
+
+        X.movie.stop("reason");
+        expect(stop).toHaveBeenCalledWith("reason");
+
+        X.movie.play();
+        expect(play).toHaveBeenCalled();
 
     });
 });
