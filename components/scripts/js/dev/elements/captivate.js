@@ -21,7 +21,8 @@ X.registerModule("elements/captivate", ["managers/debugging/logging"], function 
         },
         "window":null,
         "base": null,
-        "extra": null
+        "extra": null,
+        "variables": null
     };
 
     function getCaptivateElements () {
@@ -31,6 +32,7 @@ X.registerModule("elements/captivate", ["managers/debugging/logging"], function 
             X.captivate.window = window.parent;
             X.captivate.base   = X.captivate.window.cp;
             X.captivate.alert  = X.captivate.window.alert;
+            X.captivate.variables = X.captivate.window;
 
             if (X.captivate.hasCpExtra()) {
 
