@@ -16,6 +16,9 @@ describe("A test suite for managers/runInCaptivateWindow", function () {
         window.X = {
             "classes":unitTests.classes,
             "captivate":{
+                "extra": {
+                    "safeEval": jasmine.createSpy("_extra.safeEval()")
+                },
                 "isLoaded": function () {
                     return isCaptivateLoaded;
                 },
@@ -42,25 +45,31 @@ describe("A test suite for managers/runInCaptivateWindow", function () {
 
         // 1: Setup
         isCaptivateLoaded = true;
+        var func = function foobar () {
+
+        };
 
         // 2: Run
-        X.runInCaptivateWindow("foobar");
+        X.runInCaptivateWindow(func);
 
         // 3: Assert
-        expect(X.captivate.window.eval).toHaveBeenCalledWith("foobar");
+        expect(X.captivate.extra.safeEval).toHaveBeenCalledWith(jasmine.any(String), undefined);
 
     });
 
     it("should NOT run any code if Captivate is not present", function () {
 
         // 1: Setup
-        isCaptivateLoaded = false;
+        delete X.captivate.extra;
+
+        function test() {
+            X.runInCaptivateWindow("foobar");
+        }
 
         // 2: Run
-        X.runInCaptivateWindow("foobar");
-
         // 3: Assert
-        expect(X.captivate.window.eval).not.toHaveBeenCalled()
+        expect(test).not.toThrowError();
+
     });
 
 
