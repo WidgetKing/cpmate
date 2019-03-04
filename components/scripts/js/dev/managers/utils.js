@@ -184,6 +184,46 @@ X.registerModule("managers/utils", function () {
                 }
 
             });
+        },
+
+        "defaultTo": function (def, obj) {
+
+            X.utils.forEach(def, function (key, value) {
+
+                if (value !== null &&
+                    typeof value === "object") {
+
+                  var originalObj = obj[key];
+
+                  if (!originalObj) {
+                    originalObj = {};
+                  }
+
+                  obj[key] = X.utils.defaultTo(value, originalObj);
+
+                } else if (!obj.hasOwnProperty(key)) {
+                  obj[key] = value;
+                }
+
+            });
+
+            return obj;
+
+        },
+
+        "getMissingProps": function (props, obj) {
+
+          var result = [];
+
+          X.utils.forEach(props, function (value) {
+
+            if (!obj.hasOwnProperty(value)) {
+              result.push(value);
+            }
+
+          });
+
+            return result;
         }
 
     };

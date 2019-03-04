@@ -19,6 +19,16 @@ X.registerModule("managers/debugging/errors", function () {
 
         "GE002": function (currentVersion, minimumVersion) {
             return "CPEXTRA NEEDS TO BE UPGRADED. The current version of CpExtra is " + currentVersion + ". But the minimum version of CpExtra needed to work with CpMate is " + minimumVersion + ". PLEASE UPGRADE CPEXTRA NOW."
+        },
+
+        ////////////////////////////////////////
+        ////////// COMPONENT ERRORS
+        ////////////////////////////////////////
+        "CO001": function (property) {
+            return "The required property for slider/dial data ''" + property + "'' was not provided";
+        },
+        "CO002": function (name) {
+            return "The variable defined for the slider/dial interaction '" + name + "' does not exist'";
         }
     };
 

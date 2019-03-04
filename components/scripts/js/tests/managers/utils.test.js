@@ -184,6 +184,80 @@ describe("A test suite for managers/utils", function () {
 
     });
 
+    describe("X.utils.defaultTo()", function () {
+
+      function defaultToEquals(data) {
+
+        var result = X.utils.defaultTo(data.def, data.obj);
+        expect(result).toEqual(jasmine.objectContaining(data.result));
+
+      }
+
+      it("should provide single level object defaults", () => {
+
+        // 1: SETUP
+        defaultToEquals({
+          "obj": {
+            "foo":true
+          },
+          "def": {
+            "foo": false,
+            "bar": false
+          },
+          "result": {
+            "foo": true,
+            "bar": false
+          }
+        });
+
+        // 2: TEST
+
+
+        // 3: ASSERT
+
+      });
+
+      it("should provide multi-level object defaults", () => {
+
+        // 1: SETUP
+
+        defaultToEquals({
+          "obj": {
+            "foo":true,
+            "bar":{
+              "scooby":true
+            }
+          },
+          "def": {
+            "foo": false,
+            "bar": {
+              "scooby": false,
+              "doo": false
+            },
+            "tzar":{
+              "humbug": false
+            }
+          },
+          "result": {
+            "foo": true,
+            "bar": {
+              "scooby": true,
+              "doo": false
+            },
+            "tzar":{
+              "humbug": false
+            }
+          }
+        });
+
+        // 2: TEST
+
+
+        // 3: ASSERT
+
+      });
+    });
+
     describe("tests for X.utils.filter", function () {
 
         beforeEach(function () {
@@ -247,6 +321,46 @@ describe("A test suite for managers/utils", function () {
 
     });
 
+    describe("X.utils.getMissingProps()", () => {
 
+      function test(data) {
+         var result = X.utils.getMissingProps(data.props, data.obj);
+         expect(result).toEqual(data.result);
+      }
+
+      it("should return true if object contains all props", () => {
+
+        // 1: SETUP
+        // 2: TEST
+        // 3: ASSERT
+        test({
+          "props":["a", "b", "c"],
+          "obj":{
+            "a":true,
+            "b":true,
+            "c":true
+          },
+          "result":[]
+        });
+
+      });
+
+      it("should return the name of a missing prop", () => {
+
+        // 1: SETUP
+        // 2: TEST
+        // 3: ASSERT
+
+        test({
+          "props":["a", "b", "c"],
+          "obj":{
+            "a":true,
+            "c":true
+          },
+          "result":["b"]
+        });
+
+      });
+    });
 
 });

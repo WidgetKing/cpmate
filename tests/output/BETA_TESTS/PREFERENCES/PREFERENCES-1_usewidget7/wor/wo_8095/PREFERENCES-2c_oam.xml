@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget xmlns="http://openajax.org/metadata" spec="1.0" name="PREFERENCES-2c" version="1">
+
+<description type="text/html"><![CDATA[Widget Exported from Flash Professional]]></description>
+
+<category name="Flash Animation"/>
+<remarks>Compatible with: InDesign CC, Dreamweaver CC, Muse</remarks>
+<icon src="PosterImg_128.png" width="400" height="400"/>
+<require type="other" src="test_animation.html"/>
+<require type="javascript" src="test_animation.js"/>
+<require type="javascript" src="libs/createjs-2015.11.26.min.js"/>
+<require type="javascript" src="libs/Infosemantics_CpMate.js"/>
+<require type="image" src="images/test_animation_atlas_.png"/>
+<require type="folder" src="libs"/>
+<require type="folder" src="images"/>
+<content></content>
+
+<properties name="Properties">
+<property name="default-width" defaultValue="400" hidden="true"/>
+<property name="default-height" defaultValue="400" hidden="true"/>
+<property name="resizable" defaultValue="true" hidden="true"/>
+<property name="centering" defaultValue="both" hidden="true"/>
+<property name="scaling" defaultValue="both" hidden="true"/>
+<property name="html-page" defaultValue="test_animation.html" hidden="true"/>
+<property name="target-platform" defaultValue="htmlcanvas" hidden="true"/>
+<property name="created-in" defaultValue="Adobe Animate CC" hidden="true"/>
+</properties>
+
+</widget>

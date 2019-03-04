@@ -13,8 +13,10 @@ X.registerModule("classes/Callback", ["managers/classes"], function () {
     X.classes.register("Callback", function () {
 
         this.data = {};
+        var that = this;
 
-        function validateDataIndex (index, that) {
+        function validateDataIndex (index) {
+
             if (!that.data[index]) {
 
                 that.data[index] = {
@@ -29,30 +31,30 @@ X.registerModule("classes/Callback", ["managers/classes"], function () {
         this.addCallback = function (index, callback, overwritable) {
 
             // If this is the first callback we're adding.
-            validateDataIndex(index, this);
+            validateDataIndex(index);
 
             if (overwritable) {
-                this.data[index].overwritable = callback;
+                that.data[index].overwritable = callback;
             } else {
-                this.data[index].regular.push(callback);
+                that.data[index].regular.push(callback);
             }
         };
 
-        this.addCallbackToFront = function (index, callback) {
+        that.addCallbackToFront = function (index, callback) {
             // If this is the first callback we're adding.
-            validateDataIndex(index, this);
+            validateDataIndex(index);
 
-            this.data[index].regular.unshift(callback);
+            that.data[index].regular.unshift(callback);
         };
 
         this.hasCallbackFor = function (index) {
-            return this.data[index] !== undefined;
+            return that.data[index] !== undefined;
         };
 
         this.sendToCallback = function (index,parameter) {
             var returnValue,
                 tempReturnValue,
-                data = this.data[index];
+                data = that.data[index];
 
             if (data) {
 
@@ -83,14 +85,14 @@ X.registerModule("classes/Callback", ["managers/classes"], function () {
 
             var a;
 
-            for (var index in this.data) {
-                if (this.data.hasOwnProperty(index)) {
+            for (var index in that.data) {
+                if (that.data.hasOwnProperty(index)) {
 
-                    if (this.data[index].overwritable) {
-                        method(index, this.data[index].overwritable);
+                    if (that.data[index].overwritable) {
+                        method(index, that.data[index].overwritable);
                     }
 
-                    a = this.data[index].regular;
+                    a = that.data[index].regular;
                     for (var i = 0; i < a.length; i += 1) {
                         method(index,a[i]);
                     }
@@ -101,7 +103,7 @@ X.registerModule("classes/Callback", ["managers/classes"], function () {
 
         this.removeCallback = function (index, callbackToRemove) {
 
-            var data = this.data[index];
+            var data = that.data[index];
 
             if (data) {
 
@@ -125,7 +127,7 @@ X.registerModule("classes/Callback", ["managers/classes"], function () {
                         // If we have just deleted the last callback for this index, then we'll delete the array so that
                         // hasCallbackFor() will be able to respond accurately.
                         if (a.length <= 0) {
-                            delete this.data[index];
+                            delete that.data[index];
                         }
                         break;
                     }
@@ -135,11 +137,11 @@ X.registerModule("classes/Callback", ["managers/classes"], function () {
         };
 
         this.removeIndex = function(index) {
-            delete this.data[index];
+            delete that.data[index];
         };
 
         this.clear = function () {
-            this.data = {};
+            that.data = {};
         };
 
     });

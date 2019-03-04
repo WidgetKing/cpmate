@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for dev\elements\captivate.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">dev/elements/</a> captivate.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">12.5% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>3/24</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">12.5% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>3/24</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 10/29/18
+ * Time: 5:56 PM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("elements/captivate", ["managers/debugging/logging"], <span class="fstat-no" title="function not covered" >function () {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    var MINIMUM_CP_EXTRA_VERSION = "1.4.2";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    X.captivate = {</span>
+        "isLoaded":<span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return window.parent &amp;&amp; window.parent.hasOwnProperty("cp");</span>
+        },
+        "hasCpExtra": <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            if (X.captivate.window) {</span>
+<span class="cstat-no" title="statement not covered" >                return X.captivate.window.hasOwnProperty("_extra");</span>
+            }
+<span class="cstat-no" title="statement not covered" >            return false;</span>
+        },
+        "window":null,
+        "base": null,
+        "extra": null,
+        "variables": null
+    };
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getCaptivateElements () {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (X.captivate.isLoaded()) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            X.captivate.window = window.parent;</span>
+<span class="cstat-no" title="statement not covered" >            X.captivate.base   = X.captivate.window.cp;</span>
+<span class="cstat-no" title="statement not covered" >            X.captivate.alert  = X.captivate.window.alert;</span>
+<span class="cstat-no" title="statement not covered" >            X.captivate.variables = X.captivate.window;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            if (X.captivate.hasCpExtra()) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                X.captivate.extra = {};</span>
+<span class="cstat-no" title="statement not covered" >                getCpExtraElements();</span>
+&nbsp;
+            } else {
+<span class="cstat-no" title="statement not covered" >                X.error("GE001");</span>
+            }
+&nbsp;
+        }
+    }
+&nbsp;
+<span class="fstat-no" title="function not covered" >    function getCpExtraElements () {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        X.captivate.extra = X.captivate.window._extra;</span>
+<span class="cstat-no" title="statement not covered" >        X.captivate.extraPublicInterface = X.captivate.window.X;</span>
+<span class="cstat-no" title="statement not covered" >        X.captivate.extraVersion = X.captivate.extraPublicInterface.version;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (X.captivate.extraVersion &lt; MINIMUM_CP_EXTRA_VERSION) {</span>
+<span class="cstat-no" title="statement not covered" >            X.error("GE002", X.captivate.extraVersion, MINIMUM_CP_EXTRA_VERSION);</span>
+        }
+&nbsp;
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    getCaptivateElements();</span>
+&nbsp;
+});</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 04 2019 19:00:24 GMT+0000 (GMT Standard Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
