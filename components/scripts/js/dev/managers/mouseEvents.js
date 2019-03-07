@@ -5,11 +5,39 @@
  * Time: 3:24 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/mouseEvents", ["elements/slideObject"], function () {
+X.registerModule("managers/mouseEvents", ["managers/utils", "elements/slideObject"], function () {
 
     "use strict";
 
-    var listeners = [];
+    ///////////////////////////////////////////////////////////////////////
+	////////////// PUBLIC INTERFACE
+    ///////////////////////////////////////////////////////////////////////
+	
+	var mobileEvents = {
+		"mousemove":"touchmove",
+		"mousedown":"touchstart",
+		"mouseup":"touchend"
+	};
+	
+	X.events = {
+		"getSafeEvent": function (eventName) {
+			if (X.utils.isMobile && mobileEvents.hasOwnProperty(eventName)) {
+				return mobileEvents[eventName];
+			}
+			return eventName;
+		}
+	}
+	
+	
+	
+	
+
+    ///////////////////////////////////////////////////////////////////////
+	////////////// HANDLE DOCUMENT EVENTS
+    ///////////////////////////////////////////////////////////////////////
+	
+	var listeners = [];
+
 
     if (!X.slideObject || !X.slideObject.proxy) {
         return;
@@ -17,20 +45,21 @@ X.registerModule("managers/mouseEvents", ["elements/slideObject"], function () {
 
     function forwardEvent (eventName) {
 
+		var safeEventName = X.events.getSafeEvent(eventName);
+
         function handler() {
-            X.slideObject.proxy.dispatchEvent(eventName);
+            X.slideObject.proxy.dispatchEvent(safeEventName);
         }
 
         listeners.push({
-            "eventName":eventName,
+            "eventName":safeEventName,
             "handler":handler
         });
 
-        document.addEventListener(eventName, handler);
+        document.addEventListener(safeEventName, handler);
 
     }
 
-    var isMobile = 'ontouchstart' in document.documentElement;
 
     [
         "click",
@@ -38,9 +67,9 @@ X.registerModule("managers/mouseEvents", ["elements/slideObject"], function () {
         "contextmenu",
         "mouseover",
         "mouseout",
-        (isMobile) ? "touchmove" : "mousemove",
-        (isMobile) ? "touchstart" : "mousedown",
-        (isMobile) ? "touchend" : "mouseup"
+        "mousemove",
+        "mousedown",
+        "mouseup"
 
     ].forEach(function (eventName) {
         forwardEvent(eventName);

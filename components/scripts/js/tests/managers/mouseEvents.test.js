@@ -1,10 +1,3 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/26/18
- * Time: 3:25 PM
- * To change this template use File | Settings | File Templates.
- */
 describe("A test suite for managers/mouseEvents", function () {
 
     "use strict";
@@ -13,6 +6,9 @@ describe("A test suite for managers/mouseEvents", function () {
 
     beforeEach(function () {
         window.X = {
+			"utils": {
+				"isMobile": false
+			},
             "classes":unitTests.classes,
             "slideObject":{
                 "proxy":{
@@ -22,10 +18,10 @@ describe("A test suite for managers/mouseEvents", function () {
             "broadcast": new unitTests.classes.Callback()
         };
 
+
         spyOn(document, "addEventListener");
         spyOn(document, "removeEventListener");
 
-        module();
     });
 
     afterEach(function () {
@@ -33,6 +29,8 @@ describe("A test suite for managers/mouseEvents", function () {
     });
 
     it("should listen for mouse events", function () {
+        module();
+
         function listeningFor (eventName) {
             expect(document.addEventListener).toHaveBeenCalledWith(eventName, jasmine.anything());
         }
@@ -47,6 +45,8 @@ describe("A test suite for managers/mouseEvents", function () {
     });
 
     it("should stop listening for mouse events when it hears unload", function () {
+
+        module();
 
         function stopListeningFor (eventName) {
             expect(document.removeEventListener).toHaveBeenCalledWith(eventName, jasmine.anything());
@@ -63,4 +63,40 @@ describe("A test suite for managers/mouseEvents", function () {
         stopListeningFor("contextmenu");
 
     });
+
+	it("should also listen to the correct mobile events", function () {
+
+		// TEST
+		X.utils.isMobile = true;
+
+		module();
+
+		// ASSERT
+		expect(document.addEventListener).toHaveBeenCalledWith("touchstart", jasmine.any(Function));
+
+	});
+
+
+	it("should give us access to the appropriate event name for mobile/desktop", function () {
+
+		// 1: SETUP
+
+		function shouldGetInReturnTo(result, event) {
+			expect(X.events.getSafeEvent(event)).toBe(result);
+		}
+
+		X.utils.isMobile = true;
+
+		module();
+
+
+		// 2: TEST
+		shouldGetInReturnTo('touchstart', 'mousedown');
+		shouldGetInReturnTo('touchmove', 'mousemove');
+		shouldGetInReturnTo('touchend', 'mouseup');
+		shouldGetInReturnTo('click', 'click');
+
+		// TEARDOWN
+		delete window.document.documentElement.ontouchstart;
+	});
 });

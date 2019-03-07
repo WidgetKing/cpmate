@@ -5,9 +5,14 @@ describe("managers/cpVariables", () => {
   var hasCpExtra = true;
 
   beforeEach(() => {
-
     function spyNFake(fake) {
         return jasmine.createSpy().and.callFake(fake)
+    }
+
+    // We need this here so that the CallbackObject can
+    // access X.classes.Callback()
+    window.X = {
+      "classes": unitTests.classes
     }
 
     var fakeExtraVariableManager = new unitTests.classes.CallbackObject();
@@ -23,12 +28,11 @@ describe("managers/cpVariables", () => {
             "listenForVariableChange": spyNFake(fakeExtraVariableManager.callback),
             "setVariableValue": spyNFake(fakeExtraVariableManager.setProp),
             "getVariableValue": spyNFake(fakeExtraVariableManager.getProp),
-            "hasVariable": spyNFake(fakeExtraVariableManager.hasVariable)
+            "hasVariable": spyNFake(fakeExtraVariableManager.hasProp)
           }
         }
       }
     };
-
 
   })
 

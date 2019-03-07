@@ -80,7 +80,7 @@ describe ("managers/components/slider/view", () => {
 
     });
 
-    fdescribe("X.slider.view()", () => {
+    describe("X.slider.view()", () => {
 
       var instance;
 

@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">14.29% </span>
+        <span class="strong">92.86% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/14</span>
+        <span class='fraction'>13/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>2/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>4/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">14.29% </span>
+        <span class="strong">92.86% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/14</span>
+        <span class='fraction'>13/14</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -106,27 +106,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,12 +133,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,28 +154,28 @@
  * Time: 3:10 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/actions/gotoFrameLabel", ["managers/cpExtraActions"], <span class="fstat-no" title="function not covered" >function () {</span>
+X.registerModule("managers/actions/gotoFrameLabel", ["managers/cpExtraActions"], function () {
 &nbsp;
     "use strict";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (!X.cpExtraActions) {</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!X.cpExtraActions) {
 <span class="cstat-no" title="statement not covered" >        return;</span>
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function gotoFrameLabel (frameLabel) {</span>
+    function gotoFrameLabel (frameLabel) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        var labels = X.movie.getLabels(),</span>
+        var labels = X.movie.getLabels(),
             labelData;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        frameLabel = frameLabel.toString();</span>
+        frameLabel = frameLabel.toString();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        for (var i = 0; i &lt; labels.length; i += 1) {</span>
+        for (var i = 0; i &lt; labels.length; i += 1) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            labelData = labels[i];</span>
+            labelData = labels[i];
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (labelData.label === frameLabel) {</span>
-<span class="cstat-no" title="statement not covered" >                X.movie.gotoAndPlay(labelData.position);</span>
-<span class="cstat-no" title="statement not covered" >                return;</span>
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (labelData.label === frameLabel) {
+                X.movie.gotoAndPlay(labelData.position);
+                return;
             }
 &nbsp;
         }
@@ -188,12 +188,12 @@ X.registerModule("managers/actions/gotoFrameLabel", ["managers/cpExtraActions"],
     /////////////// REGISTER
     ///////////////////////////////////////////////////////////////////////
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    X.cpExtraActions.register("gotoFrameLabel", <span class="fstat-no" title="function not covered" >function (frameLabel) {</span></span>
+    X.cpExtraActions.register("gotoFrameLabel", function (frameLabel) {
 &nbsp;
         // Make sure the animate runtime has already loaded.
-<span class="cstat-no" title="statement not covered" >        X.animate.callWhenLoaded(<span class="fstat-no" title="function not covered" >function () {</span></span>
+        X.animate.callWhenLoaded(function () {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            gotoFrameLabel(frameLabel);</span>
+            gotoFrameLabel(frameLabel);
 &nbsp;
         })
 &nbsp;
@@ -205,7 +205,7 @@ X.registerModule("managers/actions/gotoFrameLabel", ["managers/cpExtraActions"],
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 04 2019 19:00:24 GMT+0000 (GMT Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 07 2019 14:09:27 GMT+0000 (GMT Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

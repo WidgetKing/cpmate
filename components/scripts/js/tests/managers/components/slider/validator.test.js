@@ -7,6 +7,13 @@ describe ("managers/components/slider/validator", () => {
 
     ///////////////////////
     ///// Variables
+    var view = {
+      "update": jasmine.createSpy()
+    }
+
+    var model = {
+      "updateTo":jasmine.createSpy()
+    }
 
     ///////////////////////
     ///// Before and After
@@ -19,10 +26,18 @@ describe ("managers/components/slider/validator", () => {
         module();
         utils();
 
-        X.slider.view = jasmine.createSpy();
-        X.slider.model = jasmine.createSpy();
+        // We have to add the spies after the module has been called
+        // because then otherwise the module will apply an object to
+        // X.slider and erase the spies.
+        X.slider.view = jasmine.createSpy().and.callFake(() => {
+          return view;
+        });
+
         X.slider.controller = jasmine.createSpy();
 
+        X.slider.model = jasmine.createSpy().and.callFake(() => {
+          return model;
+        });
     });
 
     afterEach(() => {
@@ -55,7 +70,6 @@ describe ("managers/components/slider/validator", () => {
       });
 
       it("should add default settings", () => {
-
         // 1: SETUP
           X.slider({
               "variable": "myVar",
@@ -108,23 +122,9 @@ describe ("managers/components/slider/validator", () => {
 
     });
 
-    fit("should wire up VMC pattern", () => {
+    it("should wire up MVC pattern", () => {
 
       // 1: SETUP
-      var view = {
-          "update": jasmine.createSpy()
-      }
-
-      var model = {
-          "updateTo":jasmine.createSpy()
-      }
-
-      X.slider.view.and.callFake(() => {
-        return view;
-      });
-      X.slider.model.and.callFake(() => {
-        return model;
-      });
 
 
       // 2: TEST

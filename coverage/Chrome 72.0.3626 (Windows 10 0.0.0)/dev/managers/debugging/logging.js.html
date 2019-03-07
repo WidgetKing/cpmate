@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">87.5% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>1/16</span>
+        <span class='fraction'>14/16</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>3/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>3/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">87.5% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>1/16</span>
+        <span class='fraction'>14/16</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -98,40 +98,40 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,34 +142,34 @@
  * Time: 9:46 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], <span class="fstat-no" title="function not covered" >function () {</span>
+X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], function () {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    X.log = <span class="fstat-no" title="function not covered" >function (message) {</span></span>
+    X.log = <span class="fstat-no" title="function not covered" >function (message) {</span>
 <span class="cstat-no" title="statement not covered" >        console.log(message);</span>
     };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    X.alert = <span class="fstat-no" title="function not covered" >function (message, title) {</span></span>
-<span class="cstat-no" title="statement not covered" >        if (X.captivate.isLoaded()) {</span>
-<span class="cstat-no" title="statement not covered" >            X.captivate.alert(message, title);</span>
+    X.alert = function (message, title) {
+        if (X.captivate.isLoaded()) {
+            X.captivate.alert(message, title);
         } else {
-<span class="cstat-no" title="statement not covered" >            alert(message);</span>
+            alert(message);
         }
     };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    X.error = <span class="fstat-no" title="function not covered" >function (errorCode, message) {</span></span>
+    X.error = function (errorCode, message) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        var title = "CpMate Error";</span>
+        var title = "CpMate Error";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (X.errors.hasOwnProperty(errorCode)) {</span>
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (X.errors.hasOwnProperty(errorCode)) {
 &nbsp;
             // Get array of all arguments except the first one.
             // We will need to pass this on to the error function.
-<span class="cstat-no" title="statement not covered" >            var args = Array.prototype.slice.call(arguments);</span>
-<span class="cstat-no" title="statement not covered" >            args.splice(0,1);</span>
+            var args = Array.prototype.slice.call(arguments);
+            args.splice(0,1);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            message = X.errors[errorCode].apply(this, args);</span>
+            message = X.errors[errorCode].apply(this, args);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            title += ": " + errorCode;</span>
+            title += ": " + errorCode;
 &nbsp;
         } else {
 &nbsp;
@@ -177,7 +177,7 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], <s
 &nbsp;
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        X.alert(message, title);</span>
+        X.alert(message, title);
 &nbsp;
     };
 &nbsp;
@@ -187,7 +187,7 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], <s
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 04 2019 19:00:24 GMT+0000 (GMT Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 07 2019 14:09:27 GMT+0000 (GMT Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

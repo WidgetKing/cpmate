@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">13.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/15</span>
+        <span class='fraction'>15/15</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/2</span>
+        <span class='fraction'>1/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>8/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">13.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/15</span>
+        <span class='fraction'>15/15</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -109,46 +109,46 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,25 +160,25 @@
  * Time: 10:41 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "managers/utils"], <span class="fstat-no" title="function not covered" >function () {</span>
+X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "managers/utils"], function () {
 &nbsp;
     "use strict";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    var list,</span>
-        init = X.utils.singleton(<span class="fstat-no" title="function not covered" >function () {</span>
+    var list,
+        init = X.utils.singleton(function () {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            X.movie.changeCallback.addCallback("play", <span class="fstat-no" title="function not covered" >function () {</span></span>
-<span class="cstat-no" title="statement not covered" >                X.utils.forEach(list, <span class="fstat-no" title="function not covered" >function (key, element) {</span></span>
+            X.movie.changeCallback.addCallback("play", function () {
+                X.utils.forEach(list, function (key, element) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    element.play();</span>
+                    element.play();
 &nbsp;
                 });
             });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            X.movie.changeCallback.addCallback("stop", <span class="fstat-no" title="function not covered" >function () {</span></span>
-<span class="cstat-no" title="statement not covered" >                X.utils.forEach(list, <span class="fstat-no" title="function not covered" >function (key, element) {</span></span>
+            X.movie.changeCallback.addCallback("stop", function () {
+                X.utils.forEach(list, function (key, element) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                    element.stop();</span>
+                    element.stop();
 &nbsp;
                 });
             })
@@ -186,24 +186,24 @@ X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "
         });
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    X.preferences.define({</span>
+    X.preferences.define({
         "name":"pausingInstanceSuffix",
         "animateRequired": true,
-        "method":<span class="fstat-no" title="function not covered" >function (suffix) {</span>
+        "method":function (suffix) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            init();</span>
+            init();
 &nbsp;
-<span class="fstat-no" title="function not covered" >            function reactToNewList () {</span>
+            function reactToNewList () {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                list = X.movie.children.getListMatchingSuffix(suffix);</span>
+                list = X.movie.children.getListMatchingSuffix(suffix);
 &nbsp;
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (X.movie.children.exist) {</span>
-<span class="cstat-no" title="statement not covered" >                reactToNewList();</span>
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (X.movie.children.exist) {
+                reactToNewList();
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            X.movie.children.changeCallback.addCallback("*", reactToNewList);</span>
+            X.movie.children.changeCallback.addCallback("*", reactToNewList);
 &nbsp;
         }
     });
@@ -214,7 +214,7 @@ X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 04 2019 19:00:24 GMT+0000 (GMT Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 07 2019 14:09:27 GMT+0000 (GMT Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

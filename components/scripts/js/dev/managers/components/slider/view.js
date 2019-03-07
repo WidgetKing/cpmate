@@ -6,8 +6,14 @@ X.registerModule("managers/components/slider/view", ["managers/utils", "managers
     ////////// EXPORTS
 
     var exports = {
-      "listenToTrack": initialData.track.addEventListener,
-      "listenToHandle": initialData.handle.addEventListener,
+	   "track": initialData.track,
+	   "handle": initialData.handle,
+       "listenToTrack": function (event, handler) {
+		 initialData.track.addEventListener(event, handler)
+       },
+	   "listenToHandle":function (event, handler) {
+		 initialData.handle.addEventListener(event, handler)
+	   },
       "update": function () {
           
       }

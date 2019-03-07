@@ -11,6 +11,8 @@ X.registerModule("managers/utils", function () {
 
     X.utils = {
 
+      "isMobile": 'ontouchstart' in document.documentElement,
+
         "callIfDefined": function (method) {
             if (method) {
                 var args = Array.prototype.slice.call(arguments);

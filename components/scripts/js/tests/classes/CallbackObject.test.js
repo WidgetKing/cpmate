@@ -47,7 +47,7 @@ describe("classes/CallbackObject", () => {
 
   });
 
-  fit("should allow us to detect whether a prop already exists", () => {
+  it("should allow us to detect whether a prop already exists", () => {
 
     // 1: SETUP
     instance.setProp("exists", true);

@@ -1,4 +1,4 @@
-fdescribe ("managers/components/slider/model", () => {
+describe ("managers/components/slider/model", () => {
 
     ///////////////////////
     ///// Requires
@@ -11,7 +11,9 @@ fdescribe ("managers/components/slider/model", () => {
     function createMC() {
       return {
         "x":0,
-        "y":0
+        "y":0,
+	    "width":100,
+		"height":100
       }
     }
 
@@ -38,8 +40,8 @@ fdescribe ("managers/components/slider/model", () => {
         "min": 0,
         "max": 100,
         "reverse": false,
-        "vertical": true,
-        "horizontal": false,
+        "vertical": false,
+        "horizontal": true,
         "handle": handle,
         "track": track,
         "hideTrack": false,
@@ -93,12 +95,11 @@ fdescribe ("managers/components/slider/model", () => {
           "error": jasmine.createSpy("X.error()")
       };
 
-      module();
-      utils();
-
+		module();
+		utils();
     });
 
-    afterEach(function () {
+    afterAll(function () {
       delete window.X;
     });
 
@@ -141,6 +142,21 @@ fdescribe ("managers/components/slider/model", () => {
 
       });
 
+	it("should detect whether cpExtra is not loaded and create a new instance of the variable in that case", () => {
+
+		// 1: SETUP
+		hasCpExtra = false;
+		defaultData.variable = "nonexistant";
+		variableManager();
+
+		// 2: TEST
+		var instance = X.slider.model(defaultData);
+
+		// 3: ASSERT
+		expect(X.error).not.toHaveBeenCalled();
+
+	});
+
       describe("update()", () => {
 
         var updateSpy = jasmine.createSpy();
@@ -156,9 +172,13 @@ fdescribe ("managers/components/slider/model", () => {
 
           instance = X.slider.model(defaultData);
           instance.updateTo(updateSpy);
+
         })
 
-        it("should send us through the updated captivate variable value", () => {
+		// WE ARE TURNING THIS ONE OFF AS WE NOW DON'T WANT THE VIEW
+		// TO KNOW WHAT THE CAPTIVATE VARIABLE IS
+		// THE LOCATION IS CALCULATED IN THE MODEL
+        xit("should send us through the updated captivate variable value", () => {
 
           // 1: SETUP
           X.cpVariablesManager.setVariableValue("myVar", 50);
@@ -173,7 +193,6 @@ fdescribe ("managers/components/slider/model", () => {
       });
 
       describe("updateTo()", () => {
-
 
         it("should be defined", () => {
 
@@ -190,6 +209,34 @@ fdescribe ("managers/components/slider/model", () => {
         });
 
       });
+
+	  describe("dragStart(), dragMove(), dragEnd()", () => {
+
+		var instance;
+
+		beforeAll(() => {
+			track.x = 0;
+			track.y = 0;
+			track.width = 100;
+			track.height = 10;
+
+			handle.x = 0;
+			handle.y = 0;
+			handle.width = 10;
+			handle.height = 10;
+
+			instance = X.slider.model(defaultData);
+		});
+
+
+		it("should send us through the new X/Y location while moving", () => {
+
+			// 1: SETUP
+
+
+		});
+
+	  });
 
     });
 });

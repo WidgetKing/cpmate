@@ -89,7 +89,6 @@ X.registerModule("managers/components/slider/validator", ["managers/utils"], fun
       model.updateTo(view.update);
 
     }
-
     // Return to entry point
     init();
 

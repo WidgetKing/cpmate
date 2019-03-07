@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">11.76% </span>
+        <span class="strong">76.47% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/17</span>
+        <span class='fraction'>13/17</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>6/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/3</span>
+        <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">11.76% </span>
+        <span class="strong">76.47% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/17</span>
+        <span class='fraction'>13/17</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -106,40 +106,40 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -154,44 +154,44 @@
  * Time: 10:39 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Callback"], <span class="fstat-no" title="function not covered" >function () {</span>
+X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Callback"], function () {
 &nbsp;
     "use strict";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    X.movie.rootTimeline = {</span>
+    X.movie.rootTimeline = {
 &nbsp;
         "changeCallback": new X.classes.Callback(),
 &nbsp;
-        "set":<span class="fstat-no" title="function not covered" >function (symbolName) {</span>
+        "set":function (symbolName) {
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (!X.animate || !X.animate.library) {</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!X.animate || !X.animate.library) {
 <span class="cstat-no" title="statement not covered" >                console.log("Tried to set root timeline before animate loaded");</span>
 <span class="cstat-no" title="statement not covered" >                return;</span>
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (typeof symbolName !== "string") {</span>
+            if (typeof symbolName !== "string") {
 &nbsp;
                 // We're not processing a symbol name, we're processing a full timeline
-<span class="cstat-no" title="statement not covered" >                setTimeline(symbolName);</span>
-<span class="cstat-no" title="statement not covered" >                return;</span>
+                setTimeline(symbolName);
+                return;
 &nbsp;
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (!X.animate.library.hasOwnProperty(symbolName)) {</span>
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!X.animate.library.hasOwnProperty(symbolName)) {
 <span class="cstat-no" title="statement not covered" >                X.error("Could not find symbol with name " + symbolName +</span>
                         " in library. Therefore was unable to add it as root timeline.");
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                return;</span>
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            var instance = new X.animate.library[symbolName]();</span>
-<span class="cstat-no" title="statement not covered" >            X.animate.mainTimeline.addChild(instance);</span>
-<span class="cstat-no" title="statement not covered" >            setTimeline(instance);</span>
+            var instance = new X.animate.library[symbolName]();
+            X.animate.mainTimeline.addChild(instance);
+            setTimeline(instance);
 &nbsp;
 &nbsp;
-<span class="fstat-no" title="function not covered" >            function setTimeline (timeline) {</span>
-<span class="cstat-no" title="statement not covered" >                X.movie._setRootTimeline(timeline);</span>
-<span class="cstat-no" title="statement not covered" >                X.movie.rootTimeline.changeCallback.sendToCallback("*", timeline);</span>
+            function setTimeline (timeline) {
+                X.movie._setRootTimeline(timeline);
+                X.movie.rootTimeline.changeCallback.sendToCallback("*", timeline);
             }
 &nbsp;
 &nbsp;
@@ -205,7 +205,7 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 04 2019 19:00:24 GMT+0000 (GMT Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 07 2019 14:09:27 GMT+0000 (GMT Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>
