@@ -3,7 +3,7 @@
 var p; // shortcut to reference prototypes
 var lib={};var ss={};var img={};
 lib.ssMetadata = [
-		{name:"cpmt_slider_test_1_atlas_", frames: [[0,1078,408,96],[106,0,96,96],[0,0,104,1076]]}
+		{name:"cpmt_slider_test_1_atlas_", frames: [[0,202,100,20],[0,224,20,20],[0,0,20,200]]}
 ];
 
 
@@ -11,21 +11,21 @@ lib.ssMetadata = [
 
 
 
-(lib.CachedTexturedBitmap_451 = function() {
+(lib.CachedTexturedBitmap_4 = function() {
 	this.initialize(ss["cpmt_slider_test_1_atlas_"]);
 	this.gotoAndStop(0);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedTexturedBitmap_452 = function() {
+(lib.CachedTexturedBitmap_5 = function() {
 	this.initialize(ss["cpmt_slider_test_1_atlas_"]);
 	this.gotoAndStop(1);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedTexturedBitmap_453 = function() {
+(lib.CachedTexturedBitmap_6 = function() {
 	this.initialize(ss["cpmt_slider_test_1_atlas_"]);
 	this.gotoAndStop(2);
 }).prototype = p = new cjs.Sprite();
@@ -52,59 +52,64 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.instance = new lib.CachedTexturedBitmap_453();
+	this.instance = new lib.CachedTexturedBitmap_6();
 	this.instance.parent = this;
-	this.instance.setTransform(-26,-269.05,0.5,0.5);
+	this.instance.setTransform(-5,-50,0.5,0.5);
 
 	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
 
 }).prototype = p = new cjs.MovieClip();
-p.nominalBounds = new cjs.Rectangle(-26,-269,52,538);
+p.nominalBounds = new cjs.Rectangle(-5,-50,10,100);
 
 
 (lib.handle_big_small = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.instance = new lib.CachedTexturedBitmap_452();
+	this.instance = new lib.CachedTexturedBitmap_5();
 	this.instance.parent = this;
-	this.instance.setTransform(-24.1,-24,0.5,0.5);
+	this.instance.setTransform(-5,-5,0.5,0.5);
 
 	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
 
 }).prototype = p = new cjs.MovieClip();
-p.nominalBounds = new cjs.Rectangle(-24.1,-24,48,48);
+p.nominalBounds = new cjs.Rectangle(-5,-5,10,10);
 
 
 (lib.handle_big = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.instance = new lib.CachedTexturedBitmap_451();
+	this.instance = new lib.CachedTexturedBitmap_4();
 	this.instance.parent = this;
-	this.instance.setTransform(-102.05,-24,0.5,0.5);
+	this.instance.setTransform(-25,-5,0.5,0.5);
 
 	this.timeline.addTween(cjs.Tween.get(this.instance).wait(1));
 
 }).prototype = p = new cjs.MovieClip();
-p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
+p.nominalBounds = new cjs.Rectangle(-25,-5,50,10);
 
 
 (lib.Scene_1_Layer_2 = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_2
+	this.handle3 = new lib.handle_big();
+	this.handle3.name = "handle3";
+	this.handle3.parent = this;
+	this.handle3.setTransform(79,101.2,1,1,90);
+
 	this.handle2 = new lib.handle_big_small();
 	this.handle2.name = "handle2";
 	this.handle2.parent = this;
-	this.handle2.setTransform(488.65,360);
+	this.handle2.setTransform(490,110);
 
 	this.handle1 = new lib.handle_big();
 	this.handle1.name = "handle1";
 	this.handle1.parent = this;
-	this.handle1.setTransform(180.05,292.1);
+	this.handle1.setTransform(298.05,110);
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.handle1},{t:this.handle2}]}).wait(1));
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.handle1},{t:this.handle2},{t:this.handle3}]}).wait(1));
 
 }).prototype = getMCSymbolPrototype(lib.Scene_1_Layer_2, null, null);
 
@@ -113,27 +118,22 @@ p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.track4 = new lib.track();
-	this.track4.name = "track4";
-	this.track4.parent = this;
-	this.track4.setTransform(1093.8,360);
-
 	this.track3 = new lib.track();
 	this.track3.name = "track3";
 	this.track3.parent = this;
-	this.track3.setTransform(791.2,360);
+	this.track3.setTransform(100,100,1,1,90);
 
 	this.track2 = new lib.track();
 	this.track2.name = "track2";
 	this.track2.parent = this;
-	this.track2.setTransform(488.6,360);
+	this.track2.setTransform(500,100);
 
 	this.track1 = new lib.track();
 	this.track1.name = "track1";
 	this.track1.parent = this;
-	this.track1.setTransform(186,360);
+	this.track1.setTransform(300,100);
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.track1},{t:this.track2},{t:this.track3},{t:this.track4}]}).wait(1));
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.track1},{t:this.track2},{t:this.track3}]}).wait(1));
 
 }).prototype = getMCSymbolPrototype(lib.Scene_1_Layer_1, null, null);
 
@@ -175,10 +175,10 @@ p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
 	this.frame_0 = function() {
 		this.handle1 = this.Layer_2.handle1;
 		this.handle2 = this.Layer_2.handle2;
+		this.handle3 = this.Layer_2.handle3;
 		this.track1 = this.Layer_1.track1;
 		this.track2 = this.Layer_1.track2;
 		this.track3 = this.Layer_1.track3;
-		this.track4 = this.Layer_1.track4;
 		X.slider({
 		  "variable": "my_var",
 		  "min": 0,
@@ -207,6 +207,14 @@ p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
 		  "handle": this.handle2,
 		  "track": this.track2
 		});
+		
+		X.slider({
+		  "variable": "my_var",
+		  "handle": this.handle3,
+		  "track": this.track3,
+		  "horizontal": true,
+		  "vertical": false
+		});
 	}
 
 	// actions tween:
@@ -216,7 +224,7 @@ p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
 	this.Layer_2 = new lib.Scene_1_Layer_2();
 	this.Layer_2.name = "Layer_2";
 	this.Layer_2.parent = this;
-	this.Layer_2.setTransform(295.3,326.1,1,1,0,0,0,295.3,326.1);
+	this.Layer_2.setTransform(284.5,101.2,1,1,0,0,0,284.5,101.2);
 	this.Layer_2.depth = 0;
 	this.Layer_2.isAttachedToCamera = 0
 	this.Layer_2.isAttachedToMask = 0
@@ -230,7 +238,7 @@ p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
 	this.Layer_1 = new lib.Scene_1_Layer_1();
 	this.Layer_1.name = "Layer_1";
 	this.Layer_1.parent = this;
-	this.Layer_1.setTransform(639.9,359.9,1,1,0,0,0,639.9,359.9);
+	this.Layer_1.setTransform(277.5,100,1,1,0,0,0,277.5,100);
 	this.Layer_1.depth = 0;
 	this.Layer_1.isAttachedToCamera = 0
 	this.Layer_1.isAttachedToMask = 0
@@ -241,7 +249,7 @@ p.nominalBounds = new cjs.Rectangle(-102,-24,204,48);
 	this.timeline.addTween(cjs.Tween.get(this.Layer_1).wait(1));
 
 }).prototype = p = new cjs.MovieClip();
-p.nominalBounds = new cjs.Rectangle(718,451,401.79999999999995,178);
+p.nominalBounds = new cjs.Rectangle(690,410,-185,-260);
 // library properties:
 lib.properties = {
 	id: '77764819752DEC4C98500AC781745364',

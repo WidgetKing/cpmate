@@ -1,7 +1,53 @@
 X.registerModule("managers/components/slider/view", ["managers/utils", "managers/components/slider/validator"], function () {
 
   X.slider.view = function (initialData) {
+	
 
+    /////////////////////////////
+    ////////// PRIVATE VARS
+	var handle = initialData.handle;
+	var track = initialData.track;
+	var handleProxy = new X.classes.DisplayObjectProxy(handle);
+	var trackProxy = new X.classes.DisplayObjectProxy(track);
+
+	var orientation = getOrientation();
+	var primaryAxis = (orientation === "v") ? "y" : "x";
+	
+	handleProxy.primary = primaryAxis;
+	trackProxy.primary = primaryAxis;
+
+	var primaryDragStart = "dragStart" + primaryAxis.toUpperCase();
+	var primaryDragCurrent = "dragCurrent" + primaryAxis.toUpperCase();
+	
+    /////////////////////////////
+    ////////// ENTRY POINT
+	function init() {
+		alignHandleToTrack();
+	}
+
+	function getOrientation() {
+		if (initialData.vertical && !initialData.horizontal) {
+			return "v";
+		} else {
+			return "h";
+		}
+	}
+
+    /////////////////////////////
+    ////////// ALIGN
+	
+	function alignHandleToTrack() {
+		// align primary axises at '0' point.
+		handleProxy.primaryAxis = trackProxy.primaryAxis;
+
+		// center on secondary axis
+		handleProxy.secondaryAxis = trackProxy.secondaryAxis + (trackProxy.secondaryLength - handleProxy.secondaryLength) / 2;	
+		
+	}
+
+
+
+	init();
     /////////////////////////////
     ////////// EXPORTS
 
@@ -14,8 +60,9 @@ X.registerModule("managers/components/slider/view", ["managers/utils", "managers
 	   "listenToHandle":function (event, handler) {
 		 initialData.handle.addEventListener(event, handler)
 	   },
-      "update": function () {
-          
+      "update": function (data) {
+       	var pds = data[primaryDragStart];
+		var pdc = data[primaryDragCurrent];
       }
     };
 

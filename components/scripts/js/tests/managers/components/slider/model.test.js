@@ -194,6 +194,7 @@ describe ("managers/components/slider/model", () => {
 
       describe("updateTo()", () => {
 
+
         it("should be defined", () => {
 
           // 1: SETUP
@@ -214,7 +215,16 @@ describe ("managers/components/slider/model", () => {
 
 		var instance;
 
-		beforeAll(() => {
+		var updateSpy;
+
+		function expectToBeUpdatedWith(data) {
+			expect(updateSpy).toHaveBeenCalledWith(jasmine.objectContaining(data));
+		}
+
+		beforeEach(() => {
+
+			updateSpy = jasmine.createSpy("update");
+
 			track.x = 0;
 			track.y = 0;
 			track.width = 100;
@@ -225,13 +235,29 @@ describe ("managers/components/slider/model", () => {
 			handle.width = 10;
 			handle.height = 10;
 
+			variableManager();
+			  
 			instance = X.slider.model(defaultData);
+			instance.updateTo(updateSpy);
+
 		});
 
 
 		it("should send us through the new X/Y location while moving", () => {
 
 			// 1: SETUP
+			instance.dragStart(10,10);
+			
+			// 2: TEST
+			instance.dragMove(10,11);
+
+			// 3: ASSERT
+			expectToBeUpdatedWith({
+				dragStartX:10,
+				dragStartY:10,
+				dragCurrentX:10,
+				dragCurrentY:11
+			});
 
 
 		});

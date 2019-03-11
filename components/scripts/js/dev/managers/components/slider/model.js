@@ -6,7 +6,24 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
     ////////// private variables
     var updateView;
     var cpVarName = initialData.variable;
+	var mouseHandleOffsetX = 0;
+	var mouseHandleOffestY = 0;
+	var data = {
+		dragStartX:0,
+		dragStartY:0,
+		dragCurrentX:0,
+		dragCurrentY:0
+	}
 
+    /////////////////////////////
+    ////////// util functions
+	function updateAfter(method) {
+		return function () {
+			method.apply(null, arguments);
+			updateView(data);
+		}
+	}
+	
     /////////////////////////////
     ////////// entry point
       function init() {
@@ -40,8 +57,7 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
       }
 
       function variableUpdate() {
-          value = X.cpVariablesManager.getVariableValue(cpVarName);
-          updateView(value);
+          var value = X.cpVariablesManager.getVariableValue(cpVarName);
       }
 
       init();
@@ -59,11 +75,13 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
           updateView = method;
       },
 	  "dragStart": function (x, y) {
-
+		  data.dragStartX = x;
+		  data.dragStartY = y;
 	  }, 
-	  "dragMove": function (x, y) {
-
-	  },
+	  "dragMove": updateAfter(function (x, y) {
+		  data.dragCurrentX = x;
+		  data.dragCurrentY = y;
+	  }),
 	  "dragEnd": function () {
 
 	  }
