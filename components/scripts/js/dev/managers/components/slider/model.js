@@ -6,14 +6,31 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
     ////////// private variables
     var updateView;
     var cpVarName = initialData.variable;
-	var mouseHandleOffsetX = 0;
-	var mouseHandleOffestY = 0;
+	var isCurrentlyDragging = false;
+	var isVertical = initialData.orientation === "vertical";
+	var mouseHandleOffset = 0;
 	var data = {
-		dragStartX:0,
-		dragStartY:0,
-		dragCurrentX:0,
-		dragCurrentY:0
+		handlePosition: 0
 	}
+	var handle = new X.classes.DisplayObjectProxy(initialData.handle);
+	var track = new X.classes.DisplayObjectProxy(initialData.track);
+
+	if (isVertical) {
+		handle.primary = "y";
+		track.primary = "y";
+	} else {
+		handle.primary = "x";
+		track.primary = "x";
+	}
+
+	var topLimit = track.primaryAxis + track.primaryLength - handle.primaryLength
+	var bottomLimit = track.primaryAxis;
+
+
+
+
+
+
 
     /////////////////////////////
     ////////// util functions
@@ -24,6 +41,33 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
 		}
 	}
 	
+
+
+	/////////////////////////////////
+	/////////////// VARIABLE UPDATE
+	
+	  var variableUpdate = X.utils.unless(
+		  // predicate
+		  function () { return isCurrentlyDragging },
+		  // method
+		  updateAfter(
+			  function () {
+
+				  var value = X.cpVariablesManager.getVariableValue(cpVarName);
+				  data.handlePosition = transposeVariableValueToHandlePosition(value);
+			  }
+		  )
+		  );
+
+
+	function transposeVariableValueToHandlePosition(value) {
+		var percent = X.utils.getPercent(initialData.min, initialData.max, value);
+		var minMaxedPercent = X.utils.minMax(0, 1, percent);
+		return X.utils.calculatePercentInRange(bottomLimit, topLimit, minMaxedPercent);
+	}
+
+
+
     /////////////////////////////
     ////////// entry point
       function init() {
@@ -56,16 +100,30 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
         return true;
       }
 
-      function variableUpdate() {
-          var value = X.cpVariablesManager.getVariableValue(cpVarName);
-      }
 
       init();
+	
+	/////////////////////////////////
+	/////////////// EXPORTS HELPERS
+	
+	function calculateHandleMove(loc) {
 
+		loc = loc - mouseHandleOffset;
+		loc = Math.min(loc, topLimit);
+		loc = Math.max(loc, bottomLimit);
+		return loc;	
+		
+	}
 	
-	
-	
-	
+	function updateCaptivateVariable(loc) {
+		
+		var percentage             = X.utils.getPercent(bottomLimit, topLimit, loc);
+		var rawValue        = X.utils.calculatePercentInRange(initialData.min, initialData.max, percentage);
+		var outputValue            = Math.round(rawValue);
+
+		X.cpVariablesManager.setVariableValue(initialData.variable, outputValue);
+		
+	}
 	
 	/////////////////////////////////
 	/////////////// EXPORTS
@@ -75,15 +133,34 @@ X.registerModule("managers/components/slider/model", ["managers/utils", "manager
           updateView = method;
       },
 	  "dragStart": function (x, y) {
-		  data.dragStartX = x;
-		  data.dragStartY = y;
+		  // We turn this on so if the Captivate Variable updates while we're dragging
+		  // We do not update the handle to its value.
+	  	  isCurrentlyDragging = true;
+
+		  if (isVertical) {
+			  mouseHandleOffset = y - handle.y;
+		  } else {
+			  mouseHandleOffset = x - handle.x;
+		  }
 	  }, 
 	  "dragMove": updateAfter(function (x, y) {
-		  data.dragCurrentX = x;
-		  data.dragCurrentY = y;
+		  
+		  var axis;
+
+		  if (isVertical) {
+		  	 axis = y;
+		  } else {
+		  	 axis = x;
+		  }
+		  
+		  var handlePosition = calculateHandleMove(axis);
+		  updateCaptivateVariable(handlePosition);
+		  data.handlePosition = handlePosition;
+
 	  }),
 	  "dragEnd": function () {
-
+			// It is now safe for us to keep listening to the captivate variable update
+			isCurrentlyDragging = false;
 	  }
     };
   }

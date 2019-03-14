@@ -41,6 +41,8 @@ X.registerModule("classes/CallbackObject", ["managers/classes"], function () {
           return obj.hasOwnProperty(key);
         }
 
+		this.removeCallback = callback.removeCallback;
+
     });
 
 }, "class");

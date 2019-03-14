@@ -1,8 +1,13 @@
-describe("managers/cpVariables", () => {
+describe("managers/cpVariablesManager", () => {
 
   var module = unitTests.requestModule("managers/cpVariablesManager");
+  var hookModule = unitTests.requestModule("managers/hook");
+  var utilsModule = unitTests.requestModule("managers/utils");
 
   var hasCpExtra = true;
+
+  // To be assigned by the X.cpExtraActions.register method
+  var moduleUnload;
 
   beforeEach(() => {
     function spyNFake(fake) {
@@ -19,6 +24,11 @@ describe("managers/cpVariables", () => {
 
     window.X = {
       "classes": unitTests.classes,
+	  "cpExtraActions": {
+		"register": (key, callback) => {
+			moduleUnload = callback;
+		}
+	  },
       "captivate":{
         "hasCpExtra": function () {
           return hasCpExtra;
@@ -28,11 +38,15 @@ describe("managers/cpVariables", () => {
             "listenForVariableChange": spyNFake(fakeExtraVariableManager.callback),
             "setVariableValue": spyNFake(fakeExtraVariableManager.setProp),
             "getVariableValue": spyNFake(fakeExtraVariableManager.getProp),
-            "hasVariable": spyNFake(fakeExtraVariableManager.hasProp)
+            "hasVariable": spyNFake(fakeExtraVariableManager.hasProp),
+			"stopListeningForVariableChange": spyNFake(fakeExtraVariableManager.removeCallback)
           }
         }
       }
     };
+
+	hookModule();
+	utilsModule();
 
   })
 
@@ -86,4 +100,58 @@ describe("managers/cpVariables", () => {
 
   });
 
+ describe("X.cpVariablesManager.listenForVariableChange()", () => {
+
+	it("X.cpVariablesManager.stopListeningForVariableChange", () => {
+		
+		// 1: SETUP
+		hasCpExtra = false;
+		var spy = jasmine.createSpy("spy");
+		module();
+		
+		// 2: TEST
+		X.cpVariablesManager.listenForVariableChange("var", spy);
+		X.cpVariablesManager.stopListeningForVariableChange("var", spy);
+		X.cpVariablesManager.setVariableValue("var", "foobar");
+		
+		// 3: ASSERT
+		expect(spy).not.toHaveBeenCalled();
+		
+	});
+
+
+ });
+
+  describe("Unload callback", () => {
+
+	it("should register an unload callback with X.cpExtraActions.register()", () => {
+		
+		// 1: SETUP
+		module();
+
+		// 2: TEST
+		// 3: ASSERT
+		expect(moduleUnload).toBeDefined();
+		
+	});
+
+	it("should unload all the listeners that were added through the course of the movie", () => {
+		
+		// 1: SETUP
+		module();
+
+		var spy = jasmine.createSpy("spy");
+
+		X.cpVariablesManager.listenForVariableChange("var", spy);
+		
+		// 2: TEST
+		moduleUnload();
+		
+		X.cpVariablesManager.setVariableValue("var", "foobar");
+		// 3: ASSERT
+		
+		expect(spy).not.toHaveBeenCalled();
+	});
+
+  });
 });

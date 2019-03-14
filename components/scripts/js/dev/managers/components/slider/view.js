@@ -16,9 +16,6 @@ X.registerModule("managers/components/slider/view", ["managers/utils", "managers
 	handleProxy.primary = primaryAxis;
 	trackProxy.primary = primaryAxis;
 
-	var primaryDragStart = "dragStart" + primaryAxis.toUpperCase();
-	var primaryDragCurrent = "dragCurrent" + primaryAxis.toUpperCase();
-	
     /////////////////////////////
     ////////// ENTRY POINT
 	function init() {
@@ -26,7 +23,7 @@ X.registerModule("managers/components/slider/view", ["managers/utils", "managers
 	}
 
 	function getOrientation() {
-		if (initialData.vertical && !initialData.horizontal) {
+		if (initialData.orientation === "vertical") {
 			return "v";
 		} else {
 			return "h";
@@ -61,8 +58,7 @@ X.registerModule("managers/components/slider/view", ["managers/utils", "managers
 		 initialData.handle.addEventListener(event, handler)
 	   },
       "update": function (data) {
-       	var pds = data[primaryDragStart];
-		var pdc = data[primaryDragCurrent];
+	  	handleProxy.primaryAxis = data.handlePosition;
       }
     };
 

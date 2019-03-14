@@ -62,4 +62,20 @@ describe("classes/CallbackObject", () => {
 
   });
 
+
+  it("should allow us to remove a callback", () => {
+    // 1: SETUP
+    var result,
+        a = jasmine.createSpy("instance.callback spy");
+
+    instance.callback("foobar", a);
+
+    // 2: TEST
+	instance.removeCallback("foobar", a);
+    instance.setProp("foobar", "scoobydoo");
+
+    // 3: ASSERT
+	expect(a).not.toHaveBeenCalled();
+  });
 });
+

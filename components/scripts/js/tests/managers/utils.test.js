@@ -363,4 +363,213 @@ describe("A test suite for managers/utils", function () {
       });
     });
 
+	describe("X.utils.ifElse()", () => {
+
+		function test(data) {
+			var trueSpy = jasmine.createSpy("true spy");
+			var falseSpy = jasmine.createSpy("false spy");
+			var returnedMethod = X.utils.ifElse(data.predicate, trueSpy, falseSpy);
+			var returnValue = returnedMethod.apply(null, data.arguments);
+			
+			if (data.returnValue) {
+				expect(returnValue).toEqual(data.returnValue);
+			}
+			
+			if (data.methodCalled) {
+				expect(trueSpy).toHaveBeenCalled();
+				expect(falseSpy).not.toHaveBeenCalled();
+			} else {
+				expect(trueSpy).not.toHaveBeenCalled();
+				expect(falseSpy).toHaveBeenCalled();
+			}
+		}
+
+		it("should call the true method if predicate returns true", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			// 3: ASSERT
+			test({
+				"predicate": () => true,
+				"methodCalled": true,
+				"arguments": [],
+				"returnValue": null
+			});
+			
+		});
+		
+		it("should call the false method if predicate returns false", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			// 3: ASSERT
+			test({
+				"predicate": () => false,
+				"methodCalled": false,
+				"arguments": [],
+				"returnValue": null
+			});
+			
+		});
+
+		it("should pass along arguments", () => {
+			
+			// 1: SETUP
+			var predicateSpy = jasmine.createSpy('predicate').and.callFake(() => true);
+			var trueSpy = jasmine.createSpy('true spy');
+			var falseSpy = jasmine.createSpy("false spy");
+			
+			// 2: TEST
+			X.utils.ifElse(predicateSpy, trueSpy, falseSpy)("foobar");
+			// 3: ASSERT
+			expect(predicateSpy).toHaveBeenCalledWith("foobar");
+			expect(trueSpy).toHaveBeenCalledWith("foobar");
+			
+			
+		});
+
+		it("should return the true/false method's return argument", () => {
+			
+			// 1: SETUP
+			var predicateSpy = jasmine.createSpy('predicate').and.callFake(() => true);
+			var trueSpy = jasmine.createSpy('true spy').and.callFake(() => 'foobar');
+			var falseSpy = jasmine.createSpy("false spy");
+			
+			// 2: TEST
+			var returnValue = X.utils.ifElse(predicateSpy, trueSpy, falseSpy)("foobar");
+			// 3: ASSERT
+			expect(returnValue).toBe("foobar");
+			
+			
+		});
+	});
+
+	describe("X.utils.when()", () => {
+
+		it("should call a method when the predicate returns true", () => {
+			
+			// 1: SETUP
+			var predicateSpy = jasmine.createSpy('predicate').and.callFake(() => true);
+			var trueSpy = jasmine.createSpy('true spy');
+			
+			// 2: TEST
+			X.utils.when(predicateSpy, trueSpy)("foobar");
+			
+			// 3: ASSERT
+			expect(trueSpy).toHaveBeenCalledWith("foobar");
+			expect(predicateSpy).toHaveBeenCalledWith("foobar");
+			
+		});
+		
+
+	});
+
+	describe("X.utils.unless()", () => {
+
+		it("should call a method when the predicate returns false", () => {
+			
+			// 1: SETUP
+			var predicateSpy = jasmine.createSpy('predicate').and.callFake(() => false);
+			var falseSpy = jasmine.createSpy('false spy');
+			
+			// 2: TEST
+			X.utils.unless(predicateSpy, falseSpy)("foobar");
+			
+			// 3: ASSERT
+			expect(falseSpy).toHaveBeenCalledWith("foobar");
+			expect(predicateSpy).toHaveBeenCalledWith("foobar");
+			
+		});
+		
+
+	});
+
+	describe("X.utils.getPercent()", () => {
+
+		it("should with a max of 100, min of 0, and a value of 50 give us: .5", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.getPercent(0, 100, 50);
+			
+			// 3: ASSERT
+			expect(result).toBe(.5);
+			
+		});
+
+		it("should with a max of 10 and a min of -10 and a value of -8 give us .1", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.getPercent(-10, 10, -8);
+			
+			// 3: ASSERT
+			expect(result).toBe(.1);
+			
+		});
+
+
+	});
+
+	describe("X.utils.minMax()", () => {
+
+		it("should return the number if it is within the range", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.minMax(0, 100, 50);
+			
+			// 3: ASSERT
+			expect(result).toBe(50);
+			
+		});
+
+		it("should return the max number if above", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.minMax(0, 100, 200);
+			
+			// 3: ASSERT
+			expect(result).toBe(100);
+			
+		});
+
+		it("should return the min number if below", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.minMax(0, 100, -100);
+			
+			// 3: ASSERT
+			expect(result).toBe(0);
+			
+		});
+	});
+
+	describe("X.utils.calculatePercentInRange()", () => {
+
+		it("should with min of 10 and max of 20 and value of .5 return 15", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.calculatePercentInRange(10, 20, .5);
+			
+			// 3: ASSERT
+			expect(result).toBe(15);
+			
+		});
+
+
+		it("should with min of -10 and max of 10 and value of .25 return -5", () => {
+			
+			// 1: SETUP
+			// 2: TEST
+			var result = X.utils.calculatePercentInRange(-10, 10, .25);
+			
+			// 3: ASSERT
+			expect(result).toBe(-5);
+			
+		});
+	});
 });

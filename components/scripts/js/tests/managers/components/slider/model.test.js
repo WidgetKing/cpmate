@@ -5,15 +5,25 @@ describe ("managers/components/slider/model", () => {
     var module = unitTests.requestModule("managers/components/slider/model");
     var variableManager = unitTests.requestModule("managers/cpVariablesManager");
     var utils = unitTests.requestModule("managers/utils");
+    var hook = unitTests.requestModule("managers/hook");
 
     /////////////////////////////
     ////////// Methods
     function createMC() {
+	  var bounds = {
+			"width":100,
+			"height":100,
+			"x":0,
+			"y":0
+	  };
+	  
       return {
         "x":0,
         "y":0,
-	    "width":100,
-		"height":100
+		"bounds":bounds,
+		"getBounds": () => {
+			return bounds;
+		}
       }
     }
 
@@ -76,6 +86,9 @@ describe ("managers/components/slider/model", () => {
 
       window.X = {
           "classes":unitTests.classes,
+		  "cpExtraActions": {
+			"register": () => true // Just to get the cpVariablesManager module working
+		  },
           "slider":{
 
           },
@@ -97,6 +110,7 @@ describe ("managers/components/slider/model", () => {
 
 		module();
 		utils();
+		hook();
     });
 
     afterAll(function () {
@@ -157,41 +171,6 @@ describe ("managers/components/slider/model", () => {
 
 	});
 
-      describe("update()", () => {
-
-        var updateSpy = jasmine.createSpy();
-        var instance;
-
-        beforeEach(() => {
-
-          hasCpExtra = false;
-
-          variableManager();
-
-          X.cpVariablesManager.setVariableValue("myVar", 0);
-
-          instance = X.slider.model(defaultData);
-          instance.updateTo(updateSpy);
-
-        })
-
-		// WE ARE TURNING THIS ONE OFF AS WE NOW DON'T WANT THE VIEW
-		// TO KNOW WHAT THE CAPTIVATE VARIABLE IS
-		// THE LOCATION IS CALCULATED IN THE MODEL
-        xit("should send us through the updated captivate variable value", () => {
-
-          // 1: SETUP
-          X.cpVariablesManager.setVariableValue("myVar", 50);
-
-          // 2: TEST
-          // 3: ASSERT
-          expect(updateSpy).toHaveBeenCalledWith(50);
-
-
-        });
-
-      });
-
       describe("updateTo()", () => {
 
 
@@ -221,19 +200,20 @@ describe ("managers/components/slider/model", () => {
 			expect(updateSpy).toHaveBeenCalledWith(jasmine.objectContaining(data));
 		}
 
+
 		beforeEach(() => {
 
 			updateSpy = jasmine.createSpy("update");
 
-			track.x = 0;
+			track.x = 10;
 			track.y = 0;
-			track.width = 100;
-			track.height = 10;
+			track.bounds.width = 110;
+			track.bounds.height = 10;
 
-			handle.x = 0;
+			handle.x = 10;
 			handle.y = 0;
-			handle.width = 10;
-			handle.height = 10;
+			handle.bounds.width = 10;
+			handle.bounds.height = 10;
 
 			variableManager();
 			  
@@ -246,22 +226,175 @@ describe ("managers/components/slider/model", () => {
 		it("should send us through the new X/Y location while moving", () => {
 
 			// 1: SETUP
-			instance.dragStart(10,10);
+			instance.dragStart(15,5);
 			
 			// 2: TEST
-			instance.dragMove(10,11);
+			instance.dragMove(16,5);
 
 			// 3: ASSERT
 			expectToBeUpdatedWith({
-				dragStartX:10,
-				dragStartY:10,
-				dragCurrentX:10,
-				dragCurrentY:11
+				"handlePosition":11
 			});
 
 
 		});
 
+		it("should not move beyond upper limits of track", () => {
+			
+			// 1: SETUP
+			instance.dragStart(10, 0);
+			
+			// 2: TEST
+			instance.dragMove(-10, 0);		
+			
+			// 3: ASSERT
+			expectToBeUpdatedWith({
+				"handlePosition":10
+			});
+			
+		});
+		
+		it("should not move beyond upper limits of track", () => {
+			
+			// 1: SETUP
+			instance.dragStart(10, 0);
+			
+			// 2: TEST
+			instance.dragMove(300, 0);		
+			
+			// 3: ASSERT
+			expectToBeUpdatedWith({
+				"handlePosition":110
+			});
+			
+		});
+
+		describe("update FROM CaptivateVariable", () => {
+			
+			function setVar(num) {
+				X.cpVariablesManager.setVariableValue(defaultData.variable, num);
+			}
+			
+			it("should update to minimum", () => {
+				
+				// 1: SETUP
+				// 2: TEST
+				setVar(100);
+				
+				// 3: ASSERT
+				expectToBeUpdatedWith({
+					"handlePosition":110
+				});
+				
+			});
+
+		});
+
+		describe("update TO Captivate Variable", () => {
+
+			function expectVarSetTo (num) {
+				expect(X.cpVariablesManager.setVariableValue).toHaveBeenCalledWith("myVar", num);
+			}
+
+			beforeEach(() => {
+
+				// this is here because we keep getting an error saying that
+				// this function has already been spied on
+				// hopefully this if check will help us avoid this.
+				if (!X.cpVariablesManager.setVariableValue.hasOwnProperty("and")) {
+					spyOn(X.cpVariablesManager, "setVariableValue");
+				}	
+
+			});
+
+
+			it("should update to max", () => {
+				
+				// 1: SETUP
+				instance.dragStart(10, 0);
+				
+				// 2: TEST
+				// move to upper limit
+				instance.dragMove(120, 0);
+				
+				// 3: ASSERT
+				// should equal highest value
+				expectVarSetTo(100);
+				
+			});
+
+
+			it("should update to min", () => { 
+
+				// 1: SETUP
+				instance.dragStart(10, 0);
+				
+				// 2: TEST
+				// move to lower limit
+				instance.dragMove(-100, 0);
+				
+				// 3: ASSERT
+				// should equal lowest value
+				expectVarSetTo(0);
+				
+			});
+
+			it("should update to middle", () => { 
+
+				// 1: SETUP
+				instance.dragStart(10, 0);
+				
+				// 2: TEST
+				// move to middle of track
+				instance.dragMove(60, 0);
+				
+				// 3: ASSERT
+				// should equal lowest value
+				expectVarSetTo(50);
+				
+			});
+
+
+			it("should update to negative values when minimum is negative", () => { 
+
+				// 1: SETUP
+				defaultData.min = -50;
+				defaultData.max = 50;
+				instance.dragStart(10, 0);
+				
+				// 2: TEST
+				// move to lower limit
+				instance.dragMove(-300, 0);
+				
+				// 3: ASSERT
+				// should equal lowest value
+				expectVarSetTo(-50);
+				
+				// TEST
+				instance.dragMove(60, 0);
+				// ASSERT
+				expectVarSetTo(0);
+
+			});
+
+			it("should update to whole numbers", () => { 
+
+				// 1: SETUP
+				defaultData.min = 0;
+				defaultData.max = 10;
+				instance.dragStart(10, 0);
+				
+				// 2: TEST
+				instance.dragMove(65, 0);
+				
+				// 3: ASSERT
+				// If it wasn't rounded this would be: 5.5
+				expectVarSetTo(6);
+				
+			});
+
+		});
+		
 	  });
 
     });

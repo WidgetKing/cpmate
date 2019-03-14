@@ -1,4 +1,3 @@
-
 describe ("managers/components/slider/view", () => {
 
     ///////////////////////
@@ -45,8 +44,7 @@ describe ("managers/components/slider/view", () => {
         "min": 0,
         "max": 100,
         "reverse": false,
-        "vertical": true,
-        "horizontal": false,
+		"orientation": "vertical",
         "handle": handle,
         "track": track,
         "hideTrack": false,
@@ -125,8 +123,7 @@ describe ("managers/components/slider/view", () => {
 	describe("horizontal alignment", () => {
 
 		beforeEach(function () {
-			defaultData.vertical = false;
-			defaultData.horizontal = true;
+			defaultData.orientation = "horizontal";
 		});
 
 		it("should align the handle with the track", () => {

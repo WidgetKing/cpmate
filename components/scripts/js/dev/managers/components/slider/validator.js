@@ -8,12 +8,11 @@ X.registerModule("managers/components/slider/validator", ["managers/utils"], fun
    *
    *
    * @param {Object} data - (required) A JSON object which provides the settings
-   * @param {string} data.variable - (required) AThe Captivate Variable to which the slider will be bound
+   * @param {string} data.variable - (required) The Captivate Variable to which the slider will be bound
    * @param {number} data.min - The minimum value of the Captivate Variable. Equates to the lowest point of the slider.
    * @param {number} data.max - The maximum value of the Captivate Variable. Equates to the highest point of the slider.
    * @param {boolean} data.reverse - Indicates whether the location of the slider handle and the value it sends to the Captivate variable needs to have its min/max inverted.
-   * @param {boolean} data.horizontal - Indicates direction of slider as being horizontal
-   * @param {boolean} data.vertical - Indicates direction of slider as being vertical
+   * @param {string} data.orientation - Either 'vertical' or 'horizontal'. Defines what direction the slider slides in.
    * @param {MovieClip} data.track - Instance of MovieClip on stage to act as slider track
    * @param {MovieClip} data.handle - Instance of MovieClip on stage to act as slider handle
    * @param {MovieClip} data.scrollUp - Instance of MovieClip on stage to act as up scroll arrow
@@ -64,8 +63,7 @@ X.registerModule("managers/components/slider/validator", ["managers/utils"], fun
             "min": 0,
             "max": 100,
             "reverse": false,
-            "vertical": true,
-            "horizontal": false,
+			"orientation": "vertical",
             "hideTrack": false,
             "scrollUp": null,
             "scrollDown": null,

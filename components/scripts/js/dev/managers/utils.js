@@ -226,8 +226,58 @@ X.registerModule("managers/utils", function () {
           });
 
             return result;
-        }
+        },
 
+		"ifElse": function (predicate, trueF, falseF) {
+			
+			return function () {
+				if (predicate.apply(null, arguments)) {
+					return trueF.apply(null, arguments);
+				} else {
+					return falseF.apply(null, arguments);
+				}
+			}
+
+		},	
+
+		"when": function (predicate, method) {
+			
+			return X.utils.ifElse(predicate, method, function () {
+				// Just a dummy function
+			});
+		},
+
+		
+		"unless": function (predicate, method) {
+			
+			return X.utils.ifElse(predicate, function () {
+				// Just a dummy function
+			}, method);
+		},
+
+		"getPercent": function (min, max, value) {
+			
+			var range = max - min;
+			var diffFromMin = value - min;
+			return diffFromMin / range;
+
+		},
+
+		"minMax": function (min, max, value) {
+			
+			value = Math.min(value, max);
+			value = Math.max(value, min);
+			return value;
+
+		},
+
+		"calculatePercentInRange": function (min, max, percent) {
+			
+			var range = max - min;
+			var value = range * percent;
+			return value + min;
+
+		}
     };
 
 });

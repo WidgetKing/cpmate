@@ -11,21 +11,21 @@ lib.ssMetadata = [
 
 
 
-(lib.CachedTexturedBitmap_4 = function() {
+(lib.CachedTexturedBitmap_1 = function() {
 	this.initialize(ss["cpmt_slider_test_1_atlas_"]);
 	this.gotoAndStop(0);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedTexturedBitmap_5 = function() {
+(lib.CachedTexturedBitmap_2 = function() {
 	this.initialize(ss["cpmt_slider_test_1_atlas_"]);
 	this.gotoAndStop(1);
 }).prototype = p = new cjs.Sprite();
 
 
 
-(lib.CachedTexturedBitmap_6 = function() {
+(lib.CachedTexturedBitmap_3 = function() {
 	this.initialize(ss["cpmt_slider_test_1_atlas_"]);
 	this.gotoAndStop(2);
 }).prototype = p = new cjs.Sprite();
@@ -52,7 +52,7 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.instance = new lib.CachedTexturedBitmap_6();
+	this.instance = new lib.CachedTexturedBitmap_3();
 	this.instance.parent = this;
 	this.instance.setTransform(-5,-50,0.5,0.5);
 
@@ -66,7 +66,7 @@ p.nominalBounds = new cjs.Rectangle(-5,-50,10,100);
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.instance = new lib.CachedTexturedBitmap_5();
+	this.instance = new lib.CachedTexturedBitmap_2();
 	this.instance.parent = this;
 	this.instance.setTransform(-5,-5,0.5,0.5);
 
@@ -80,7 +80,7 @@ p.nominalBounds = new cjs.Rectangle(-5,-5,10,10);
 	this.initialize(mode,startPosition,loop,{});
 
 	// Layer_1
-	this.instance = new lib.CachedTexturedBitmap_4();
+	this.instance = new lib.CachedTexturedBitmap_1();
 	this.instance.parent = this;
 	this.instance.setTransform(-25,-5,0.5,0.5);
 
@@ -184,8 +184,7 @@ p.nominalBounds = new cjs.Rectangle(-25,-5,50,10);
 		  "min": 0,
 		  "max": 100,
 		  "reverse": false,
-		  "vertical": true,
-		  "horizontal": false,
+		  "orientation": "vertical",
 		  "handle": this.handle1,
 		  "track": this.track1,
 		  "hideTrack": false,
@@ -212,7 +211,7 @@ p.nominalBounds = new cjs.Rectangle(-25,-5,50,10);
 		  "variable": "my_var",
 		  "handle": this.handle3,
 		  "track": this.track3,
-		  "horizontal": true,
+		  "orientation": "horizontal",
 		  "vertical": false
 		});
 	}
