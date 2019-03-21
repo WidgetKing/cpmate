@@ -1,4 +1,3 @@
-
 X.registerModule("managers/components/slider/validator", ["managers/utils"], function () {
 
   /**
@@ -25,7 +24,7 @@ X.registerModule("managers/components/slider/validator", ["managers/utils"], fun
    * @param {boolean} data.scroll - Indicates whether should react to mouse wheel scroll.
    * @param {boolean} data.scrollWhenOver - Indicates whether should react to mouse wheel scroll when mouse is located on top of handle and track.
    * @param {boolean} data.scrollStep - Indicates how much the variable should be changed by for each step of the scroll wheel.
-   * @param {Object} data.evalation - Settings for whether slider evaluates to success or failure (TBA)
+   * @param {Object} data.evaluate - Settings for slider evaluation (See the evaluate module for more details)
    * @return {null}
    */
   X.slider = function (data) {
@@ -73,8 +72,7 @@ X.registerModule("managers/components/slider/validator", ["managers/utils"], fun
             "handCursor": true,
             "scrollWhenOver": false,
             "scroll": false,
-            "scrollStep": 10,
-            "evaluation": {}
+            "scrollStep": 10
       }, data);
 
     }
@@ -83,10 +81,11 @@ X.registerModule("managers/components/slider/validator", ["managers/utils"], fun
 
       var model = X.slider.model(data);
       var view = X.slider.view(data);
-      X.slider.controller(view, model);
+      X.slider.controller(view, model, data);
       model.updateTo(view.update);
 
     }
+	
     // Return to entry point
     init();
 

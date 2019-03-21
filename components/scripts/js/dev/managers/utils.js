@@ -188,6 +188,33 @@ X.registerModule("managers/utils", function () {
             });
         },
 
+		"forEachUntil": function (predicate, loop, list) {
+
+			for (var i = 0; i < list.length; i += 1) {
+
+				var result = loop(list[i]);
+
+				if (predicate(result)) {
+					return result;
+				}
+
+			}
+
+		},
+
+		"forEachUntilResult": function (loop, list) {
+
+			function predicate (value) {
+
+				return value !== undefined;
+
+			}
+			
+
+			return X.utils.forEachUntil(predicate, loop, list);
+
+		},
+
         "defaultTo": function (def, obj) {
 
             X.utils.forEach(def, function (key, value) {
@@ -289,6 +316,26 @@ X.registerModule("managers/utils", function () {
 			);
 
 			return initialValue;
+
+		},
+
+		"both": function (predicateA, predicateB) {
+
+			return function (value) {
+
+				return predicateA(value) && predicateB(value);
+
+			}
+
+		},
+
+		"either": function (predicateA, predicateB) {
+
+			return function (value) {
+
+				return predicateA(value) || predicateB(value);
+
+			}
 
 		}
     };

@@ -31,6 +31,11 @@ describe("managers/prefix/displayObjectNameAndVariable", function () {
 	
 	beforeEach(function () {
 	
+		// We have this line here just in case the last test suite
+		// forgot to delete window.X and that will effect us
+		// instantiating the CallbackObject below.
+		delete window.X;
+
 		var fakeVariables = new unitTests.classes.CallbackObject();
 
 		hasCpExtra = true;

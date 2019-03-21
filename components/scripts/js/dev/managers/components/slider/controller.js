@@ -1,7 +1,11 @@
 X.registerModule("managers/components/slider/controller", ["managers/utils", "managers/components/slider/validator"], function () {
 
-  X.slider.controller = function (view, model) {
+  X.slider.controller = function (view, model, data) {
 
+	////////////////////// 
+	////// Variable
+	var evaluateManager;
+	
 	////////////////////// 
 	////// Assistant methods
 	function gtx () {
@@ -19,6 +23,7 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 
 	function init() {
 		addHandlers();
+		addEvaluate();
 	}
 
 	function addHandlers() {
@@ -32,10 +37,12 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 			// MOUSE MOVE HANDLER
 			function moveHandler() {
 				model.dragMove(gtx(), gty());
+				evaluateManager.dragMove();
 			}
 
 			function upHandler() {
 				model.dragEnd();
+				evaluateManager.dragEnd();
 				document.removeEventListener(X.events.getSafeEvent('mousemove'), moveHandler);
 				document.removeEventListener(X.events.getSafeEvent('mouseup'), upHandler);
 			}
@@ -46,6 +53,24 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 		});
 	}
 
+	function addEvaluate () {
+
+		if (data.evaluate) {
+		
+			evaluateManager = X.slider.evaluate(data.evaluate, data.variable);
+		
+		} else {
+		
+			// Create a dummy so we don't have to define a heap of if statements
+			evaluateManager = {
+				"dragMove": function () {},
+				"dragEnd": function () {}
+			}
+		
+		}
+
+	}
+	
 	init();
 
     return {

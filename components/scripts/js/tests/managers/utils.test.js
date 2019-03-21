@@ -597,4 +597,99 @@ describe("A test suite for managers/utils", function () {
 		});			
 		
 	});
+	
+	describe("X.utils.forEachUntil", function () {
+		
+		it("should keep looping through a list until the looping method returns something that matches the predicate", function () {
+
+			// 1: SETUP
+			var list = ["F", "B", "I"];
+
+			function predicate (value) {
+
+				return value !== undefined;
+
+			}
+
+			function loop(value) {
+				if (value === "B") return value;
+			}
+			
+			// 2: TEST
+			var result = X.utils.forEachUntil(predicate, loop, list);
+
+			// 3: ASSERT
+			expect(result).toBe("B");
+
+		});
+		
+	});
+
+	describe("X.utils.forEachUntilResult", function () {
+		
+		it("should keep looping through a list until the looping method returns something that matches the predicate", function () {
+
+			// 1: SETUP
+			var list = ["F", "B", "I"];
+
+			function loop(value) {
+				if (value === "B") return value;
+			}
+			
+			// 2: TEST
+			var result = X.utils.forEachUntilResult(loop, list);
+
+			// 3: ASSERT
+			expect(result).toBe("B");
+
+		});
+		
+	});
+
+	describe("X.utils.both", function () {
+		
+		it("should return true if both the predicates return true", function () {
+
+			// 1: SETUP
+			var a = () => true;
+			var b = value => value === "foobar";
+			
+			var method = X.utils.both(a, b);
+
+			// 2: TEST
+			var result1 = method("foobar");
+			var result2 = method("something else");
+
+			// 3: ASSERT
+			expect(result1).toBe(true);
+			expect(result2).toBe(false);
+
+		});
+		
+	});
+
+	describe("X.utils.either", function () {
+		
+		it("should return true if either the predicates return true", function () {
+
+			// 1: SETUP
+			var a = value => typeof value === "string";
+			var b = value => value === "foobar";
+			
+			var method = X.utils.either(a, b);
+
+			// 2: TEST
+			var result1 = method("foobar");
+			var result2 = method("something else");
+			var result3 = method(10);
+			
+
+			// 3: ASSERT
+			expect(result1).toBe(true);
+			expect(result2).toBe(true);
+			expect(result3).toBe(false);
+
+		});
+		
+	});
 });

@@ -30,6 +30,9 @@ X.registerModule("managers/debugging/errors", function () {
         "CO002": function (name) {
             return "The variable defined for the slider/dial interaction '" + name + "' does not exist'";
         },
+		"CO003": function (propertyName) {
+			return "The evaluate settings for a slider/dial interaction did not have the required '" + propertyName + "' property defined.";
+		},
 
 		////////////////////////////////////////
 		////////// PREFIX ERRORS

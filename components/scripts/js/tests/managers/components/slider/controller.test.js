@@ -17,7 +17,6 @@ describe ("managers/components/slider/controller", () => {
 
     ///////////////////////
     ///// Variables
-    var defaultData;
     var track;
     var handle;
 	var trackEvents = {};
@@ -42,7 +41,21 @@ describe ("managers/components/slider/controller", () => {
 		"dragEnd": jasmine.createSpy("model.dragEnd")
 	};
 
+	var mockData = {
+		"variable":"myVar",	
+		"evaluate":{
+			"on":"continually",
+			"button": {
+			
+			}
+		}
+	};
 
+
+	var mockEvaluate = {
+		"dragEnd": jasmine.createSpy("mockEvaluate.dragEnd()"),
+		"dragMove": jasmine.createSpy("mockEvaluate.dragMove()")
+	};
 
 	var mockMobileEvents = {
 
@@ -64,28 +77,15 @@ describe ("managers/components/slider/controller", () => {
 			delete documentEvents[event];
 		});
 
-      defaultData = {
-        "variable": "myVar",
-        "min": 0,
-        "max": 100,
-        "reverse": false,
-        "vertical": true,
-        "horizontal": false,
-        "handle": handle,
-        "track": track,
-        "hideTrack": false,
-        "scrollUp": null,
-        "scrollDown": null,
-        "attachedItems": null,
-        "trackClicking": false,
-        "throwingFriction": 0,
-        "handCursor": true,
-        "scrollWhenOver": false,
-        "scroll": false,
-        "scrollStep": 10,
-        "evaluation": {}
-      };
-
+		 mockData = {
+			"variable":"myVar",	
+			"evaluate":{
+				"on":"continually",
+				"button": {
+				
+				}
+			}
+		};
 
       window.X = {
 	  		"animate":{
@@ -103,7 +103,9 @@ describe ("managers/components/slider/controller", () => {
 				}
 			},
 		  "slider":{
-
+				"evaluate": jasmine.createSpy("X.slider.evaluate").and.callFake(function () {
+					return mockEvaluate;
+				})
 		  }
       };
 
@@ -128,12 +130,44 @@ describe ("managers/components/slider/controller", () => {
 
     });
 
+	describe("evaluate interaction", function () {
+		
+		it("should create an evaluate object if the 'evaluate' property is defined", function () {
+
+			// 1: SETUP
+			var instance = X.slider.controller(mockView, mockModel, mockData);
+
+			// 2: TEST
+			
+
+			// 3: ASSERT
+			expect(X.slider.evaluate).toHaveBeenCalledWith(mockData.evaluate, mockData.variable);
+
+		});
+
+		it("should NOT create an evaluate object if the 'evaluate' property is not defined", function () {
+
+			// 1: SETUP
+			delete mockData.evaluate;
+			var instance = X.slider.controller(mockView, mockModel, mockData);
+			
+
+			// 2: TEST
+			
+
+			// 3: ASSERT
+			expect(X.slider.evaluate).not.toHaveBeenCalledWith(mockData.evaluate, mockData.variable);
+
+		});
+		
+	});
+
 	describe("X.slider.controller()", () => {
 
 		var instance;
 
 		beforeEach(() => {
-			instance = X.slider.controller(mockView, mockModel);
+			instance = X.slider.controller(mockView, mockModel, mockData);
 		});
 
 		it("should add handlers to event listeners provied by view", () => {
@@ -174,6 +208,23 @@ describe ("managers/components/slider/controller", () => {
 				// 2: TEST
 				documentEvents.mousemove();
 				expect(mockModel.dragMove).toHaveBeenCalledWith(10, 20);
+
+			});
+
+			it("should inform the evaluate manager when a drag ends", function () {
+
+
+				// 1: SETUP
+				handleEvents.mousedown();
+				expect(documentEvents.mousemove).toBeDefined();
+
+				X.animate.stage.mouseX = 10;
+				X.animate.stage.mouseY = 20;
+
+				// 2: TEST
+				documentEvents.mousemove();
+				expect(mockEvaluate.dragMove).toHaveBeenCalled();
+
 			});
 
 			it("should inform the model when the drag ends", () => {
@@ -187,6 +238,20 @@ describe ("managers/components/slider/controller", () => {
 
 				expect(mockModel.dragEnd).toHaveBeenCalled();
 				expect(documentEvents.mousemove).not.toBeDefined();
+
+			});
+
+			it("should inform the evaluate manager when the drag ends", function () {
+
+
+				// 1: SETUP
+				handleEvents.mousedown();
+				documentEvents.mousemove()
+
+				// 2: TEST
+				documentEvents.mouseup();
+
+				expect(mockEvaluate.dragEnd).toHaveBeenCalled();
 
 			});
 		});

@@ -98,8 +98,8 @@ describe ("managers/components/slider/validator", () => {
           "handCursor": true,
           "scrollWhenOver": false,
           "scroll": false,
-          "scrollStep": 10,
-          "evaluation": {}
+          "scrollStep": 10
+          // "evaluate": {} // We don't include the evaluate object by default
         });
       });
 
@@ -138,7 +138,8 @@ describe ("managers/components/slider/validator", () => {
       expect(X.slider.view).toHaveBeenCalledWith(jasmine.any(Object)); // data
       expect(X.slider.controller).toHaveBeenCalledWith(
         view,
-        model
+        model,
+		jasmine.any(Object)
       );
 
       expect(model.updateTo).toHaveBeenCalledWith(view.update);
