@@ -277,6 +277,19 @@ X.registerModule("managers/utils", function () {
 			var value = range * percent;
 			return value + min;
 
+		},
+
+		"reduce": function (method, initialValue, list) {
+
+			X.utils.forEach(list, function(value) {
+
+					initialValue = method(value, initialValue);
+
+				}
+			);
+
+			return initialValue;
+
 		}
     };
 

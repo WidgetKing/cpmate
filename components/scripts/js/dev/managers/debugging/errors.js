@@ -29,7 +29,14 @@ X.registerModule("managers/debugging/errors", function () {
         },
         "CO002": function (name) {
             return "The variable defined for the slider/dial interaction '" + name + "' does not exist'";
-        }
+        },
+
+		////////////////////////////////////////
+		////////// PREFIX ERRORS
+		////////////////////////////////////////
+		"PR001": function (clipName) {
+			return "Could not find a matching variable for movie clip named: '" + clipName + "'";
+		}
     };
 
 });

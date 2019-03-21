@@ -12,7 +12,18 @@ X.registerModule("classes/CallbackObject", ["managers/classes"], function () {
 
     X.classes.register("CallbackObject", function () {
 
-        var callback = new X.classes.Callback();
+		var CallbackClass;
+
+		// Yes, it's not good that we're making a reference to the unit tests
+		// in the main code but... does this save a lot of time in bug hunting
+		// do I tell you.
+		if (window.X) {
+			CallbackClass = X.classes.Callback;
+		} else {
+			CallbackClass = unitTests.classes.Callback;	
+		}
+
+        var callback = new CallbackClass();
         var obj = {};
 
         this.callback = callback.addCallback;

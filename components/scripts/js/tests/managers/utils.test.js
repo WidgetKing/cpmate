@@ -572,4 +572,29 @@ describe("A test suite for managers/utils", function () {
 			
 		});
 	});
+
+	describe("X.utils.reduce()", function () {
+		
+		it("should take a method and send the accumulated value and the current value into the method", function () {
+
+			// 1: SETUP
+			var list = ["a", "b", "c"];
+			var intialValue = "z";
+			var method = function (value, acc) {
+
+				return acc + "_" + value;
+
+			}
+			
+
+			// 2: TEST
+			var result = X.utils.reduce(method, intialValue, list);
+
+			// 3: ASSERT
+			expect(result).toBe("z_a_b_c");
+
+
+		});			
+		
+	});
 });
