@@ -5,7 +5,7 @@
  * Time: 12:20 PM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for managers/utils", function () {
+fdescribe("A test suite for managers/utils", function () {
 
     "use strict";
 
@@ -460,6 +460,21 @@ describe("A test suite for managers/utils", function () {
 			expect(predicateSpy).toHaveBeenCalledWith("foobar");
 			
 		});
+
+		it("should return identity when incorrect", function () {
+
+			// 1: SETUP
+			var predicate = () => false;
+			var trueSpy = jasmine.createSpy('true spy');
+
+			// 2: TEST
+			var result = X.utils.when(predicate, trueSpy)("anything");
+
+			// 3: ASSERT
+			expect(trueSpy).not.toHaveBeenCalled();
+			expect(result).toBe("anything");
+
+		});
 		
 
 	});
@@ -623,6 +638,33 @@ describe("A test suite for managers/utils", function () {
 
 		});
 		
+		it("should work with objects", function () {
+
+			// 1: SETUP
+			var list = {
+				"a":"f",
+				"b":"b",
+				"c":"i"
+			}
+		
+			function predicate (value) {
+
+				return value !== undefined;
+
+			}
+
+			function loop(value) {
+				if (value === "b") return value;
+			}
+			
+			// 2: TEST
+			var result = X.utils.forEachUntil(predicate, loop, list);
+
+			// 3: ASSERT
+			expect(result).toBe("b");
+
+
+		});
 	});
 
 	describe("X.utils.forEachUntilResult", function () {
@@ -641,6 +683,30 @@ describe("A test suite for managers/utils", function () {
 
 			// 3: ASSERT
 			expect(result).toBe("B");
+
+		});
+		
+	});
+
+	describe("X.utils.within()", function () {
+		
+		it("should return true if a number is within two ranges", function () {
+
+			// 2: TEST
+			var result = X.utils.within(1, 10, 5);
+
+			// 3: ASSERT
+			expect(result).toBe(true);
+
+		});
+
+		it("should return false if number outside two ranges", function () {
+
+			// 2: TEST
+			var result = X.utils.within(1, 10, 11);
+
+			// 3: ASSERT
+			expect(result).toBe(false);
 
 		});
 		
@@ -689,6 +755,421 @@ describe("A test suite for managers/utils", function () {
 			expect(result2).toBe(true);
 			expect(result3).toBe(false);
 
+		});
+		
+	});
+
+	describe("X.utils.curry()", function () {
+
+		function getCurriedAdd () {
+
+			function add (a, b) {
+
+				return a + b;
+
+			}
+
+			return X.utils.curry(2, add);
+
+		}
+
+		
+		it("should call the function directly if all the parameters are passed in on first call", function () {
+
+			// 1: SETUP
+			var curriedAdd = getCurriedAdd();
+
+			// 2: TEST
+			var result = curriedAdd(1, 2);
+
+			// 3: ASSERT
+			expect(result).toBe(3);
+
+		});
+
+		it("should allow us to send in some parameters first and the rest later", function () {
+
+			// 1: SETUP
+			var curriedAdd = getCurriedAdd();
+
+			// 2: TEST
+			var inc = curriedAdd(1);
+
+			// 3: ASSERT
+			expect(inc(10)).toBe(11);
+
+		});
+		
+		it("should allow us to add parameters one at a time", function () {
+
+			// 1: SETUP
+			function addThree (a, b, c) {
+
+				return a + b + c;
+
+			}
+
+			var curriedAddThree = X.utils.curry(3, addThree);
+
+			// 2: TEST
+			var add2 = curriedAddThree(1);
+			var add1 = add2(2);
+			var result1 = add1(3);
+
+			add1 = curriedAddThree(1, 2);
+			var result2 = add1(3);
+
+			var result3 = curriedAddThree(1, 2, 3);
+
+			// 3: ASSERT
+			expect(result1).toBe(6);
+			expect(result2).toBe(6);
+			expect(result3).toBe(6);
+
+		});
+
+		it("should allow us to use X.utils.__ to specify a blank", function () {
+
+			// 1: SETUP
+			function subtract (a, b) {
+
+				return a - b;
+
+			}
+
+			var curriedSubtract = X.utils.curry(2, subtract);
+
+			// 2: TEST
+			var dec = curriedSubtract(X.utils.__, 1);
+
+			var result = dec(10);
+
+			// 3: ASSERT
+			expect(result).toBe(9);
+
+		});
+	});
+
+	describe("X.utils.map()", function () {
+		
+		it("should opperate a method over each element of an array, saving the returned result", function () {
+
+			// 1: SETUP
+			var inc = value => value + 1;	
+
+			var data = [1, 2, 3];
+
+			// 2: TEST
+			var result = X.utils.map(inc, data);
+
+			// 3: ASSERT
+			expect(result).toEqual([2, 3, 4]);
+			expect(result).not.toBe(data);
+
+		});
+		
+		it("should also work on objects", function () {
+
+			// 1: SETUP
+			var inc = value => value + 1;	
+
+			var data = {
+				"a":1,
+				"b":2,
+				"c":3
+			}
+
+			// 2: TEST
+			var result = X.utils.map(inc, data);
+			
+			// 3: ASSERT
+			expect(result).toEqual(jasmine.objectContaining({
+				"a":2,
+				"b":3,
+				"c":4
+			}));
+
+			expect(result).not.toBe(data);
+		});
+	});
+
+	describe("X.utils.pipe()", function () {
+		
+		it("should call all methods in a row, sending the output of one as input to the next", function () {
+
+			// 1: SETUP
+			var inc = value => value + 1;	
+
+
+			// 2: TEST
+			var add3 = X.utils.pipe(
+				inc,
+				inc,
+				inc
+			);
+
+			// 3: ASSERT
+			expect(add3(3)).toBe(6);
+
+		});
+		
+	});
+
+	describe("X.utils.complement()", function () {
+		
+		it("should return true when a function returns false", function () {
+
+			// 1: SETUP
+			var returnTrue = () => true;
+
+			// 2: TEST
+			var returnFalse = X.utils.complement(returnTrue);		
+
+			// 3: ASSERT
+			expect(returnFalse()).toBe(false);
+
+		});
+
+		it("should work on curried functions", function () {
+
+			// 1: SETUP
+			var isGreaterThan = (threshold, num) => {
+				return num > threshold;
+			}
+			var isGreaterThanCurry = X.utils.curry(2, isGreaterThan);
+
+			// 2: TEST
+			var isLesserThan = X.utils.complement(isGreaterThanCurry);
+			var isLesserThan10 = isLesserThan(10);
+
+			// 3: ASSERT
+			expect(isLesserThan10(5)).toBe(true);
+
+		});
+		
+	});
+
+	describe("X.utils.always()", function () {
+		
+		it("should return the same value no matter what is passed to it", function () {
+
+			// 1: SETUP
+			var always1 = X.utils.always(1);
+
+			// 2: TEST
+			var result1 = always1(null);
+			var result2 = always1();
+
+			// 3: ASSERT
+			expect(result1).toBe(1);
+			expect(result2).toBe(1);
+
+		});
+		
+	});
+
+	describe("X.utils.any()", function () {
+		
+		it("should return true if even just one of the items in an array matches the predicate", function () {
+
+			// 1: SETUP
+			var data = [1, 2, 3];
+			var predicate = (num) => num > 2;
+
+			// 2: TEST
+			var result = X.utils.any(predicate, data);
+
+			// 3: ASSERT
+			expect(result).toBe(true);		
+
+		});
+
+		it("should return false if none match", function () {
+
+
+			// 1: SETUP
+			var data = [1, 2, 3];
+			var predicate = (num) => num > 3;
+
+			// 2: TEST
+			var result = X.utils.any(predicate, data);
+
+			// 3: ASSERT
+			expect(result).toBe(false);	
+
+		});
+		
+	});
+
+	describe("X.utils.isNil()", function () {
+		
+		function  test (value, result) {
+
+			expect(X.utils.isNil(value)).toBe(result);
+
+		}
+		
+		it("should return true for null, undefined, '', and NaN", function () {
+
+			test(null, true);
+			test(undefined, true);
+			test("", true);
+			test(NaN, true);
+
+		});
+
+		it("should not return true to empty objects and arrays", function () {
+
+			test({}, false);
+			test([], false);
+
+		});
+	});
+
+	describe("X.utils.isRange()", function () {
+		
+		it("should return true if is a valid range", function () {
+
+			// 1: SETUP
+			var rangeValid = "1 - 100";
+			var rangeInvalid = "-1 + 500";
+
+			// 2: TEST
+			var validResult = X.utils.isRange(rangeValid);		
+			var invalidResult = X.utils.isRange(rangeInvalid);
+
+			// 3: ASSERT
+			expect(validResult).toBe(true);
+			expect(invalidResult).toBe(false);
+
+		});
+		
+	});
+
+	describe("X.utils.getRangeObject()", function () {
+		
+		it("should return an object with the range details", function () {
+
+			// 1: SETUP
+			var range = "1 - 10";
+
+			// 2: TEST
+			var result = X.utils.getRangeObject(range);
+
+			// 3: ASSERT
+			expect(result).toEqual(jasmine.objectContaining({
+				"start": 1,
+				"end":10
+			}));
+
+		});
+
+		it("should return null for invalid ranges", function () {
+
+			// 1: SETUP
+			var rangeInvalid = "-1 + 500";
+
+			// 2: TEST
+			var result = X.utils.getRangeObject(rangeInvalid);
+			
+			// 3: ASSERT
+			expect(result).toEqual(null);
+
+		});
+		
+		it("should interpret minus numbers", function () {
+
+			// 1: SETUP
+			var range1 = "-10 - 1";
+			var range2 = "10 - -10";
+			var range3 = "-100 - -10";
+
+			// 2: TEST
+			var result1 = X.utils.getRangeObject(range1);
+			var result2 = X.utils.getRangeObject(range2);
+			var result3 = X.utils.getRangeObject(range3);
+
+			// 3: ASSERT
+			expect(result1).toEqual(jasmine.objectContaining({
+				"start": -10,
+				"end":1
+			}));
+			
+			expect(result2).toEqual(jasmine.objectContaining({
+				"start": 10,
+				"end":-10
+			}));
+
+			expect(result3).toEqual(jasmine.objectContaining({
+				"start": -100,
+				"end":-10
+			}));
+		});
+
+
+	});
+
+	describe("X.utils.split()", function () {
+		
+		it("should split an array", function () {
+
+			// 1: SETUP
+			var string = "1-2-3";
+
+			// 2: TEST
+			var result = X.utils.split("-", string);
+
+			// 3: ASSERT
+			expect(result).toEqual(["1", "2", "3"])
+
+		});
+
+		it("should curry", function () {
+
+			// 1: SETUP
+			var string1 = "a/b/c";
+			var string2 = "x/y/z";
+
+			// 2: TEST
+			var splitOnSlash = X.utils.split("/");
+			var result1 = splitOnSlash(string1);
+			var result2 = splitOnSlash(string2);
+			
+
+			// 3: ASSERT
+			expect(result1).toEqual(["a", "b", "c"]);
+			expect(result2).toEqual(["x", "y", "z"]);
+
+		});
+		
+	});
+
+	describe("X.utils.removeWhiteSpace()", function () {
+		
+		it("should remove spaces and tabs from a string", function () {
+
+			// 1: SETUP
+			var string = "a b	c   ";
+
+			// 2: TEST
+			var result = X.utils.removeWhiteSpace(string);
+
+			// 3: ASSERT
+			expect(result).toBe("abc");
+			
+
+		});
+		
+	});
+
+	describe("X.utils.isType()", function () {
+		
+		it("should return true if matches type", function () {
+			expect(X.utils.isType("number", 10)).toBe(true);
+		});
+
+		it("should return false if does not match type", function () {
+			expect(X.utils.isType("string", 10)).toBe(false);
 		});
 		
 	});

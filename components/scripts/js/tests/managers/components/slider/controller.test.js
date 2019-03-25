@@ -79,6 +79,8 @@ describe ("managers/components/slider/controller", () => {
 
 		 mockData = {
 			"variable":"myVar",	
+			"track": track,
+			"handle": handle,
 			"evaluate":{
 				"on":"continually",
 				"button": {
@@ -207,23 +209,58 @@ describe ("managers/components/slider/controller", () => {
 
 				// 2: TEST
 				documentEvents.mousemove();
+
+				// 3: ASSERT
 				expect(mockModel.dragMove).toHaveBeenCalledWith(10, 20);
 
 			});
 
-			it("should inform the evaluate manager when a drag ends", function () {
+			it("should inform the evaluate manager when mouse moves", function () {
 
 
 				// 1: SETUP
 				handleEvents.mousedown();
 				expect(documentEvents.mousemove).toBeDefined();
 
-				X.animate.stage.mouseX = 10;
-				X.animate.stage.mouseY = 20;
+				// 2: TEST
+				mockData.handle.x = 10;
+				mockData.handle.y = 10;
+
+				documentEvents.mousemove();
+
+				// 3: ASSERT
+				expect(mockEvaluate.dragMove).toHaveBeenCalled();
+
+				// 4: Keep testing
+				mockEvaluate.dragMove.calls.reset();
+
+				mockData.handle.x = 11;
+				mockData.handle.y = 10;
+
+				documentEvents.mousemove();
+				// 5: ASSERT
+				expect(mockEvaluate.dragMove).toHaveBeenCalled();
+
+			});
+
+			it("should not inform the evaluate manager when the mouse moves but the slider doesn't", function () {
+
+				// 1: SETUP
+				handleEvents.mousedown();
+				expect(documentEvents.mousemove).toBeDefined();
+
+				mockData.handle.x = 10;
+				mockData.handle.y = 10;
 
 				// 2: TEST
 				documentEvents.mousemove();
-				expect(mockEvaluate.dragMove).toHaveBeenCalled();
+
+				mockEvaluate.dragMove.calls.reset();
+
+				documentEvents.mousemove();
+
+				// 3: ASSERT
+				expect(mockEvaluate.dragMove).not.toHaveBeenCalled();
 
 			});
 
@@ -236,6 +273,7 @@ describe ("managers/components/slider/controller", () => {
 				// 2: TEST
 				documentEvents.mouseup();
 
+				// 3: ASSERT
 				expect(mockModel.dragEnd).toHaveBeenCalled();
 				expect(documentEvents.mousemove).not.toBeDefined();
 
@@ -251,9 +289,11 @@ describe ("managers/components/slider/controller", () => {
 				// 2: TEST
 				documentEvents.mouseup();
 
+				// 3: ASSERT
 				expect(mockEvaluate.dragEnd).toHaveBeenCalled();
 
 			});
+
 		});
 
 	});

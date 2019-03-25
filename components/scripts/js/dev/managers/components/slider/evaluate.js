@@ -100,6 +100,7 @@ X.registerModule("managers/components/slider/evaluate", ["managers/mouseEvents",
 		
 		var init = X.utils.when(isValid, function () {
 
+			breakUpCommaDelimitedEvaluationMethods();
 			associateCriteriaWithEvaluationMethod();
 			listenForButton();
 
@@ -125,6 +126,92 @@ X.registerModule("managers/components/slider/evaluate", ["managers/mouseEvents",
 			}
 			
 			return true;
+
+		}
+
+		////////////////////////////////////////
+		////// break up comma delimited evaluation methods
+
+		// This is for those cases where someone specifies a comma
+		// delimited list of 'if' conditions like:
+		// "criteria"[
+		// 	{
+		// 		"if": "1, 20, 45",
+		// 		"then": "HAN_something"
+		// 	}
+		// 	]
+		//
+		// 	Under those circumstances we will break up the 'if' list
+		// 	and create a criteria object for each of the specified 
+		// 	conditions.
+		//
+		// 	So the end result will look like:
+		// "criteria"[
+		// 	{
+		// 		"if": "1",
+		// 		"then": "HAN_something"
+		// 	},
+		// 	{
+		// 		"if": "20",
+		// 		"then": "HAN_something"
+		// 	},
+		// 	{
+		// 		"if": "45",
+		// 		"then": "HAN_something"
+		// 	}
+		// 	]
+
+		function breakUpCommaDelimitedEvaluationMethods () {
+
+			var finalCriteriaList = [];
+
+			X.utils.forEach(data.criteria, function (criteriaData) {
+					
+				var conditionList = getConditionsList(criteriaData.if);
+
+				// If there is no list of conditions
+				if (!conditionList.length || conditionList.length === 1) {
+				
+					finalCriteriaList.push(criteriaData);
+				
+				} else {
+					// If there is a list of conditions
+					var newCriteria = makeCriteriaForEachCondition(conditionList, criteriaData.then);
+
+					finalCriteriaList = finalCriteriaList.concat(newCriteria);
+
+				}
+
+			}); 
+
+		
+			data.criteria = finalCriteriaList;
+
+		}
+
+		var getConditionsList = X.utils.when(
+
+				// Is this a string?
+				X.utils.isType("string"),
+
+				// It's a string
+				X.utils.pipe(
+					X.utils.removeWhiteSpace,
+					X.utils.split(",")
+				)
+			
+			);
+
+		function makeCriteriaForEachCondition (list, then) {
+
+			return X.utils.map(function (condition) {
+
+				return {
+					"if": condition,
+					"then":then
+				}
+
+			}, list);
 
 		}
 

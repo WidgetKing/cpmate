@@ -5,6 +5,8 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 	////////////////////// 
 	////// Variable
 	var evaluateManager;
+	var lastHandleX = data.handle.x;
+	var lastHandleY = data.handle.y;
 	
 	////////////////////// 
 	////// Assistant methods
@@ -16,6 +18,20 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 		return X.animate.stage.mouseY;
 	}
 
+	function hasHandleMoved () {
+
+		if (lastHandleX === data.handle.x &&
+		    lastHandleY === data.handle.y) {
+			
+			return false;
+
+		}
+
+		lastHandleX = data.handle.x;
+		lastHandleY = data.handle.y;
+
+		return true;
+	}
 
 
 	/////////////////////
@@ -37,7 +53,9 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 			// MOUSE MOVE HANDLER
 			function moveHandler() {
 				model.dragMove(gtx(), gty());
-				evaluateManager.dragMove();
+				if (hasHandleMoved()) {
+					evaluateManager.dragMove();
+				}
 			}
 
 			function upHandler() {

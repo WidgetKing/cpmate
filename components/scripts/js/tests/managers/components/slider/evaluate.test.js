@@ -29,17 +29,17 @@ describe("managers/components/slider/evaluate", function () {
 				}
 			},
 			"slider": {
-				"evaluateMethods":[
-					{
+				"evaluateMethods":{ 
+					"default": {
 						"isValid": function () {
 
 							return true;
 
 						},
-						
+
 						"method": evaluateMethodSpy
 					}
-				]
+				}
 			}
 		};
 
@@ -105,12 +105,12 @@ describe("managers/components/slider/evaluate", function () {
 				
 				mockData.criteria = data.criteria;
 
-				X.slider.evaluateMethods = [
-					{
+				X.slider.evaluateMethods = {
+					"default":{
 						"isValid": data.isValid,
 						"method": data.method
 					}
-				];
+				};
 
 				var instance = getInstance();
 
@@ -144,6 +144,32 @@ describe("managers/components/slider/evaluate", function () {
 				expect(methodSpy).toHaveBeenCalled();
 
 				expect(thenSpy).toHaveBeenCalled();
+			});
+
+			it("should separate comma delimited criteria", function () {
+
+				// 1: SETUP
+				var thenSpy = jasmine.createSpy("criteria.then");
+				var methodSpy = jasmine.createSpy("methodSpy").and.returnValue(true);
+				
+				// 2: TEST
+				testCriteria({
+					"criteria":[{
+						"if":"10, 20, 30",
+						"then":thenSpy
+					}],
+					"isValid": function (value) {
+
+						return true;
+
+					},
+					"method": methodSpy,
+					"variableValue": "not required for test"
+				});
+
+				// 3: ASSERT
+				expect(methodSpy.calls.count()).toBe(3);
+
 			});
 
 			it("should call the 'then' property as a Captivte action name", function () {

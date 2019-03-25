@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for dev\managers\cpVariablesManager.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">dev/managers/</a> cpVariablesManager.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>1/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/4</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>1/10</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">X.registerModule("managers/cpVariablesManager", ["managers/utils", "managers/hook", "elements/captivate", "managers/cpExtraActions"], <span class="fstat-no" title="function not covered" >function () {</span>
+&nbsp;
+  /////////////////////////////
+  ////////// Variables
+<span class="cstat-no" title="statement not covered" >  var hasCpExtra = X.captivate.hasCpExtra();</span>
+<span class="cstat-no" title="statement not covered" >  var fakeVariables = new X.classes.CallbackObject();</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  X.cpVariablesManager = {</span>
+&nbsp;
+    "listenForVariableChange": (hasCpExtra) ? X.captivate.extra.variableManager.listenForVariableChange
+                                              : fakeVariables.callback,
+&nbsp;
+    "setVariableValue": (hasCpExtra) ? X.captivate.extra.variableManager.setVariableValue
+                                       : fakeVariables.setProp,
+&nbsp;
+    "getVariableValue": (hasCpExtra) ? X.captivate.extra.variableManager.getVariableValue
+                                       : fakeVariables.getProp,
+&nbsp;
+    "hasVariable": (hasCpExtra) ? X.captivate.extra.variableManager.getVariableValue
+                                  : fakeVariables.hasProp,
+&nbsp;
+	"stopListeningForVariableChange": (hasCpExtra) ? X.captivate.extra.variableManager.stopListeningForVariableChange
+									               : fakeVariables.removeCallback
+  }
+&nbsp;
+	/////////////////////////////////////////
+	///////////////// UNLOAD
+	//
+	//
+	// We want to make sure we unload all the variable listeners when the iframe
+	// is unloaded. This is so that we don't get an error where CpExtra
+	// calls code in an already unloaded iFrame
+<span class="cstat-no" title="statement not covered" >	var listenerList = {};</span>
+	
+	// So first we need to spy on all the listeners being added and record them
+	// in a list
+<span class="cstat-no" title="statement not covered" >	X.addHook(X.cpVariablesManager, "listenForVariableChange", <span class="fstat-no" title="function not covered" >function (key, value) {</span></span>
+<span class="cstat-no" title="statement not covered" >		listenerList[key] = value;</span>
+	});
+	
+	// Then when we are informed of the movie unload we will
+	// loop through the list and unload all the listeners.
+<span class="cstat-no" title="statement not covered" >    X.cpExtraActions.register("unload", <span class="fstat-no" title="function not covered" >function () {</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		X.utils.forEach(listenerList, <span class="fstat-no" title="function not covered" >function (key, value) {</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			X.cpVariablesManager.stopListeningForVariableChange(key, value);</span>
+&nbsp;
+		});
+	
+	});
+});
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 25 2019 17:59:50 GMT+0000 (GMT Standard Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

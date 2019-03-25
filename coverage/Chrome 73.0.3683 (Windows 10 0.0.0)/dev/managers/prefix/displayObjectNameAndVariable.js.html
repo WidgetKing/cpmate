@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for dev\managers\prefix\displayObjectNameAndVariable.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">dev/managers/prefix/</a> displayObjectNameAndVariable.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">16.28% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>7/43</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">16.67% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>7/42</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">X.registerModule("managers/prefix/displayObjectNameAndVariable", ["managers/prefix/displayObjectName"], <span class="fstat-no" title="function not covered" >function () {</span>
+	
+	///////// UTIL	
+<span class="fstat-no" title="function not covered" >	function getVariableName (name) {</span>
+&nbsp;
+		// xfoobar, my, var, name
+<span class="cstat-no" title="statement not covered" >		var nameSplit = name.split("_");</span>
+		// my, var, name
+<span class="cstat-no" title="statement not covered" >		var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length -1);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		createVariableIfNotInCaptivate(nameSplitMinusStart);</span>
+		
+<span class="cstat-no" title="statement not covered" >		var validVarName = loopThroughVarNames(nameSplitMinusStart);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		if (validVarName) {</span>
+		
+<span class="cstat-no" title="statement not covered" >			return validVarName;</span>
+&nbsp;
+		} else {
+		
+<span class="cstat-no" title="statement not covered" >			X.error("PR001", name);</span>
+		
+		}
+&nbsp;
+	}
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function createVariableIfNotInCaptivate (nameSections) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  		if (!X.captivate.hasCpExtra()) {</span>
+			
+<span class="cstat-no" title="statement not covered" >			var varName = buildVariableNameFromArray(nameSections);</span>
+<span class="cstat-no" title="statement not covered" >			X.cpVariablesManager.setVariableValue(varName, "");</span>
+&nbsp;
+		}
+&nbsp;
+	}
+	
+	
+<span class="fstat-no" title="function not covered" >	function loopThroughVarNames (nameSections) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var name;</span>
+<span class="cstat-no" title="statement not covered" >		var i = nameSections.length -1;</span>
+<span class="cstat-no" title="statement not covered" >		var workingSections;</span>
+<span class="cstat-no" title="statement not covered" >		var splicedSections;</span>
+<span class="cstat-no" title="statement not covered" >		var almostVariableName;</span>
+<span class="cstat-no" title="statement not covered" >		var variableName;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		while(i &gt;= 0) {</span>
+		
+<span class="cstat-no" title="statement not covered" >			workingSections = nameSections.concat();</span>
+<span class="cstat-no" title="statement not covered" >			splicedSections = workingSections.splice(0, i+1);</span>
+<span class="cstat-no" title="statement not covered" >			variableName = buildVariableNameFromArray(splicedSections);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			if (X.cpVariablesManager.hasVariable(variableName)) {</span>
+<span class="cstat-no" title="statement not covered" >				return variableName;</span>
+			}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			i--;</span>
+		}
+		
+<span class="cstat-no" title="statement not covered" >		return null;</span>
+&nbsp;
+	}
+	
+<span class="fstat-no" title="function not covered" >	function buildVariableNameFromArray (varNameArray) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var almostVariableName = X.utils.reduce(makeVariableName, "", varNameArray);</span>
+<span class="cstat-no" title="statement not covered" >		return almostVariableName.substring(1, almostVariableName.length);</span>
+&nbsp;
+	}
+	
+&nbsp;
+<span class="fstat-no" title="function not covered" >	function makeVariableName (value, acc) {</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		return acc + "_" + value;</span>
+&nbsp;
+	}
+	
+&nbsp;
+&nbsp;
+	///////// ENTRY POINT
+<span class="cstat-no" title="statement not covered" >	X.registerDisplayObjectNamePrefixAndVariable = <span class="fstat-no" title="function not covered" >function (prefix, callback) {</span></span>
+&nbsp;
+		// Get informed when a movieClip matching our prefix appears
+<span class="cstat-no" title="statement not covered" >		X.registerDisplayObjectNamePrefix(prefix, <span class="fstat-no" title="function not covered" >function (movieClip) {</span></span>
+&nbsp;
+&nbsp;
+			/////////// ASSISTANT METHODS
+<span class="fstat-no" title="function not covered" >			function updateCallback (value) {</span>
+&nbsp;
+				// Inform the originally passed in callback
+<span class="cstat-no" title="statement not covered" >				callback(movieClip, value);</span>
+&nbsp;
+			}
+			
+			
+			
+			// Interpret variable name from movie clip name
+<span class="cstat-no" title="statement not covered" >			var variableName = getVariableName(movieClip.name);</span>
+&nbsp;
+			// If we can't find variable then stop here
+<span class="cstat-no" title="statement not covered" >			if (!variableName) <span class="cstat-no" title="statement not covered" >return;</span></span>
+&nbsp;
+			// listen for variable change
+<span class="cstat-no" title="statement not covered" >			X.cpVariablesManager.listenForVariableChange(variableName, updateCallback);</span>
+&nbsp;
+			// Update the callback now with the current variable value
+<span class="cstat-no" title="statement not covered" >			var currentValue = X.cpVariablesManager.getVariableValue(variableName);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			updateCallback(currentValue);</span>
+&nbsp;
+		})
+&nbsp;
+	}
+&nbsp;
+});
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 25 2019 17:59:50 GMT+0000 (GMT Standard Time)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

@@ -9,6 +9,71 @@ X.registerModule("managers/utils", function () {
 
     "use strict";
 
+	function curry (numParams, method) {
+
+		function mergeParams (oldParams, newParams) {
+
+			var params = [];
+
+			oldParams.forEach(function (param) {
+
+				if (param === X.utils.__ &&
+					newParams.length > 0) {
+
+					params.push(newParams.shift());
+
+				} else {
+
+					params.push(param);
+
+				}
+
+			})
+
+			return params.concat(newParams);
+
+		}
+
+		function getTrueParamsLength (params) {
+
+			return X.utils.reduce(function (value, acc) {
+
+				if (value === X.utils.__) {
+					return acc;
+				} else {
+					return acc + 1;
+				}
+
+			}, 0, params);
+		}
+
+		function innerCurry (params, args) {
+
+			var argumentsArray = Array.prototype.slice.call(args);
+			params = mergeParams(params, argumentsArray);
+			
+			if (getTrueParamsLength(params) >= numParams) {
+				return method.apply(null, params);
+			} else {
+				return callInnerCurry(params);
+			}
+
+		}
+
+		function callInnerCurry (params) {
+
+			return function () {
+
+				return innerCurry(params, arguments);
+
+			}
+
+		}
+
+		return callInnerCurry([]);
+
+	};
+
     X.utils = {
 
       "isMobile": 'ontouchstart' in document.documentElement,
@@ -188,19 +253,47 @@ X.registerModule("managers/utils", function () {
             });
         },
 
-		"forEachUntil": function (predicate, loop, list) {
+		"forEachUntil": curry(3, function (predicate, loop, list) {
 
-			for (var i = 0; i < list.length; i += 1) {
+            return X.utils.callByType(list, {
 
-				var result = loop(list[i]);
+				"array": function () {
 
-				if (predicate(result)) {
-					return result;
+					for (var i = 0; i < list.length; i += 1) {
+
+						var result = loop(list[i]);
+
+						if (predicate(result)) {
+							return result;
+						}
+
+					}
+
+				},
+
+
+
+				"object": function () {
+
+					for (var key in list) {
+						if (list.hasOwnProperty(key)) {
+
+							var result = loop(list[key]);
+
+							if (predicate(result)) {
+							
+								return result;
+
+							}
+
+						}
+					}
+
 				}
 
-			}
+			});
 
-		},
+		}),
 
 		"forEachUntilResult": function (loop, list) {
 
@@ -214,6 +307,47 @@ X.registerModule("managers/utils", function () {
 			return X.utils.forEachUntil(predicate, loop, list);
 
 		},
+
+		"identity": function (value) {
+
+			return value;
+
+		},
+
+		"T": function () {
+
+			return true;
+
+		},
+
+		"F": function () {
+
+			return false;
+
+		},
+
+		"pipeLog": function (value) {
+
+			console.log(value);
+
+			return value;
+
+		},
+
+		"any": curry(2, function (predicate, list) {
+
+			return X.utils.pipe(
+				X.utils.forEachUntil(
+					X.utils.identity,
+					predicate
+				),
+				X.utils.when(
+					X.utils.isNil,
+					X.utils.F
+				)
+			)(list);
+
+		}),
 
         "defaultTo": function (def, obj) {
 
@@ -269,17 +403,15 @@ X.registerModule("managers/utils", function () {
 
 		"when": function (predicate, method) {
 			
-			return X.utils.ifElse(predicate, method, function () {
-				// Just a dummy function
-			});
+			return X.utils.ifElse(predicate, method, X.utils.identity);
+
 		},
 
 		
 		"unless": function (predicate, method) {
 			
-			return X.utils.ifElse(predicate, function () {
-				// Just a dummy function
-			}, method);
+			return X.utils.ifElse(predicate, X.utils.identity, method);
+
 		},
 
 		"getPercent": function (min, max, value) {
@@ -319,6 +451,12 @@ X.registerModule("managers/utils", function () {
 
 		},
 
+		"within": curry(3, function (start, end, value) {
+
+			return value >= start && value <= end;
+
+		}),
+			
 		"both": function (predicateA, predicateB) {
 
 			return function (value) {
@@ -334,6 +472,232 @@ X.registerModule("managers/utils", function () {
 			return function (value) {
 
 				return predicateA(value) || predicateB(value);
+
+			}
+
+		},
+
+		"map": curry(2, function (method, data) {
+
+            return X.utils.callByType(data, {
+
+
+
+
+				"array": function () {
+
+					var returnArray = [];
+
+					X.utils.forEach(data, function (item) {
+
+						var result = method(item);
+						returnArray.push(result);
+
+					})
+
+					return returnArray;
+				},
+
+
+
+
+				"object": function () {
+
+					var returnObject = {};
+
+					X.utils.forEach(data, function (key, item) {
+
+						var result = method(item);
+						returnObject[key] = result;
+
+					});
+
+					return returnObject;
+
+				}
+
+
+
+
+
+			});
+
+		}),
+
+		"__": {},
+
+		"curry": curry, 
+
+		"pipe":function () {
+
+			var argumentsArray = Array.prototype.slice.call(arguments);
+
+			return function (input) {
+
+				return X.utils.reduce(function (method, input) {
+
+					return method(input);
+
+				}, input, argumentsArray);
+
+			}
+				
+
+		},
+
+		"complement": function (method) {
+
+			return function () {
+
+				var result = method.apply(null, arguments); 
+
+				if (typeof result === "function") {
+					return X.utils.complement(result);	
+				} else {
+					return !result;
+				}
+
+			}
+
+		},
+
+		"removeWhiteSpace": function (string) {
+
+			if (typeof string === "string") {
+			
+				return string.replace(/\s/g, "");
+
+			}
+
+		},
+
+		"split": curry(2, function (character, string) {
+
+			if (character && string) {
+			
+				return string.split(character);
+			
+			}
+
+		}),
+
+		"isType": curry(2, function (type, data) {
+
+			return typeof data === type;
+
+		}),
+
+		"isNil": function (value) {
+
+			return value === "" || value === null || value === undefined || 
+				   (isNaN(value) && typeof value === "number");
+
+		},
+
+		"invert": function (value) {
+
+			return !value;
+
+		},
+
+		"isIndexEmpty": curry(2, function (index, array) {
+
+			return X.utils.isNil(array[index]);
+
+		}),
+
+		"isRange": function (string) {
+
+			return X.utils.pipe(
+				X.utils.getRangeObject,
+				X.utils.isNil,
+				X.utils.invert
+			)(string);
+
+		},
+
+		"getRangeObject": function (string) {
+
+			return X.utils.pipe(
+
+				X.utils.removeWhiteSpace,
+
+				X.utils.split("-"),
+
+				X.utils.map(parseInt),
+
+				function (rangeArray) {
+
+					var isMinus = X.utils.isIndexEmpty(X.utils.__, rangeArray);
+
+					switch (rangeArray.length) {
+
+						
+						// case 2:
+							// This is not needed.
+							// It's just here so that default
+							// won't stop the function
+							// break;
+
+						case 3:
+
+							if (isMinus(0)) {
+
+								rangeArray = [
+									rangeArray[1] * -1,
+									rangeArray[2]
+								];
+
+							} else if (isMinus(1)) {
+								
+								rangeArray = [
+									rangeArray[0],
+									rangeArray[2] * -1
+								]
+
+							} else {
+								rangeArray = null
+							}
+
+							break;
+
+						case 4 :
+							
+							if (isMinus(0) && isMinus(2)) {
+								rangeArray = [
+									rangeArray[1] * -1,
+									rangeArray[3] * -1
+								];
+							}
+
+							break;
+					}
+
+					if (rangeArray === null) return [NaN];
+					
+					return {
+						"start": rangeArray[0],
+						"end": rangeArray[1]
+					}
+
+				},
+				
+
+				X.utils.when( 
+					X.utils.any(X.utils.isNil),
+					X.utils.always(null)
+				)
+
+
+			)(string);
+
+		},
+
+		"always": function (value) {
+
+			return function () {
+
+				return value;
 
 			}
 
