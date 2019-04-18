@@ -5,7 +5,6 @@ X.registerModule("managers/cpVariablesManager", ["managers/utils", "managers/hoo
   var hasCpExtra = X.captivate.hasCpExtra();
   var fakeVariables = new X.classes.CallbackObject();
 
-
   X.cpVariablesManager = {
 
     "listenForVariableChange": (hasCpExtra) ? X.captivate.extra.variableManager.listenForVariableChange

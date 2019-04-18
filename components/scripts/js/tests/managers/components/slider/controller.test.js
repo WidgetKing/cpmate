@@ -22,7 +22,6 @@ describe ("managers/components/slider/controller", () => {
 	var trackEvents = {};
 	var handleEvents = {};
 	var documentEvents = {};
-	var handleOnMouseDown;
 
     ///////////////////////
     ///// Mocks

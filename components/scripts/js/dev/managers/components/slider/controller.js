@@ -43,11 +43,18 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 	}
 
 	function addHandlers() {
-		view.listenToTrack(X.events.getSafeEvent('mousedown'), function () {
+		
+		var safeMouseMove = X.events.getSafeEvent('mousemove');
+		var safeMouseUp = X.events.getSafeEvent('mouseup');
+		var safeMouseDown = X.events.getSafeEvent('mousedown');
+
+		view.listenToTrack(safeMouseDown, function () {
 			
 		});
 
-		view.listenToHandle(X.events.getSafeEvent('mousedown'), function () {
+		// MOUSE DOWN HANDLER
+		view.listenToHandle(safeMouseDown, function () {
+
 			model.dragStart(gtx(), gty());
 
 			// MOUSE MOVE HANDLER
@@ -58,16 +65,17 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 				}
 			}
 
+			// MOUSE UP HANDLER
 			function upHandler() {
 				model.dragEnd();
 				evaluateManager.dragEnd();
-				document.removeEventListener(X.events.getSafeEvent('mousemove'), moveHandler);
-				document.removeEventListener(X.events.getSafeEvent('mouseup'), upHandler);
+				document.removeEventListener(safeMouseMove, moveHandler);
+				document.removeEventListener(safeMouseUp, upHandler);
 			}
 
 			// MOUSE MOVE LISTENER
-			document.addEventListener(X.events.getSafeEvent('mousemove'), moveHandler);
-			document.addEventListener(X.events.getSafeEvent('mouseup'), upHandler);
+			document.addEventListener(safeMouseMove, moveHandler);
+			document.addEventListener(safeMouseUp, upHandler);
 		});
 	}
 

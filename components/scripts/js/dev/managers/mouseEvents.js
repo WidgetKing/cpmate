@@ -15,7 +15,10 @@ X.registerModule("managers/mouseEvents", ["managers/utils", "elements/slideObjec
 	
 	var mobileEvents = {
 		"mousemove":"touchmove",
-		"mousedown":"touchstart",
+		// Stragely, once createjs.Touch is enabled although the other
+		// touch events need to be used, mouse down does not
+		// Go figure
+		// "mousedown":"touchstart",
 		"mouseup":"touchend"
 	};
 	
@@ -31,6 +34,10 @@ X.registerModule("managers/mouseEvents", ["managers/utils", "elements/slideObjec
 	
 	
 	
+    ///////////////////////////////////////////////////////////////////////
+	////////////// ENABLE FOR MOBILE
+    ///////////////////////////////////////////////////////////////////////
+	createjs.Touch.enable(X.animate.stage, true);
 
     ///////////////////////////////////////////////////////////////////////
 	////////////// HANDLE DOCUMENT EVENTS

@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">23.08% </span>
+        <span class="strong">21.43% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>9/39</span>
+        <span class='fraction'>9/42</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">23.08% </span>
+        <span class="strong">21.43% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>9/39</span>
+        <span class='fraction'>9/42</span>
       </div>
     </div>
   </div>
@@ -142,7 +142,15 @@
 97
 98
 99
-100</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+100
+101
+102
+103
+104
+105
+106
+107
+108</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,11 +195,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,6 +214,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -286,11 +302,18 @@
 	}
 &nbsp;
 <span class="fstat-no" title="function not covered" >	function addHandlers() {</span>
-<span class="cstat-no" title="statement not covered" >		view.listenToTrack(X.events.getSafeEvent('mousedown'), <span class="fstat-no" title="function not covered" >function () {</span></span>
+		
+<span class="cstat-no" title="statement not covered" >		var safeMouseMove = X.events.getSafeEvent('mousemove');</span>
+<span class="cstat-no" title="statement not covered" >		var safeMouseUp = X.events.getSafeEvent('mouseup');</span>
+<span class="cstat-no" title="statement not covered" >		var safeMouseDown = X.events.getSafeEvent('mousedown');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		view.listenToTrack(safeMouseDown, <span class="fstat-no" title="function not covered" >function () {</span></span>
 			
 		});
 &nbsp;
-<span class="cstat-no" title="statement not covered" >		view.listenToHandle(X.events.getSafeEvent('mousedown'), <span class="fstat-no" title="function not covered" >function () {</span></span>
+		// MOUSE DOWN HANDLER
+<span class="cstat-no" title="statement not covered" >		view.listenToHandle(safeMouseDown, <span class="fstat-no" title="function not covered" >function () {</span></span>
+&nbsp;
 <span class="cstat-no" title="statement not covered" >			model.dragStart(gtx(), gty());</span>
 &nbsp;
 			// MOUSE MOVE HANDLER
@@ -301,16 +324,17 @@
 				}
 			}
 &nbsp;
+			// MOUSE UP HANDLER
 <span class="fstat-no" title="function not covered" >			function upHandler() {</span>
 <span class="cstat-no" title="statement not covered" >				model.dragEnd();</span>
 <span class="cstat-no" title="statement not covered" >				evaluateManager.dragEnd();</span>
-<span class="cstat-no" title="statement not covered" >				document.removeEventListener(X.events.getSafeEvent('mousemove'), moveHandler);</span>
-<span class="cstat-no" title="statement not covered" >				document.removeEventListener(X.events.getSafeEvent('mouseup'), upHandler);</span>
+<span class="cstat-no" title="statement not covered" >				document.removeEventListener(safeMouseMove, moveHandler);</span>
+<span class="cstat-no" title="statement not covered" >				document.removeEventListener(safeMouseUp, upHandler);</span>
 			}
 &nbsp;
 			// MOUSE MOVE LISTENER
-<span class="cstat-no" title="statement not covered" >			document.addEventListener(X.events.getSafeEvent('mousemove'), moveHandler);</span>
-<span class="cstat-no" title="statement not covered" >			document.addEventListener(X.events.getSafeEvent('mouseup'), upHandler);</span>
+<span class="cstat-no" title="statement not covered" >			document.addEventListener(safeMouseMove, moveHandler);</span>
+<span class="cstat-no" title="statement not covered" >			document.addEventListener(safeMouseUp, upHandler);</span>
 		});
 	}
 &nbsp;
@@ -346,7 +370,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 25 2019 17:59:50 GMT+0000 (GMT Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Apr 11 2019 21:35:09 GMT+0100 (GMT Daylight Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

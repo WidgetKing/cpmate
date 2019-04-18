@@ -110,13 +110,11 @@
 65
 66
 67
-68
-69
-70</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+68</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -157,7 +155,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,87 +173,84 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">X.registerModule("managers/components/slider/view", ["managers/utils", "managers/components/slider/validator"], <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">X.registerModule(
+  "managers/components/slider/view",
+  ["managers/utils", "managers/components/slider/validator"],
+<span class="fstat-no" title="function not covered" >  function() {</span>
+<span class="cstat-no" title="statement not covered" >    X.slider.view = <span class="fstat-no" title="function not covered" >function(initialData) {</span></span>
+      /////////////////////////////
+      ////////// PRIVATE VARS
+<span class="cstat-no" title="statement not covered" >      var handle = initialData.handle;</span>
+<span class="cstat-no" title="statement not covered" >      var track = initialData.track;</span>
+<span class="cstat-no" title="statement not covered" >      var handleProxy = new X.classes.DisplayObjectProxy(handle);</span>
+<span class="cstat-no" title="statement not covered" >      var trackProxy = new X.classes.DisplayObjectProxy(track);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  X.slider.view = <span class="fstat-no" title="function not covered" >function (initialData) {</span></span>
-	
+<span class="cstat-no" title="statement not covered" >      var orientation = getOrientation();</span>
+<span class="cstat-no" title="statement not covered" >      var primaryAxis = orientation === "v" ? "y" : "x";</span>
 &nbsp;
-    /////////////////////////////
-    ////////// PRIVATE VARS
-<span class="cstat-no" title="statement not covered" >	var handle = initialData.handle;</span>
-<span class="cstat-no" title="statement not covered" >	var track = initialData.track;</span>
-<span class="cstat-no" title="statement not covered" >	var handleProxy = new X.classes.DisplayObjectProxy(handle);</span>
-<span class="cstat-no" title="statement not covered" >	var trackProxy = new X.classes.DisplayObjectProxy(track);</span>
+<span class="cstat-no" title="statement not covered" >      handleProxy.primary = primaryAxis;</span>
+<span class="cstat-no" title="statement not covered" >      trackProxy.primary = primaryAxis;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >	var orientation = getOrientation();</span>
-<span class="cstat-no" title="statement not covered" >	var primaryAxis = (orientation === "v") ? "y" : "x";</span>
-	
-<span class="cstat-no" title="statement not covered" >	handleProxy.primary = primaryAxis;</span>
-<span class="cstat-no" title="statement not covered" >	trackProxy.primary = primaryAxis;</span>
-&nbsp;
-    /////////////////////////////
-    ////////// ENTRY POINT
-<span class="fstat-no" title="function not covered" >	function init() {</span>
-<span class="cstat-no" title="statement not covered" >		alignHandleToTrack();</span>
-	}
-&nbsp;
-<span class="fstat-no" title="function not covered" >	function getOrientation() {</span>
-<span class="cstat-no" title="statement not covered" >		if (initialData.orientation === "vertical") {</span>
-<span class="cstat-no" title="statement not covered" >			return "v";</span>
-		} else {
-<span class="cstat-no" title="statement not covered" >			return "h";</span>
-		}
-	}
-&nbsp;
-    /////////////////////////////
-    ////////// ALIGN
-	
-<span class="fstat-no" title="function not covered" >	function alignHandleToTrack() {</span>
-		// align primary axises at '0' point.
-<span class="cstat-no" title="statement not covered" >		handleProxy.primaryAxis = trackProxy.primaryAxis;</span>
-&nbsp;
-		// center on secondary axis
-<span class="cstat-no" title="statement not covered" >		handleProxy.secondaryAxis = trackProxy.secondaryAxis + (trackProxy.secondaryLength - handleProxy.secondaryLength) / 2;	</span>
-		
-	}
-&nbsp;
-&nbsp;
-&nbsp;
-<span class="cstat-no" title="statement not covered" >	init();</span>
-    /////////////////////////////
-    ////////// EXPORTS
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    var exports = {</span>
-	   "track": initialData.track,
-	   "handle": initialData.handle,
-       "listenToTrack": <span class="fstat-no" title="function not covered" >function (event, handler) {</span>
-<span class="cstat-no" title="statement not covered" >		 initialData.track.addEventListener(event, handler)</span>
-       },
-	   "listenToHandle":<span class="fstat-no" title="function not covered" >function (event, handler) {</span>
-<span class="cstat-no" title="statement not covered" >		 initialData.handle.addEventListener(event, handler)</span>
-	   },
-      "update": <span class="fstat-no" title="function not covered" >function (data) {</span>
-<span class="cstat-no" title="statement not covered" >	  	handleProxy.primaryAxis = data.handlePosition;</span>
+      /////////////////////////////
+      ////////// ENTRY POINT
+<span class="fstat-no" title="function not covered" >      function init() {</span>
+<span class="cstat-no" title="statement not covered" >        alignHandleToTrack();</span>
       }
+&nbsp;
+<span class="fstat-no" title="function not covered" >      function getOrientation() {</span>
+<span class="cstat-no" title="statement not covered" >        if (initialData.orientation === "vertical") {</span>
+<span class="cstat-no" title="statement not covered" >          return "v";</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >          return "h";</span>
+        }
+      }
+&nbsp;
+      /////////////////////////////
+      ////////// ALIGN
+&nbsp;
+<span class="fstat-no" title="function not covered" >      function alignHandleToTrack() {</span>
+        // align primary axises at '0' point.
+<span class="cstat-no" title="statement not covered" >        handleProxy.primaryAxis = trackProxy.primaryAxis;</span>
+&nbsp;
+        // center on secondary axis
+<span class="cstat-no" title="statement not covered" >        handleProxy.secondaryAxis =</span>
+          trackProxy.secondaryAxis +
+          (trackProxy.secondaryLength - handleProxy.secondaryLength) / 2;
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      init();</span>
+      /////////////////////////////
+      ////////// EXPORTS
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      var exports = {</span>
+        track: initialData.track,
+        handle: initialData.handle,
+        listenToTrack: <span class="fstat-no" title="function not covered" >function(event, handler) {</span>
+<span class="cstat-no" title="statement not covered" >          initialData.track.addEventListener(event, handler);</span>
+        },
+        listenToHandle: <span class="fstat-no" title="function not covered" >function(event, handler) {</span>
+<span class="cstat-no" title="statement not covered" >          initialData.handle.addEventListener(event, handler);</span>
+        },
+        update: <span class="fstat-no" title="function not covered" >function(data) {</span>
+<span class="cstat-no" title="statement not covered" >          handleProxy.primaryAxis = data.handlePosition;</span>
+        }
+      };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      return exports;</span>
     };
-&nbsp;
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    return exports;</span>
   }
-&nbsp;
-});
+);
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Mar 25 2019 17:59:50 GMT+0000 (GMT Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Apr 11 2019 21:35:09 GMT+0100 (GMT Daylight Time)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>
