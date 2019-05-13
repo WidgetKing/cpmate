@@ -15,6 +15,7 @@ X.registerModule("managers/actions/gotoFrameLabel", ["managers/cpExtraActions"],
 
     function gotoFrameLabel (frameLabel) {
 
+		console.log("Going to label: " + frameLabel);
         var labels = X.movie.getLabels(),
             labelData;
 
