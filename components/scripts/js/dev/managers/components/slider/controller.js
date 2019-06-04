@@ -52,6 +52,8 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 			
 		});
 
+
+
 		// MOUSE DOWN HANDLER
 		view.listenToHandle(safeMouseDown, function () {
 

@@ -23,6 +23,18 @@
 
     X.registerModule = function (moduleName, moduleDependencies, moduleConstructor) {
 
+
+		if (moduleName === "elements/animate") {
+			// throw new Error("What is the source?");
+			console.log("Registering");
+		}
+
+		// if (moduleRegistry.hasOwnProperty(moduleName)) {
+
+		// 	console.log("Conflict in module name: " + moduleName);
+		// 	// We will abort this, preventing duplication of module calls
+		// }
+
         var registry,
             dependency,
             dependencyRegistry,

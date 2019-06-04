@@ -5,7 +5,7 @@
  * Time: 3:50 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("elements/animate", function () {
+X.registerModule("elements/animate", [], function () {
 
     "use strict";
 
@@ -79,6 +79,14 @@ X.registerModule("elements/animate", function () {
     X.animate.callWhenLoaded(function () {
 
         X.animate.stage = stage;
+
+		// Now that we have access to the stage it's important we add
+		// support for touch events.
+		// We put this code here rather than in another file because
+		// the stage takes an arbitrary amount of time to load.
+		// Therefore this is the safest place to put it.
+		createjs.Touch.enable(X.animate.stage, true);
+
         X.animate.mainTimeline = stage.children[0];
 
         if (window.AdobeAn) {
@@ -87,6 +95,8 @@ X.registerModule("elements/animate", function () {
 
         }
 
+		// Now is the point where it is safe for the nimation to play
+		document.dispatchEvent
     });
 
     /*
