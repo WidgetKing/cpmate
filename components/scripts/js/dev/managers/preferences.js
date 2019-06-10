@@ -5,7 +5,7 @@
  * Time: 5:00 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/preferences", function () {
+X.registerModule("managers/preferences", [], function () {
 
     function Preferences() {
 
