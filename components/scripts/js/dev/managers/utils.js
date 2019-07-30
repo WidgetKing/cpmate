@@ -88,6 +88,7 @@ X.registerModule("managers/utils", function () {
         },
 
         "onNextTick": function (func) {
+
             return function () {
 
                 var args = arguments;

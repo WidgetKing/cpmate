@@ -9,6 +9,8 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 
     "use strict";
 
+	var _timeline;
+
     X.movie.rootTimeline = {
 
         "changeCallback": new X.classes.Callback(),
@@ -41,12 +43,19 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 
 
             function setTimeline (timeline) {
+				_timeline = timeline;
                 X.movie._setRootTimeline(timeline);
                 X.movie.rootTimeline.changeCallback.sendToCallback("*", timeline);
             }
 
 
-        }
+        },
+
+		"get": function () {
+
+			return _timeline;
+
+		}
 
     };
 

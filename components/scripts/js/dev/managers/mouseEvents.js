@@ -49,7 +49,8 @@ X.registerModule(
     }
 
     function dispatchOnSlideObject(event) {
-      X.slideObject.proxy.dispatchEvent(event);
+      if (X.slideObject && X.slideObject.proxy)
+        X.slideObject.proxy.dispatchEvent(event);
     }
 
     function forwardEvent(eventName) {

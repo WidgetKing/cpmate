@@ -13,7 +13,7 @@
 
     window.X = {
         "version":"0.0.2",
-        "build":"2216"
+        "build":"2386"
     };
 
     var moduleRegistry = {},
@@ -225,11 +225,14 @@ X.registerModule("elements/animate", function() {
     if (isAnimateLoaded()) {
       window.clearInterval(waitingForAnimateLoadInterval);
 
-      for (var i = 0; i < callWhenLoadedList.length; i += 1) {
-        callWhenLoadedList[i]();
-      }
-
+      // We clear this here just in case we hit an error while
+      // executing the below
       waitingForAnimateLoadInterval = null;
+
+      callWhenLoadedList.forEach(function(method) {
+        method();
+      });
+
       callWhenLoadedList = null;
     }
   }
@@ -243,6 +246,7 @@ X.registerModule("elements/animate", function() {
 
   X.animate = {
     callWhenLoaded: function(method) {
+      // Animate is loaded
       if (isAnimateLoaded()) {
         if (waitingForAnimateLoadInterval) {
           // Oh, the interval has not discovered animate is loaded
@@ -252,6 +256,9 @@ X.registerModule("elements/animate", function() {
         } else {
           method();
         }
+
+        // Animate not yet loaded
+        // Add to waiting list
       } else {
         callWhenLoadedList.push(method);
 
@@ -299,7 +306,10 @@ X.registerModule("elements/animate", function() {
   function dispatchAnimationReady() {
     if (X.captivate) {
       if (X.captivate.extra && X.captivate.extra.cpMate.notifyCpExtra) {
-        X.captivate.extra.cpMate.notifyCpExtra(X.slideObject.name, "animationready");
+        X.captivate.extra.cpMate.notifyCpExtra(
+          X.slideObject.name,
+          "animationready"
+        );
       }
     } else {
       console.log(
@@ -807,6 +817,381 @@ X.registerModule("classes/MovieClipProxy", ["managers/classes"], function () {
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
+ * Date: 10/29/18
+ * Time: 10:24 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "elements/slideObject"], function () {
+
+    // This setting was created because I didn't know Captivate supplied settings to turn off its
+    // default scrollbar and border when viewing web objects.
+
+    X.preferences.define({
+        "name":"disableIFrameBorder",
+        "method":function (value) {
+
+            if (!X.captivate.isLoaded()) {
+                return;
+            }
+
+            if (value) {
+
+                disableBorder();
+
+            } else {
+
+                enableBorder();
+
+            }
+
+        },
+        "default":false
+    });
+
+    function disableBorder () {
+        X.slideObject.div.style.border = "0px";
+    }
+
+    function enableBorder () {
+        X.slideObject.div.style.border = "1px";
+    }
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/22/18
+ * Time: 9:01 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences", "elements/slideObject", "managers/movie", "elements/animate"], function () {
+
+    X.preferences.define({
+        "name":"linkNameToLibrarySymbol",
+        "animateRequired": true,
+        "method":function (value) {
+
+            if (isInvalid(value)) {
+                return;
+            }
+
+            var name = getSlideObjectClassName();
+
+            if (!name) {
+                X.log("Could not find a symbol by the name of '" + getSlideObjectClassName() +
+                      "'. Perhaps this animation is only included to preload other animations?");
+
+                return;
+            }
+
+            X.movie.rootTimeline.set(name);
+
+        },
+        "default":false
+    });
+
+
+
+
+    function isInvalid (value) {
+        return !value || !X.slideObject
+    }
+
+
+    function getSlideObjectClassName () {
+
+        var name = X.slideObject.name;
+
+        if (X.animate.library[name]) {
+
+            return name;
+
+        }
+
+        // If we're here, we haven't found the correct name
+        // Let's try seeing if there's an underscore at the end of the name
+        var underscore = name.lastIndexOf("_");
+
+        if (underscore > 0) {
+
+            name = name.substring(0, underscore);
+
+        }
+
+        if (X.animate.library[name]) {
+
+            // If this is not valid, the function we are returning this to will pick it up.
+            return name;
+
+        }
+
+        return false;
+
+    }
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 12/17/18
+ * Time: 10:41 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "managers/utils"], function () {
+
+    "use strict";
+
+    var list,
+        init = X.utils.singleton(function () {
+
+            X.movie.changeCallback.addCallback("play", function () {
+                X.utils.forEach(list, function (key, element) {
+
+                    element.play();
+
+                });
+            });
+
+            X.movie.changeCallback.addCallback("stop", function () {
+                X.utils.forEach(list, function (key, element) {
+
+                    element.stop();
+
+                });
+            })
+
+        });
+
+
+    X.preferences.define({
+        "name":"pausingInstanceSuffix",
+        "animateRequired": true,
+        "method":function (suffix) {
+
+            init();
+
+            function reactToNewList () {
+
+                list = X.movie.children.getListMatchingSuffix(suffix);
+
+            }
+
+            if (X.movie.children.exist) {
+                reactToNewList();
+            }
+
+            X.movie.children.changeCallback.addCallback("*", reactToNewList);
+
+        }
+    });
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/29/18
+ * Time: 10:28 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("managers/preferences/preview", ["managers/preferences"], function () {
+
+    "use strict";
+
+    X.preferences.define({
+        "name":"preview",
+        "animateRequired": true,
+        "method":function (symbolName) {
+
+            if (X.captivate.isLoaded()) {
+                return;
+            }
+
+            X.movie.rootTimeline.set(symbolName);
+
+            document.addEventListener("click", X.movie.play);
+
+        }
+    });
+
+});
+X.registerModule(
+  "preferences/publishSettings",
+  ["managers/preferences"],
+  function() {
+    ////////////////////////////////////////
+    ////////// OBJECTS
+    ////////////////////////////////////////
+    var responsiveDirections = {
+      BOTH: "both",
+      WIDTH: "width",
+      HEIGHT: "height"
+    };
+
+    var scaleTypes = {
+      FIT_IN_VIEW: 1,
+      STRETCH_TO_FIT: 2
+    };
+
+    function resizeCanvas() {
+      if (X.resizeCanvas) X.resizeCanvas();
+    }
+
+    ////////////////////////////////////////
+    ////////// Add preferences
+    ////////////////////////////////////////
+
+    ////////////////////////////////////////
+    ////// Make responsive
+
+    /**
+     * Boolean
+     *
+     * @default true
+     */
+    X.preferences.define({
+      name: "makeResponsive",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: true
+    });
+
+    ////////////////////////////////////////
+    ////// Responsive direction
+
+    X.preferences.define({
+      name: "responsiveDirections",
+      animateRequired: false,
+      method: function(value) {},
+      default: responsiveDirections
+    });
+
+    X.preferences.define({
+      name: "responsiveDirection",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: responsiveDirections.BOTH
+    });
+
+    ////////////////////////////////////////
+    ////// Scale types
+
+    X.preferences.define({
+      name: "scaleTypes",
+      animateRequired: false,
+      method: function(value) {},
+      default: scaleTypes
+    });
+    /**
+     * Assign with either X.preferences.scaleTypes.FIT_IN_VIEW
+     * Or X.preferences.scaleTypes.STRETCH_TO_FIT
+     *
+     */
+    X.preferences.define({
+      name: "scaleType",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: scaleTypes.FIT_IN_VIEW
+    });
+
+    ////////////////////////////////////////
+    ////// outerRendering
+
+    /**
+     * Boolean
+     *
+     * @default true
+     */
+    X.preferences.define({
+      name: "outerRendering",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: false
+    });
+
+  }
+);
+
+X.registerModule("preferences/size", ["managers/preferences", "elements/animate"], function () {
+
+    function resizeCanvas() {
+      if (X.resizeCanvas) X.resizeCanvas();
+    }
+
+	X.preferences.define({
+		"name":"stageWidth",
+		"animateRequired": false,
+		"method": resizeCanvas,
+		"default": null
+	});
+
+	X.preferences.define({
+		"name":"stageHeight",
+		"animateRequired": false,
+		"method": resizeCanvas,
+		"default": null
+	});
+
+	////////////////////////////////////////
+	////// Set defaults
+	
+    X.animate.callWhenLoaded(function() {
+
+		// We first check for null because the user may
+		// have already set this value while we've been waiting
+		// for the library to load.
+
+		if (X.preferences.stageWidth === undefined) {
+			X.preferences.stageWidth = X.animate.library.properties.width;
+		}
+
+		if (X.preferences.stageHeight === undefined) {
+			X.preferences.stageHeight = X.animate.library.properties.height;
+		}
+
+	});
+});
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 12/10/18
+ * Time: 3:57 PM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("useRAFTiming", ["managers/preferences"], function () {
+
+    "use strict";
+
+    X.preferences.define({
+        "name":"useRAFTiming",
+        "animateRequired": true,
+        "method":function (value) {
+
+            if (!createjs || !createjs.Ticker) {
+                console.error("Tried to change createjs.Ticker timing mode before it was loaded");
+
+                return;
+            }
+
+            if (value) {
+
+                createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+
+            } else {
+
+                createjs.Ticker.timingMode = null;
+
+            }
+
+        },
+        "default":true
+    });
+
+
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
  * Date: 11/26/18
  * Time: 3:39 PM
  * To change this template use File | Settings | File Templates.
@@ -818,6 +1203,215 @@ X.registerModule("managers/broadcast", ["classes/Callback"], function () {
     X.broadcast = new X.classes.Callback();
 
 });
+// The stage resize code from animate plus a couple of additions I've
+// made to make it run correctly
+//
+// TODO: Find a way to edit this so the overflow is rendered too.
+
+X.registerModule(
+  "managers/canvasSize",
+  ["preferences/size", "elements/animate", "managers/utils"],
+  function() {
+    ////////////////////////////////////////
+    ////////// Begin
+    ////////////////////////////////////////
+    var internalResizeCanvas;
+    var alreadyWaitingForCanvasResize = false;
+
+    ////////////////////////////////////////
+    ////// private methods
+    var triggerResizeOnNextTick = X.utils.onNextTick(function() {
+      alreadyWaitingForCanvasResize = false;
+      internalResizeCanvas();
+    });
+
+    ////////////////////////////////////////
+    ////// Public methods
+
+    X.resizeCanvas = function() {
+      if (!alreadyWaitingForCanvasResize) {
+        alreadyWaitingForCanvasResize = true;
+        triggerResizeOnNextTick();
+      }
+    };
+
+    ////////////////////////////////////////
+    ////////// Calculate canvas width
+    ////////////////////////////////////////
+
+    X.animate.callWhenLoaded(function() {
+      var domContainers = [
+        document.getElementById("canvas"),
+        document.getElementById("animation_container"),
+        document.getElementById("dom_overlay_container")
+      ];
+
+      var lastW,
+        lastH,
+        lastS = 1,
+        lib = X.animate.library;
+
+      internalResizeCanvas = function(e) {
+        if (e) e.preventDefault();
+
+        // Render according to user's current settings for stageWidth and stageHeight
+        // Which might not bare any relation to the actual stage height or stage width
+        // due to outerRendering.
+        var originalW = X.preferences.stageWidth;
+        var originalH = X.preferences.stageHeight;
+        // The width of stage in pixels (example: 958)
+        var iw = window.innerWidth,
+          // The height of stage in pixels (example: 574)
+          ih = window.innerHeight;
+
+        // If device displays more pixels in a pixel space due to
+        // 'retina' screens. (example: 1) No retina.
+        var pRatio = window.devicePixelRatio || 1,
+          // On the canvas, how many real pixels would be needed
+          // to simulate a canvas pixel if this was stretched out
+          // according to width
+          // (example: 2.395)
+          xRatio = iw / originalW,
+          // On the canvas, how many real pixels would be needed
+          // to simulate a canvas pixel if this was stretched out
+          // according to height
+          // (example: 0.7175)
+          yRatio = ih / originalH,
+          // A temp variable which will either hold the value of xRatio
+          // or yRatio depending on which one should be used based
+          // on the users publish settings.
+          sRatio = 1;
+
+        // Publish Settings > Javascript > Basic > Make Responsive
+        // Example: true
+        if (X.preferences.makeResponsive) {
+          // THE FOLLOWING IF BLOCK
+          // Is purely to calculate what sRatio should equal
+
+          // If the screen size has not changed since last time
+          if (
+            (X.preferences.responsiveDirection ==
+              X.preferences.responsiveDirections.WIDTH &&
+              lastW == iw) ||
+            (X.preferences.responsiveDirection ==
+              X.preferences.responsiveDirections.HEIGHT &&
+              lastH == ih)
+          ) {
+            sRatio = lastS;
+
+            // If we have not checked Scale to Visible Area
+            // } else if (!isScale) {
+            //   if (iw < originalW || ih < originalH)
+            //     sRatio = Math.min(xRatio, yRatio);
+
+            // This is what runs in our example
+          } else if (
+            X.preferences.scaleType == X.preferences.scaleTypes.FIT_IN_VIEW
+          ) {
+            sRatio = Math.min(xRatio, yRatio);
+
+            // Unknown setting
+          } else if (scaleType == X.preferences.scaleTypes.STRETCH_TO_FIT) {
+            sRatio = Math.max(xRatio, yRatio);
+          } else {
+            if (iw < originalW || ih < originalH)
+              sRatio = Math.min(xRatio, yRatio);
+          }
+        }
+
+        // Example: sRatio equals yRatio which is 0.7175
+
+        ////////////////////////////////////////
+        ////////// MY CALCULATION OF STAGE SIZE
+        ////////////////////////////////////////
+
+        if (X.preferences.outerRendering) {
+
+          // WIDTH
+          if (sRatio === xRatio) {
+
+			  // You may be looking at this code and wondering why we never reference
+			  // pRatio which allows us to compensate for retina screens.
+			  // Well it seems this part of the code doesn't really need to deal with that.
+			  // Other parts will, but this part is safe.
+            lib.properties.width = originalW;
+            lib.properties.height = ih / sRatio;
+
+            // HEIGHT
+          } else if (sRatio === yRatio) {
+            lib.properties.width = iw / sRatio;
+            lib.properties.height = originalH;
+
+            // Not responsive
+          } else {
+            lib.properties.width = originalW;
+            lib.properties.height = originalH;
+
+            console.log(
+              "To use X.properties.outerRendering you must also enable Make Responsive under Publish Settings"
+            );
+          }
+
+          ////////////////////////////////////////
+          ////// Reposistion stage in center
+          if (X.preferences.linkNameToLibrarySymbol) {
+
+            var timeline = X.movie.rootTimeline.get();
+            timeline.y = lib.properties.height / 2 - originalH / 2;
+            timeline.x = lib.properties.width / 2 - originalW / 2;
+
+          }
+
+			// If this has been enabled and then disabled
+        } else {
+            lib.properties.width = originalW;
+            lib.properties.height = originalH;
+            var timeline = X.movie.rootTimeline.get();
+            timeline.y = 0;
+            timeline.x = 0;
+		}
+
+        // The width of the stage (example: 400)
+        var w = lib.properties.width,
+          // The height of the stage (example: 800)
+          h = lib.properties.height;
+        ////////////////////////////////////////
+        ////////// THE MEAT AND POTATOES
+        ////////////////////////////////////////
+
+        // stage width * retina screen modifier * axis ratio
+        // (400 * 1 * 0.7175) = 287
+        domContainers[0].width = w * pRatio * sRatio;
+        // stage height * retina screen modifier * axis ratio
+        // (800 * 1 * 0.7175) = 574
+        domContainers[0].height = h * pRatio * sRatio;
+
+        domContainers.forEach(function(container) {
+          container.style.width = w * sRatio + "px";
+          container.style.height = h * sRatio + "px";
+        });
+
+        // Set scale in consideration of retina displays
+        stage.scaleX = pRatio * sRatio;
+        stage.scaleY = pRatio * sRatio;
+
+        // Setting up for next time this function runs
+        lastW = iw;
+        lastH = ih;
+        lastS = sRatio;
+
+        // Redraw stage
+        stage.tickOnUpdate = false;
+        stage.update();
+        stage.tickOnUpdate = true;
+      };
+
+      window.addEventListener("resize", internalResizeCanvas, true);
+      internalResizeCanvas();
+    });
+  }
+);
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -1261,7 +1855,8 @@ X.registerModule(
     }
 
     function dispatchOnSlideObject(event) {
-      X.slideObject.proxy.dispatchEvent(event);
+      if (X.slideObject && X.slideObject.proxy)
+        X.slideObject.proxy.dispatchEvent(event);
     }
 
     function forwardEvent(eventName) {
@@ -1598,6 +2193,7 @@ X.registerModule("managers/utils", function () {
         },
 
         "onNextTick": function (func) {
+
             return function () {
 
                 var args = arguments;
@@ -2219,291 +2815,6 @@ X.registerModule("managers/utils", function () {
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 10/29/18
- * Time: 10:24 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "elements/slideObject"], function () {
-
-    // This setting was created because I didn't know Captivate supplied settings to turn off its
-    // default scrollbar and border when viewing web objects.
-
-    X.preferences.define({
-        "name":"disableIFrameBorder",
-        "method":function (value) {
-
-            if (!X.captivate.isLoaded()) {
-                return;
-            }
-
-            if (value) {
-
-                disableBorder();
-
-            } else {
-
-                enableBorder();
-
-            }
-
-        },
-        "default":false
-    });
-
-    function disableBorder () {
-        X.slideObject.div.style.border = "0px";
-    }
-
-    function enableBorder () {
-        X.slideObject.div.style.border = "1px";
-    }
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/22/18
- * Time: 9:01 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences", "elements/slideObject", "managers/movie", "elements/animate"], function () {
-
-    X.preferences.define({
-        "name":"linkNameToLibrarySymbol",
-        "animateRequired": true,
-        "method":function (value) {
-
-            if (isInvalid(value)) {
-                return;
-            }
-
-            var name = getSlideObjectClassName();
-
-            if (!name) {
-                X.log("Could not find a symbol by the name of '" + getSlideObjectClassName() +
-                      "'. Perhaps this animation is only included to preload other animations?");
-
-                return;
-            }
-
-            X.movie.rootTimeline.set(name);
-
-        },
-        "default":false
-    });
-
-
-
-
-    function isInvalid (value) {
-        return !value || !X.slideObject
-    }
-
-
-    function getSlideObjectClassName () {
-
-        var name = X.slideObject.name;
-
-        if (X.animate.library[name]) {
-
-            return name;
-
-        }
-
-        // If we're here, we haven't found the correct name
-        // Let's try seeing if there's an underscore at the end of the name
-        var underscore = name.lastIndexOf("_");
-
-        if (underscore > 0) {
-
-            name = name.substring(0, underscore);
-
-        }
-
-        if (X.animate.library[name]) {
-
-            // If this is not valid, the function we are returning this to will pick it up.
-            return name;
-
-        }
-
-        return false;
-
-    }
-
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 12/17/18
- * Time: 10:41 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "managers/utils"], function () {
-
-    "use strict";
-
-    var list,
-        init = X.utils.singleton(function () {
-
-            X.movie.changeCallback.addCallback("play", function () {
-                X.utils.forEach(list, function (key, element) {
-
-                    element.play();
-
-                });
-            });
-
-            X.movie.changeCallback.addCallback("stop", function () {
-                X.utils.forEach(list, function (key, element) {
-
-                    element.stop();
-
-                });
-            })
-
-        });
-
-
-    X.preferences.define({
-        "name":"pausingInstanceSuffix",
-        "animateRequired": true,
-        "method":function (suffix) {
-
-            init();
-
-            function reactToNewList () {
-
-                list = X.movie.children.getListMatchingSuffix(suffix);
-
-            }
-
-            if (X.movie.children.exist) {
-                reactToNewList();
-            }
-
-            X.movie.children.changeCallback.addCallback("*", reactToNewList);
-
-        }
-    });
-
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/29/18
- * Time: 10:28 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("managers/preferences/preview", ["managers/preferences"], function () {
-
-    "use strict";
-
-    X.preferences.define({
-        "name":"preview",
-        "animateRequired": true,
-        "method":function (symbolName) {
-
-            if (X.captivate.isLoaded()) {
-                return;
-            }
-
-            X.movie.rootTimeline.set(symbolName);
-
-            document.addEventListener("click", X.movie.play);
-
-        }
-    });
-
-});
-/*
-
-// The stage resize code from animate plus a couple of additions I've
-// made to make it run correctly
-//
-// TODO: Find a way to edit this so the overflow is rendered too.
-
-function makeResponsive(isResp, respDim, isScale, scaleType) {
-		var lib = X.animate.library;
-		var lastW, lastH, lastS=1;
-		window.addEventListener('resize', resizeCanvas, true);
-		resizeCanvas();
-		function resizeCanvas(e) {
-			if (e) e.preventDefault();
-			var w = lib.properties.width, h = lib.properties.height;
-			var iw = window.innerWidth, ih=window.innerHeight;
-			var pRatio = window.devicePixelRatio || 1, xRatio=iw/w, yRatio=ih/h, sRatio=1;
-			if(isResp) {
-				if((respDim=='width'&&lastW==iw) || (respDim=='height'&&lastH==ih)) {
-					sRatio = lastS;
-				}
-				else if(!isScale) {
-					if(iw<w || ih<h)
-						sRatio = Math.min(xRatio, yRatio);
-				}
-				else if(scaleType==1) {
-					sRatio = Math.min(xRatio, yRatio);
-				}
-				else if(scaleType==2) {
-					sRatio = Math.max(xRatio, yRatio);
-				}
-			}
-			canvas.width = //w*pRatio*sRatio;
-			canvas.height = h*pRatio*sRatio;
-			canvas.style.width = dom_overlay_container.style.width = anim_container.style.width =  w*sRatio+'px';
-			canvas.style.height = anim_container.style.height = dom_overlay_container.style.height = h*sRatio+'px';
-			stage.scaleX = pRatio*sRatio;
-			stage.scaleY = pRatio*sRatio;
-			lastW = iw; lastH = ih; lastS = sRatio;
-			stage.tickOnUpdate = false;
-			stage.update();
-			stage.tickOnUpdate = true;
-		}
-	}
-	makeResponsive(true,'both',true,1);
-*/
-
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 12/10/18
- * Time: 3:57 PM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("useRAFTiming", ["managers/preferences"], function () {
-
-    "use strict";
-
-    X.preferences.define({
-        "name":"useRAFTiming",
-        "animateRequired": true,
-        "method":function (value) {
-
-            if (!createjs || !createjs.Ticker) {
-                console.error("Tried to change createjs.Ticker timing mode before it was loaded");
-
-                return;
-            }
-
-            if (value) {
-
-                createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
-
-            } else {
-
-                createjs.Ticker.timingMode = null;
-
-            }
-
-        },
-        "default":true
-    });
-
-
-
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
  * Date: 11/26/18
  * Time: 5:43 PM
  * To change this template use File | Settings | File Templates.
@@ -2886,6 +3197,8 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 
     "use strict";
 
+	var _timeline;
+
     X.movie.rootTimeline = {
 
         "changeCallback": new X.classes.Callback(),
@@ -2918,17 +3231,21 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 
 
             function setTimeline (timeline) {
+				_timeline = timeline;
                 X.movie._setRootTimeline(timeline);
                 X.movie.rootTimeline.changeCallback.sendToCallback("*", timeline);
             }
 
 
-        }
+        },
+
+		"get": function () {
+
+			return _timeline;
+
+		}
 
     };
-
-});
-X.registerModule("managers/notifications/animationReady", function () {
 
 });
 

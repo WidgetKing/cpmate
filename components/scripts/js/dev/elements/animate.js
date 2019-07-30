@@ -19,11 +19,14 @@ X.registerModule("elements/animate", function() {
     if (isAnimateLoaded()) {
       window.clearInterval(waitingForAnimateLoadInterval);
 
-      for (var i = 0; i < callWhenLoadedList.length; i += 1) {
-        callWhenLoadedList[i]();
-      }
-
+      // We clear this here just in case we hit an error while
+      // executing the below
       waitingForAnimateLoadInterval = null;
+
+      callWhenLoadedList.forEach(function(method) {
+        method();
+      });
+
       callWhenLoadedList = null;
     }
   }
@@ -37,6 +40,7 @@ X.registerModule("elements/animate", function() {
 
   X.animate = {
     callWhenLoaded: function(method) {
+      // Animate is loaded
       if (isAnimateLoaded()) {
         if (waitingForAnimateLoadInterval) {
           // Oh, the interval has not discovered animate is loaded
@@ -46,6 +50,9 @@ X.registerModule("elements/animate", function() {
         } else {
           method();
         }
+
+        // Animate not yet loaded
+        // Add to waiting list
       } else {
         callWhenLoadedList.push(method);
 
@@ -93,7 +100,10 @@ X.registerModule("elements/animate", function() {
   function dispatchAnimationReady() {
     if (X.captivate) {
       if (X.captivate.extra && X.captivate.extra.cpMate.notifyCpExtra) {
-        X.captivate.extra.cpMate.notifyCpExtra(X.slideObject.name, "animationready");
+        X.captivate.extra.cpMate.notifyCpExtra(
+          X.slideObject.name,
+          "animationready"
+        );
       }
     } else {
       console.log(
