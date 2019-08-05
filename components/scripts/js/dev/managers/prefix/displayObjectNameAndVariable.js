@@ -9,22 +9,29 @@ X.registerModule(
       // my, var, name
       var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
 
-      createVariableIfNotInCaptivate(nameSplitMinusStart);
-
       var validVarName = loopThroughVarNames(nameSplitMinusStart);
 
       if (validVarName) {
         return validVarName;
       } else {
-        X.error("PR001", name);
+
+		  // If we are in Captivate we have not been able to locate
+		  // the variable
+        if (X.captivate.hasCpExtra()) {
+          X.error("PR001", name);
+
+			// If we are inside of an Animate preview then we need to
+			// create the variable
+        } else {
+          createVariableIfNotInCaptivate(nameSplitMinusStart);
+          return getVariableName(name);
+        }
       }
     }
 
     function createVariableIfNotInCaptivate(nameSections) {
-      if (!X.captivate.hasCpExtra()) {
-        var varName = buildVariableNameFromArray(nameSections);
-        X.cpVariablesManager.setVariableValue(varName, "");
-      }
+      var varName = buildVariableNameFromArray(nameSections);
+      X.cpVariablesManager.setVariableValue(varName, "");
     }
 
     function loopThroughVarNames(nameSections) {

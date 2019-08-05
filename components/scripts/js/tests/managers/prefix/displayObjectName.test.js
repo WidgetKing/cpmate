@@ -3,9 +3,6 @@ describe("managers/prefix/displayObjectName", function () {
 	// MODULES
 	var mod = unitTests.requestModule("managers/prefix/displayObjectName");
 	var utils = unitTests.requestModule("managers/utils");
-	
-	// VARIABLES
-	var handleNewTimeline;
 
 	// METHODS
 	function addToChildrenList (list) {
@@ -42,6 +39,7 @@ describe("managers/prefix/displayObjectName", function () {
 			"classes":unitTests.classes,
 			"movie":{
 				"children":{
+					"newChildCallback": new unitTests.classes.Callback(),
 					"changeCallback": new unitTests.classes.Callback(),
 					"list": {}
 				}
@@ -49,12 +47,6 @@ describe("managers/prefix/displayObjectName", function () {
 		};
 
 		utils();
-
-		spyOn(X.movie.children.changeCallback, "addCallback").and.callFake(function (key, method) {
-
-			handleNewTimeline = method;
-			
-		});
 
 		mod();
 
@@ -77,7 +69,19 @@ describe("managers/prefix/displayObjectName", function () {
 		
 	});
 
-	describe("handleNewTimeline()", function () {
+	describe("newChildCallback.addCallback(*)", function () {
+		
+		function sendChildren(children) {
+
+			children.forEach(function (childName) {
+
+				X.movie.children.newChildCallback.sendToCallback("*", {
+					name:childName
+				});
+
+			})
+
+		}
 		
 		it("should inform us of any children matching our registered prefix", function () {
 
@@ -87,10 +91,9 @@ describe("managers/prefix/displayObjectName", function () {
 			X.registerDisplayObjectNamePrefix("xFooBar", spy_foobar)
 			X.registerDisplayObjectNamePrefix("xBarFoo", spy_barfoo)
 
-			addToChildrenList(["bill", "xFooBar_1", "murry", "xFooBar_2", "xBarFoo"]);
 			
 			// 2: TEST
-			handleNewTimeline();
+			sendChildren(["bill", "xFooBar_1", "murry", "xFooBar_2", "xBarFoo"]);
 
 			// 3: ASSERT
 			calledWithMC(spy_foobar, "xFooBar_1");
@@ -109,18 +112,16 @@ describe("managers/prefix/displayObjectName", function () {
 			var spy_foobar = jasmine.createSpy("xFooBar registered method");
 			X.registerDisplayObjectNamePrefix("xFooBar", spy_foobar)
 
-			addToChildrenList(["xFooBar_1"]);
+			sendChildren(["xFooBar_1"]);
 
-			handleNewTimeline();
 			
 			calledWithMC(spy_foobar, "xFooBar_1");
 
 			// 2: TEST
 			spy_foobar.calls.reset();
 
-			addToChildrenList(["xFooBar_2"]);
+			sendChildren(["xFooBar_2"]);
 			
-			handleNewTimeline();
 
 			// 3: ASSERT
 			calledWithMC(spy_foobar, "xFooBar_2");
@@ -131,17 +132,17 @@ describe("managers/prefix/displayObjectName", function () {
 
 			// 1: SETUP
 			var spy_foobar = jasmine.createSpy("xFooBar registered method");
-			addToChildrenList(["xfoobar_1"]);
+			X.registerDisplayObjectNamePrefix("xFooBar", spy_foobar);			
 
 			// 2: TEST
-			X.registerDisplayObjectNamePrefix("xFooBar", spy_foobar);			
-			handleNewTimeline();
+			sendChildren(["xfoobar_1"]);
 
 			// 3: ASSERT
 			calledWithMC(spy_foobar, "xfoobar_1");
 			
 
 		});
+		
 	});
 
 });

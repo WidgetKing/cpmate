@@ -5,155 +5,76 @@
  * Time: 11:25 AM
  * To change this template use File | Settings | File Templates.
  */
-describe("A test suite for managers/movie/children", function () {
+describe("A test suite for managers/movie/children", function() {
+  "use strict";
 
-    "use strict";
+  var module = unitTests.requestModule("managers/movie/children"),
+    utils = unitTests.requestModule("managers/utils"),
+    hook = unitTests.requestModule("managers/hook");
 
-    var module = unitTests.requestModule("managers/movie/children"),
-        utils = unitTests.requestModule("managers/utils"),
+  beforeEach(function() {
+      window.X = {
+        classes: unitTests.classes,
+        movie: {}
+      };
 
-        sendTimeline = function (timeline) {
-            module();
-            X.movie.rootTimeline.changeCallback.sendToCallback("*", timeline);
-        },
-
-        mockTimeline = {
-            "name":"main",
-            "children": [
-
-                {
-                    "name":"child1"
-                },
-
-                {
-                    "name":"child2",
-                    "children": [
-
-                        {
-                            "name":"child2-1"
-                        }
-
-                    ]
-                }
-            ]
-        };
-
-    beforeEach(function () {
-        window.X = {
-            "classes":unitTests.classes,
-            "movie":{
-                "rootTimeline":{
-                    "changeCallback": new unitTests.classes.Callback()
-                }
+      window.createjs = {
+        MovieClip: {
+          prototype: {
+            addChildAt: function() {
+              // Function to be overwritten
             }
-        };
+          }
+        }
+      };
 
-        window.createjs = {
-            "Ticker":{
-                "on": function (a, f) {
-                    f();
-                }
-            }
-        };
+      hook();
+      utils();
+      module();
+  });
 
-        spyOn(X.movie.rootTimeline.changeCallback, "addCallback").and.callThrough();
+  afterEach(function() {
+    delete window.X;
+  });
 
-        utils();
-        module();
+  it("should define X.movie.children", function() {
+    expect(X.movie.children).toBeDefined();
+  });
 
+  describe("newChildCallback", function() {
+    it("should inform us of new children", function() {
+      // 1: SETUP
+      var spyStar = jasmine.createSpy("newChildCallback.addCallback(*) result");
+      var spyName = jasmine.createSpy(
+        "newChildCallback.addCallback('name') result"
+      );
+
+      X.movie.children.newChildCallback.addCallback("*", spyStar);
+      X.movie.children.newChildCallback.addCallback("foobar", spyName);
+
+      // 2: TEST
+      createjs.MovieClip.prototype.addChildAt({
+        name: "foobar"
+      });
+
+      // 3: ASSERT
+      expect(spyStar).toHaveBeenCalled();
+      expect(spyName).toHaveBeenCalled();
     });
 
-    afterEach(function () {
-        delete window.X;
+    it("should not inform us of children without names", function() {
+      // 1: SETUP
+      var spy = jasmine.createSpy("newChildCallback.addCallback(*) result");
+
+      X.movie.children.newChildCallback.addCallback("*", spy);
+
+      // 2: TEST
+      createjs.MovieClip.prototype.addChildAt({
+        name: null
+      });
+
+      // 3: ASSERT
+      expect(spy).not.toHaveBeenCalled();
     });
-
-    it("should listen for new main timelines", function () {
-        expect(X.movie.rootTimeline.changeCallback.addCallback).toHaveBeenCalled();
-    });
-
-    it("should define X.movie.children", function () {
-
-        expect(X.movie.children).toBeDefined();
-
-    });
-
-    it("should create a list of all children", function () {
-
-        sendTimeline({
-            "name":"main",
-            "children": [
-
-                {
-                    "name":"child1"
-                },
-
-                {
-                    "name":"child2",
-                    "children": [
-
-                        {
-                            "name":"child2-1"
-                        }
-
-                    ]
-                }
-            ]
-        });
-
-        var a = jasmine.anything();
-
-        expect(X.movie.children.list).toEqual(
-            {
-                "main":a,
-                "child1":a,
-                "child2":a,
-                "child2-1":a
-            }
-        );
-
-    });
-
-    it("should notify Callback when new list of children is found", function () {
-
-        var callback = jasmine.createSpy("callback");
-        X.movie.children.changeCallback.addCallback("*", callback);
-
-        X.movie.rootTimeline.changeCallback.sendToCallback("*", mockTimeline);
-
-        expect(callback).toHaveBeenCalled();
-
-    });
-
-    it("should update the children.exist property", function () {
-
-        expect(X.movie.children.exist).toBe(false);
-
-        X.movie.rootTimeline.changeCallback.sendToCallback("*", {});
-
-        expect(X.movie.children.exist).toBe(false);
-
-        X.movie.rootTimeline.changeCallback.sendToCallback("*", mockTimeline);
-
-        expect(X.movie.children.exist).toBe(true);
-
-    });
-
-    it("should implement X.movie.children.getListMatchingSuffix", function () {
-
-        X.movie.children.list = {
-
-            "foobar": "[foobar]",
-            "foo_bar": "[foo_bar]",
-            "too_bar": "[too_bar]"
-
-        };
-
-        expect(X.movie.children.getListMatchingSuffix("_bar")).toEqual({
-
-            "foo_bar": "[foo_bar]",
-            "too_bar": "[too_bar]"
-
-        })
-
-    });
+  });
 });

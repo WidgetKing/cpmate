@@ -8,17 +8,20 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
   var utils = unitTests.requestModule("managers/utils");
 
   // VARIABLES
-  var triggerChildChange;
   var hasCpExtra;
 
   // METHODS
-  function addToChildrenList(list) {
-    list.forEach(function(name) {
-      X.movie.children.list[name] = {
-        name: name
-      };
-    });
-  }
+		function sendChildren(children) {
+
+			children.forEach(function (childName) {
+
+				X.movie.children.newChildCallback.sendToCallback("*", {
+					name:childName
+				});
+
+			})
+
+		}
 
   function expectCallTo(spy, movieClipName, value) {
     expect(spy).toHaveBeenCalledWith(
@@ -47,7 +50,7 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       },
       movie: {
         children: {
-          changeCallback: new unitTests.classes.Callback(),
+          newChildCallback: new unitTests.classes.Callback(),
           list: {}
         }
       },
@@ -68,15 +71,6 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
         stopListeningForVariableChange: fakeVariables.removeCallback
       }
     };
-
-    utils();
-
-    spyOn(X.movie.children.changeCallback, "addCallback").and.callFake(function(
-      key,
-      method
-    ) {
-      triggerChildChange = method;
-    });
 
     utils();
     displayObjectName();
@@ -102,7 +96,6 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       var movieClipName = "xfoobar_myvar_1";
 
       var spy = jasmine.createSpy("method");
-      addToChildrenList([movieClipName]);
 
       // creating variable
       X.cpVariablesManager.setVariableValue(variableName, variableValue);
@@ -110,10 +103,32 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       // 2: TEST
       X.registerDisplayObjectNamePrefixAndVariable("xfoobar", spy);
 
-      triggerChildChange();
+      sendChildren([movieClipName]);
 
       // 3: ASSERT
       expectCallTo(spy, movieClipName, variableValue);
+    });
+
+    it("should work with multiple movieclips trying to register to same variable", function() {
+      // 1: SETUP
+      var variableName = "myvar";
+      var variableValue = "value";
+      var movieClip1Name = "xfoobar_myvar";
+      var movieClip2Name = "xfoobar_myvar_1";
+		hasCpExtra = true;
+
+      var spy = jasmine.createSpy("movieClip1");
+
+      // creating variable
+      X.cpVariablesManager.setVariableValue(variableName, variableValue);
+
+      // 2: TEST
+      X.registerDisplayObjectNamePrefixAndVariable("xfoobar", spy);
+
+      sendChildren([movieClip1Name, movieClip2Name]);
+
+      // 3: ASSERT
+		expect(spy.calls.count()).toBe(2);
     });
 
     it("should find variable name even if doesn't match movieClip name", function() {
@@ -123,7 +138,6 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       var movieClipName = "xfoobar_my_var_is_well_known_1";
 
       var spy = jasmine.createSpy("method");
-      addToChildrenList([movieClipName]);
 
       X.cpVariablesManager.setVariableValue(
         variableName,
@@ -133,7 +147,7 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       // 2: TEST
       X.registerDisplayObjectNamePrefixAndVariable("xfoobar", spy);
 
-      triggerChildChange();
+      sendChildren([movieClipName]);
 
       X.cpVariablesManager.setVariableValue(variableName, variableValue);
 
@@ -146,14 +160,13 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       var movieClipName = "xfoobar_non_existant_variable";
 
       var spy = jasmine.createSpy("method");
-      addToChildrenList([movieClipName]);
 
       spyOn(X.cpVariablesManager, "listenForVariableChange");
 
       // 2: TEST
       X.registerDisplayObjectNamePrefixAndVariable("xfoobar", spy);
 
-      triggerChildChange();
+      sendChildren([movieClipName]);
 
       // 3: ASSERT
       expect(
@@ -173,16 +186,40 @@ describe("managers/prefix/displayObjectNameAndVariable", function() {
       // This is really the crux of the test right here
       hasCpExtra = false;
 
-      addToChildrenList([movieClipName]);
 
       // 2: TEST
       X.registerDisplayObjectNamePrefixAndVariable("xfoobar", spy);
 
-      triggerChildChange();
+      sendChildren([movieClipName]);
       X.cpVariablesManager.setVariableValue(variableName, variableValue);
 
       // 3: ASSERT
       expectCallTo(spy, movieClipName, variableValue);
+    });
+
+
+    it("should when outside of Captivate still link two variables together, even if there is a _1 suffix", function() {
+      // 1: SETUP
+      var variableName = "myvar";
+      var variableValue = "value";
+      var movieClip1Name = "xfoobar_myvar";
+      var movieClip2Name = "xfoobar_myvar_1";
+		hasCpExtra = false;
+
+      var spy = jasmine.createSpy("movieClip1");
+
+      // creating variable
+      X.cpVariablesManager.setVariableValue(variableName, variableValue);
+		spyOn(X.cpVariablesManager, "setVariableValue");
+
+      // 2: TEST
+      X.registerDisplayObjectNamePrefixAndVariable("xfoobar", spy);
+
+      sendChildren([movieClip1Name, movieClip2Name]);
+
+      // 3: ASSERT
+		// should not have created another variable
+		expect(X.cpVariablesManager.setVariableValue).not.toHaveBeenCalled();
     });
   });
 });

@@ -5,76 +5,38 @@
  * Time: 11:23 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/movie/children", ["managers/movie/rootTimeline", "managers/utils"], function () {
-
+X.registerModule(
+  "managers/movie/children",
+  ["managers/hook", "managers/movie/rootTimeline", "managers/utils"],
+  function() {
     "use strict";
 
     X.movie.children = {
-        "list":{},
-        "changeCallback": new X.classes.Callback(),
-        "exist": false,
-        "getListMatchingSuffix": function (suffix) {
-
-            return X.utils.filter(X.movie.children.list, function (name, value) {
-
-                return X.utils.hasSuffix(name, suffix);
-
-            });
-
-        }
+      newChildCallback: new X.classes.Callback()
     };
 
-    function getDeepListOfChildren (timeline) {
+    ////////////////////////////////////////
+    ////// newChildCallback functionality
+    var existingChildIds = {};
 
-        var newChildren = {};
+    X.addHookAfter(
+      createjs.MovieClip.prototype,
+      "addChildAt",
+      X.utils.unless(
+		  // predicate
+        function(child) {
+          return X.utils.has(child.id, existingChildIds) || X.utils.isNil(child.name)
+        },
 
-        function addChild (child) {
-            if (child.name && !newChildren.hasOwnProperty(child.name)) {
-                newChildren[child.name] = child;
-            }
+		  // method
+        function(child) {
+          existingChildIds[child.id] = true;
+
+          X.movie.children.newChildCallback.sendToCallback(child.name, child);
+          X.movie.children.newChildCallback.sendToCallback("*", child);
         }
+      )
+    );
 
-
-        function inspectChildren (parent) {
-
-            addChild(parent);
-
-            parent.children.forEach(function (child) {
-
-                if (child.children && child.children.length > 0) {
-
-                    inspectChildren(child);
-
-                } else {
-
-                    addChild(child);
-
-                }
-
-            })
-
-        }
-
-        if (timeline.children) {
-            inspectChildren(timeline);
-        }
-
-        return newChildren;
-
-    }
-
-
-
-    function handleNewTimeline (timeline) {
-
-        X.movie.children.list = getDeepListOfChildren(timeline);
-
-        X.movie.children.exist = !X.utils.isEmpty(X.movie.children.list);
-
-        X.movie.children.changeCallback.sendToCallback("*");
-
-    }
-
-    X.movie.rootTimeline.changeCallback.addCallback("*", X.utils.onNextTick(handleNewTimeline));
-
-});
+  }
+);

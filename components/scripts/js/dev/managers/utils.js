@@ -702,7 +702,13 @@ X.registerModule("managers/utils", function () {
 
 			}
 
-		}
+		},
+
+		"has": curry(2, function (property, object) {
+
+			return object.hasOwnProperty(property)
+
+		})
     };
 
 });

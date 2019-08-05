@@ -13,7 +13,7 @@
 
     window.X = {
         "version":"0.0.2",
-        "build":"2386"
+        "build":"2545"
     };
 
     var moduleRegistry = {},
@@ -203,262 +203,6 @@
     });
 
 }());
-
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/13/18
- * Time: 3:50 PM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("elements/animate", function() {
-  "use strict";
-
-  var callWhenLoadedList = [],
-    waitingForAnimateLoadInterval;
-
-  function isAnimateLoaded() {
-    return window.stage;
-  }
-
-  function animateLoadIntervalHandler() {
-    if (isAnimateLoaded()) {
-      window.clearInterval(waitingForAnimateLoadInterval);
-
-      // We clear this here just in case we hit an error while
-      // executing the below
-      waitingForAnimateLoadInterval = null;
-
-      callWhenLoadedList.forEach(function(method) {
-        method();
-      });
-
-      callWhenLoadedList = null;
-    }
-  }
-
-  function setUpAnimateLoadInterval() {
-    waitingForAnimateLoadInterval = window.setInterval(
-      animateLoadIntervalHandler,
-      10
-    );
-  }
-
-  X.animate = {
-    callWhenLoaded: function(method) {
-      // Animate is loaded
-      if (isAnimateLoaded()) {
-        if (waitingForAnimateLoadInterval) {
-          // Oh, the interval has not discovered animate is loaded
-          // Strange as it may seem, I've actually had this happen.
-          callWhenLoadedList.push(method);
-          animateLoadIntervalHandler();
-        } else {
-          method();
-        }
-
-        // Animate not yet loaded
-        // Add to waiting list
-      } else {
-        callWhenLoadedList.push(method);
-
-        if (!waitingForAnimateLoadInterval) {
-          setUpAnimateLoadInterval();
-        }
-      }
-    }
-  };
-
-  X.animate.callWhenLoaded(function() {
-    X.animate.stage = stage;
-
-    // Now that we have access to the stage it's important we add
-    // support for touch events.
-    // We put this code here rather than in another file because
-    // the stage takes an arbitrary amount of time to load.
-    // Therefore this is the safest place to put it.
-    createjs.Touch.enable(X.animate.stage, true);
-
-    X.animate.mainTimeline = stage.children[0];
-
-    if (window.AdobeAn) {
-      X.animate.library = AdobeAn.getComposition(
-        AdobeAn.bootcompsLoaded[0]
-      ).getLibrary();
-    }
-
-    // Now is the point where it is safe for the animation to play
-    dispatchAnimationReady();
-  });
-
-  /**
-   * Dispatches the 'animationready' event on the window.
-   *
-   * Side Effects:
-   *   - Accesses functions...
-   *   - - X.event.newEvent
-   *   - - window.dispatchEvent
-   *   - Dispatches an event on the window object.
-   *
-   * @parmas None
-   * @returns None
-   */
-  function dispatchAnimationReady() {
-    if (X.captivate) {
-      if (X.captivate.extra && X.captivate.extra.cpMate.notifyCpExtra) {
-        X.captivate.extra.cpMate.notifyCpExtra(
-          X.slideObject.name,
-          "animationready"
-        );
-      }
-    } else {
-      console.log(
-        "WARNING: Tried to send 'animationready' notification to CpExtra, " +
-          "but the 'elements/captivate' module has not yet run"
-      );
-    }
-    // var event = X.event.newEvent("animationready");
-    // window.dispatchEvent(event);
-  }
-
-  /*
-    var time = 0;
-
-    var interval = window.setInterval(function () {
-
-        if (window.stage) {
-
-            console.log("Ready: " + time);
-            console.log(stage)
-            window.clearInterval(interval);
-
-        }
-
-        time += 10;
-
-    }, 10);
-
-    window.addEventListener("load", function () {
-        console.log(stage);
-        X.animate = {
-            "mainTimeline": stage.children[0]
-        }
-    });
-*/
-});
-
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 10/29/18
- * Time: 5:56 PM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("elements/captivate", ["managers/debugging/logging"], function () {
-
-    var MINIMUM_CP_EXTRA_VERSION = "1.4.2";
-
-    X.captivate = {
-        "isLoaded":function () {
-            return window.parent && window.parent.hasOwnProperty("cp");
-        },
-        "hasCpExtra": function () {
-            if (X.captivate.window) {
-                return X.captivate.window.hasOwnProperty("_extra");
-            }
-            return false;
-        },
-        "window":null,
-        "base": null,
-        "extra": null,
-        "variables": null
-    };
-
-    function getCaptivateElements () {
-
-        if (X.captivate.isLoaded()) {
-
-            X.captivate.window = window.parent;
-            X.captivate.base   = X.captivate.window.cp;
-            X.captivate.alert  = X.captivate.window.alert;
-            X.captivate.variables = X.captivate.window;
-
-            if (X.captivate.hasCpExtra()) {
-
-                X.captivate.extra = {};
-                getCpExtraElements();
-
-            } else {
-                X.error("GE001");
-            }
-
-        }
-    }
-
-    function getCpExtraElements () {
-
-        X.captivate.extra = X.captivate.window._extra;
-        X.captivate.extraPublicInterface = X.captivate.window.X;
-        X.captivate.extraVersion = X.captivate.extraPublicInterface.version;
-		X.captivate.extraCallActionOn = X.captivate.extraPublicInterface.callActionOn;
-
-        if (X.captivate.extraVersion < MINIMUM_CP_EXTRA_VERSION) {
-            X.error("GE002", X.captivate.extraVersion, MINIMUM_CP_EXTRA_VERSION);
-        }
-
-    }
-
-    getCaptivateElements();
-
-});
-
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/1/18
- * Time: 10:25 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("elements/slideObject", ["elements/captivate", "managers/broadcast"], function () {
-
-    function recursiveParentSearch (tag, property, value) {
-
-        while (tag.parentElement) {
-
-            if (tag.getAttribute(property) === value) {
-                return tag;
-            } else {
-                tag = tag.parentElement;
-            }
-        }
-
-        return null;
-
-    }
-
-    if (X.captivate.isLoaded()) {
-
-        X.slideObject = {};
-        X.slideObject.iframe = window.frameElement;
-        X.slideObject.div = recursiveParentSearch(X.slideObject.iframe, "class", "cp-WebObject");
-        X.slideObject.name = X.slideObject.div.getAttribute("id");
-        // Remove the 'c' from end of name
-        // Eg. change 'Web_1c' to 'Web_1';
-        X.slideObject.name = X.slideObject.name.substring(0, X.slideObject.name.length - 1);
-
-        if (X.captivate.extra) {
-            X.slideObject.proxy = X.captivate.extra.slideObjects.getSlideObjectByName(X.slideObject.name);
-        }
-
-    }
-
-    X.broadcast.addCallback("unload", function () {
-        if (X.slideObject) {
-            delete X.slideObject.proxy;
-        }
-    });
-
-});
 
 /* global _extra*/
 /**
@@ -817,378 +561,259 @@ X.registerModule("classes/MovieClipProxy", ["managers/classes"], function () {
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 10/29/18
- * Time: 10:24 AM
+ * Date: 11/13/18
+ * Time: 3:50 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "elements/slideObject"], function () {
+X.registerModule("elements/animate", function() {
+  "use strict";
 
-    // This setting was created because I didn't know Captivate supplied settings to turn off its
-    // default scrollbar and border when viewing web objects.
+  var callWhenLoadedList = [],
+    waitingForAnimateLoadInterval;
 
-    X.preferences.define({
-        "name":"disableIFrameBorder",
-        "method":function (value) {
-
-            if (!X.captivate.isLoaded()) {
-                return;
-            }
-
-            if (value) {
-
-                disableBorder();
-
-            } else {
-
-                enableBorder();
-
-            }
-
-        },
-        "default":false
-    });
-
-    function disableBorder () {
-        X.slideObject.div.style.border = "0px";
-    }
-
-    function enableBorder () {
-        X.slideObject.div.style.border = "1px";
-    }
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/22/18
- * Time: 9:01 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences", "elements/slideObject", "managers/movie", "elements/animate"], function () {
-
-    X.preferences.define({
-        "name":"linkNameToLibrarySymbol",
-        "animateRequired": true,
-        "method":function (value) {
-
-            if (isInvalid(value)) {
-                return;
-            }
-
-            var name = getSlideObjectClassName();
-
-            if (!name) {
-                X.log("Could not find a symbol by the name of '" + getSlideObjectClassName() +
-                      "'. Perhaps this animation is only included to preload other animations?");
-
-                return;
-            }
-
-            X.movie.rootTimeline.set(name);
-
-        },
-        "default":false
-    });
-
-
-
-
-    function isInvalid (value) {
-        return !value || !X.slideObject
-    }
-
-
-    function getSlideObjectClassName () {
-
-        var name = X.slideObject.name;
-
-        if (X.animate.library[name]) {
-
-            return name;
-
-        }
-
-        // If we're here, we haven't found the correct name
-        // Let's try seeing if there's an underscore at the end of the name
-        var underscore = name.lastIndexOf("_");
-
-        if (underscore > 0) {
-
-            name = name.substring(0, underscore);
-
-        }
-
-        if (X.animate.library[name]) {
-
-            // If this is not valid, the function we are returning this to will pick it up.
-            return name;
-
-        }
-
-        return false;
-
-    }
-
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 12/17/18
- * Time: 10:41 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("preferences/pausingInstanceSuffix", ["managers/preferences", "managers/utils"], function () {
-
-    "use strict";
-
-    var list,
-        init = X.utils.singleton(function () {
-
-            X.movie.changeCallback.addCallback("play", function () {
-                X.utils.forEach(list, function (key, element) {
-
-                    element.play();
-
-                });
-            });
-
-            X.movie.changeCallback.addCallback("stop", function () {
-                X.utils.forEach(list, function (key, element) {
-
-                    element.stop();
-
-                });
-            })
-
-        });
-
-
-    X.preferences.define({
-        "name":"pausingInstanceSuffix",
-        "animateRequired": true,
-        "method":function (suffix) {
-
-            init();
-
-            function reactToNewList () {
-
-                list = X.movie.children.getListMatchingSuffix(suffix);
-
-            }
-
-            if (X.movie.children.exist) {
-                reactToNewList();
-            }
-
-            X.movie.children.changeCallback.addCallback("*", reactToNewList);
-
-        }
-    });
-
-});
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/29/18
- * Time: 10:28 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("managers/preferences/preview", ["managers/preferences"], function () {
-
-    "use strict";
-
-    X.preferences.define({
-        "name":"preview",
-        "animateRequired": true,
-        "method":function (symbolName) {
-
-            if (X.captivate.isLoaded()) {
-                return;
-            }
-
-            X.movie.rootTimeline.set(symbolName);
-
-            document.addEventListener("click", X.movie.play);
-
-        }
-    });
-
-});
-X.registerModule(
-  "preferences/publishSettings",
-  ["managers/preferences"],
-  function() {
-    ////////////////////////////////////////
-    ////////// OBJECTS
-    ////////////////////////////////////////
-    var responsiveDirections = {
-      BOTH: "both",
-      WIDTH: "width",
-      HEIGHT: "height"
-    };
-
-    var scaleTypes = {
-      FIT_IN_VIEW: 1,
-      STRETCH_TO_FIT: 2
-    };
-
-    function resizeCanvas() {
-      if (X.resizeCanvas) X.resizeCanvas();
-    }
-
-    ////////////////////////////////////////
-    ////////// Add preferences
-    ////////////////////////////////////////
-
-    ////////////////////////////////////////
-    ////// Make responsive
-
-    /**
-     * Boolean
-     *
-     * @default true
-     */
-    X.preferences.define({
-      name: "makeResponsive",
-      animateRequired: false,
-      method: resizeCanvas,
-      default: true
-    });
-
-    ////////////////////////////////////////
-    ////// Responsive direction
-
-    X.preferences.define({
-      name: "responsiveDirections",
-      animateRequired: false,
-      method: function(value) {},
-      default: responsiveDirections
-    });
-
-    X.preferences.define({
-      name: "responsiveDirection",
-      animateRequired: false,
-      method: resizeCanvas,
-      default: responsiveDirections.BOTH
-    });
-
-    ////////////////////////////////////////
-    ////// Scale types
-
-    X.preferences.define({
-      name: "scaleTypes",
-      animateRequired: false,
-      method: function(value) {},
-      default: scaleTypes
-    });
-    /**
-     * Assign with either X.preferences.scaleTypes.FIT_IN_VIEW
-     * Or X.preferences.scaleTypes.STRETCH_TO_FIT
-     *
-     */
-    X.preferences.define({
-      name: "scaleType",
-      animateRequired: false,
-      method: resizeCanvas,
-      default: scaleTypes.FIT_IN_VIEW
-    });
-
-    ////////////////////////////////////////
-    ////// outerRendering
-
-    /**
-     * Boolean
-     *
-     * @default true
-     */
-    X.preferences.define({
-      name: "outerRendering",
-      animateRequired: false,
-      method: resizeCanvas,
-      default: false
-    });
-
+  function isAnimateLoaded() {
+    return window.stage;
   }
-);
 
-X.registerModule("preferences/size", ["managers/preferences", "elements/animate"], function () {
+  function animateLoadIntervalHandler() {
+    if (isAnimateLoaded()) {
+      window.clearInterval(waitingForAnimateLoadInterval);
 
-    function resizeCanvas() {
-      if (X.resizeCanvas) X.resizeCanvas();
+      // We clear this here just in case we hit an error while
+      // executing the below
+      waitingForAnimateLoadInterval = null;
+
+      callWhenLoadedList.forEach(function(method) {
+        method();
+      });
+
+      callWhenLoadedList = null;
+    }
+  }
+
+  function setUpAnimateLoadInterval() {
+    waitingForAnimateLoadInterval = window.setInterval(
+      animateLoadIntervalHandler,
+      10
+    );
+  }
+
+  X.animate = {
+    callWhenLoaded: function(method) {
+      // Animate is loaded
+      if (isAnimateLoaded()) {
+        if (waitingForAnimateLoadInterval) {
+          // Oh, the interval has not discovered animate is loaded
+          // Strange as it may seem, I've actually had this happen.
+          callWhenLoadedList.push(method);
+          animateLoadIntervalHandler();
+        } else {
+          method();
+        }
+
+        // Animate not yet loaded
+        // Add to waiting list
+      } else {
+        callWhenLoadedList.push(method);
+
+        if (!waitingForAnimateLoadInterval) {
+          setUpAnimateLoadInterval();
+        }
+      }
+    }
+  };
+
+  X.animate.callWhenLoaded(function() {
+    X.animate.stage = stage;
+
+    // Now that we have access to the stage it's important we add
+    // support for touch events.
+    // We put this code here rather than in another file because
+    // the stage takes an arbitrary amount of time to load.
+    // Therefore this is the safest place to put it.
+    createjs.Touch.enable(X.animate.stage, true);
+
+    X.animate.mainTimeline = stage.children[0];
+
+    if (window.AdobeAn) {
+      X.animate.library = AdobeAn.getComposition(
+        AdobeAn.bootcompsLoaded[0]
+      ).getLibrary();
     }
 
-	X.preferences.define({
-		"name":"stageWidth",
-		"animateRequired": false,
-		"method": resizeCanvas,
-		"default": null
-	});
+    // Now is the point where it is safe for the animation to play
+    dispatchAnimationReady();
+  });
 
-	X.preferences.define({
-		"name":"stageHeight",
-		"animateRequired": false,
-		"method": resizeCanvas,
-		"default": null
-	});
+  /**
+   * Dispatches the 'animationready' event on the window.
+   *
+   * Side Effects:
+   *   - Accesses functions...
+   *   - - X.event.newEvent
+   *   - - window.dispatchEvent
+   *   - Dispatches an event on the window object.
+   *
+   * @parmas None
+   * @returns None
+   */
+  function dispatchAnimationReady() {
+    if (X.captivate) {
+      if (X.captivate.extra && X.captivate.extra.cpMate.notifyCpExtra) {
+        X.captivate.extra.cpMate.notifyCpExtra(
+          X.slideObject.name,
+          "animationready"
+        );
+      }
+    } else {
+      console.log(
+        "WARNING: Tried to send 'animationready' notification to CpExtra, " +
+          "but the 'elements/captivate' module has not yet run"
+      );
+    }
+    // var event = X.event.newEvent("animationready");
+    // window.dispatchEvent(event);
+  }
 
-	////////////////////////////////////////
-	////// Set defaults
-	
-    X.animate.callWhenLoaded(function() {
+  /*
+    var time = 0;
 
-		// We first check for null because the user may
-		// have already set this value while we've been waiting
-		// for the library to load.
+    var interval = window.setInterval(function () {
 
-		if (X.preferences.stageWidth === undefined) {
-			X.preferences.stageWidth = X.animate.library.properties.width;
-		}
+        if (window.stage) {
 
-		if (X.preferences.stageHeight === undefined) {
-			X.preferences.stageHeight = X.animate.library.properties.height;
-		}
+            console.log("Ready: " + time);
+            console.log(stage)
+            window.clearInterval(interval);
 
-	});
+        }
+
+        time += 10;
+
+    }, 10);
+
+    window.addEventListener("load", function () {
+        console.log(stage);
+        X.animate = {
+            "mainTimeline": stage.children[0]
+        }
+    });
+*/
 });
 
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
- * Date: 12/10/18
- * Time: 3:57 PM
+ * Date: 10/29/18
+ * Time: 5:56 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("useRAFTiming", ["managers/preferences"], function () {
+X.registerModule("elements/captivate", ["managers/debugging/logging"], function () {
 
-    "use strict";
+    var MINIMUM_CP_EXTRA_VERSION = "1.4.2";
 
-    X.preferences.define({
-        "name":"useRAFTiming",
-        "animateRequired": true,
-        "method":function (value) {
-
-            if (!createjs || !createjs.Ticker) {
-                console.error("Tried to change createjs.Ticker timing mode before it was loaded");
-
-                return;
+    X.captivate = {
+        "isLoaded":function () {
+            return window.parent && window.parent.hasOwnProperty("cp");
+        },
+        "hasCpExtra": function () {
+            if (X.captivate.window) {
+                return X.captivate.window.hasOwnProperty("_extra");
             }
+            return false;
+        },
+        "window":null,
+        "base": null,
+        "extra": null,
+        "variables": null
+    };
 
-            if (value) {
+    function getCaptivateElements () {
 
-                createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+        if (X.captivate.isLoaded()) {
+
+            X.captivate.window = window.parent;
+            X.captivate.base   = X.captivate.window.cp;
+            X.captivate.alert  = X.captivate.window.alert;
+            X.captivate.variables = X.captivate.window;
+
+            if (X.captivate.hasCpExtra()) {
+
+                X.captivate.extra = {};
+                getCpExtraElements();
 
             } else {
-
-                createjs.Ticker.timingMode = null;
-
+                X.error("GE001");
             }
 
-        },
-        "default":true
-    });
+        }
+    }
 
+    function getCpExtraElements () {
 
+        X.captivate.extra = X.captivate.window._extra;
+        X.captivate.extraPublicInterface = X.captivate.window.X;
+        X.captivate.extraVersion = X.captivate.extraPublicInterface.version;
+		X.captivate.extraCallActionOn = X.captivate.extraPublicInterface.callActionOn;
+
+        if (X.captivate.extraVersion < MINIMUM_CP_EXTRA_VERSION) {
+            X.error("GE002", X.captivate.extraVersion, MINIMUM_CP_EXTRA_VERSION);
+        }
+
+    }
+
+    getCaptivateElements();
 
 });
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/1/18
+ * Time: 10:25 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("elements/slideObject", ["elements/captivate", "managers/broadcast"], function () {
+
+    function recursiveParentSearch (tag, property, value) {
+
+        while (tag.parentElement) {
+
+            if (tag.getAttribute(property) === value) {
+                return tag;
+            } else {
+                tag = tag.parentElement;
+            }
+        }
+
+        return null;
+
+    }
+
+    if (X.captivate.isLoaded()) {
+
+        X.slideObject = {};
+        X.slideObject.iframe = window.frameElement;
+        X.slideObject.div = recursiveParentSearch(X.slideObject.iframe, "class", "cp-WebObject");
+        X.slideObject.name = X.slideObject.div.getAttribute("id");
+        // Remove the 'c' from end of name
+        // Eg. change 'Web_1c' to 'Web_1';
+        X.slideObject.name = X.slideObject.name.substring(0, X.slideObject.name.length - 1);
+
+        if (X.captivate.extra) {
+            X.slideObject.proxy = X.captivate.extra.slideObjects.getSlideObjectByName(X.slideObject.name);
+        }
+
+    }
+
+    X.broadcast.addCallback("unload", function () {
+        if (X.slideObject) {
+            delete X.slideObject.proxy;
+        }
+    });
+
+});
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -2807,11 +2432,336 @@ X.registerModule("managers/utils", function () {
 
 			}
 
-		}
+		},
+
+		"has": curry(2, function (property, object) {
+
+			return object.hasOwnProperty(property)
+
+		})
     };
 
 });
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 10/29/18
+ * Time: 10:24 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("preferences/disableIFrameBorder", ["managers/preferences", "elements/slideObject"], function () {
+
+    // This setting was created because I didn't know Captivate supplied settings to turn off its
+    // default scrollbar and border when viewing web objects.
+
+    X.preferences.define({
+        "name":"disableIFrameBorder",
+        "method":function (value) {
+
+            if (!X.captivate.isLoaded()) {
+                return;
+            }
+
+            if (value) {
+
+                disableBorder();
+
+            } else {
+
+                enableBorder();
+
+            }
+
+        },
+        "default":false
+    });
+
+    function disableBorder () {
+        X.slideObject.div.style.border = "0px";
+    }
+
+    function enableBorder () {
+        X.slideObject.div.style.border = "1px";
+    }
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/22/18
+ * Time: 9:01 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences", "elements/slideObject", "managers/movie", "elements/animate"], function () {
+
+    X.preferences.define({
+        "name":"linkNameToLibrarySymbol",
+        "animateRequired": true,
+        "method":function (value) {
+
+            if (isInvalid(value)) {
+                return;
+            }
+
+            var name = getSlideObjectClassName();
+
+            if (!name) {
+                X.log("Could not find a symbol by the name of '" + getSlideObjectClassName() +
+                      "'. Perhaps this animation is only included to preload other animations?");
+
+                return;
+            }
+
+            X.movie.rootTimeline.set(name);
+
+        },
+        "default":false
+    });
+
+
+
+
+    function isInvalid (value) {
+        return !value || !X.slideObject
+    }
+
+
+    function getSlideObjectClassName () {
+
+        var name = X.slideObject.name;
+
+        if (X.animate.library[name]) {
+
+            return name;
+
+        }
+
+        // If we're here, we haven't found the correct name
+        // Let's try seeing if there's an underscore at the end of the name
+        var underscore = name.lastIndexOf("_");
+
+        if (underscore > 0) {
+
+            name = name.substring(0, underscore);
+
+        }
+
+        if (X.animate.library[name]) {
+
+            // If this is not valid, the function we are returning this to will pick it up.
+            return name;
+
+        }
+
+        return false;
+
+    }
+
+});
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/29/18
+ * Time: 10:28 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("managers/preferences/preview", ["managers/preferences"], function () {
+
+    "use strict";
+
+    X.preferences.define({
+        "name":"preview",
+        "animateRequired": true,
+        "method":function (symbolName) {
+
+            if (X.captivate.isLoaded()) {
+                return;
+            }
+
+            X.movie.rootTimeline.set(symbolName);
+
+            document.addEventListener("click", X.movie.play);
+
+        }
+    });
+
+});
+X.registerModule(
+  "preferences/publishSettings",
+  ["managers/preferences"],
+  function() {
+    ////////////////////////////////////////
+    ////////// OBJECTS
+    ////////////////////////////////////////
+    var responsiveDirections = {
+      BOTH: "both",
+      WIDTH: "width",
+      HEIGHT: "height"
+    };
+
+    var scaleTypes = {
+      FIT_IN_VIEW: 1,
+      STRETCH_TO_FIT: 2
+    };
+
+    function resizeCanvas() {
+      if (X.resizeCanvas) X.resizeCanvas();
+    }
+
+    ////////////////////////////////////////
+    ////////// Add preferences
+    ////////////////////////////////////////
+
+    ////////////////////////////////////////
+    ////// Make responsive
+
+    /**
+     * Boolean
+     *
+     * @default true
+     */
+    X.preferences.define({
+      name: "makeResponsive",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: true
+    });
+
+    ////////////////////////////////////////
+    ////// Responsive direction
+
+    X.preferences.define({
+      name: "responsiveDirections",
+      animateRequired: false,
+      method: function(value) {},
+      default: responsiveDirections
+    });
+
+    X.preferences.define({
+      name: "responsiveDirection",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: responsiveDirections.BOTH
+    });
+
+    ////////////////////////////////////////
+    ////// Scale types
+
+    X.preferences.define({
+      name: "scaleTypes",
+      animateRequired: false,
+      method: function(value) {},
+      default: scaleTypes
+    });
+    /**
+     * Assign with either X.preferences.scaleTypes.FIT_IN_VIEW
+     * Or X.preferences.scaleTypes.STRETCH_TO_FIT
+     *
+     */
+    X.preferences.define({
+      name: "scaleType",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: scaleTypes.FIT_IN_VIEW
+    });
+
+    ////////////////////////////////////////
+    ////// outerRendering
+
+    /**
+     * Boolean
+     *
+     * @default true
+     */
+    X.preferences.define({
+      name: "outerRendering",
+      animateRequired: false,
+      method: resizeCanvas,
+      default: false
+    });
+
+  }
+);
+
+X.registerModule("preferences/size", ["managers/preferences", "elements/animate"], function () {
+
+    function resizeCanvas() {
+      if (X.resizeCanvas) X.resizeCanvas();
+    }
+
+	X.preferences.define({
+		"name":"stageWidth",
+		"animateRequired": false,
+		"method": resizeCanvas,
+		"default": null
+	});
+
+	X.preferences.define({
+		"name":"stageHeight",
+		"animateRequired": false,
+		"method": resizeCanvas,
+		"default": null
+	});
+
+	////////////////////////////////////////
+	////// Set defaults
+	
+    X.animate.callWhenLoaded(function() {
+
+		// We first check for null because the user may
+		// have already set this value while we've been waiting
+		// for the library to load.
+
+		if (X.preferences.stageWidth === undefined) {
+			X.preferences.stageWidth = X.animate.library.properties.width;
+		}
+
+		if (X.preferences.stageHeight === undefined) {
+			X.preferences.stageHeight = X.animate.library.properties.height;
+		}
+
+	});
+});
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 12/10/18
+ * Time: 3:57 PM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("useRAFTiming", ["managers/preferences"], function () {
+
+    "use strict";
+
+    X.preferences.define({
+        "name":"useRAFTiming",
+        "animateRequired": true,
+        "method":function (value) {
+
+            if (!createjs || !createjs.Ticker) {
+                console.error("Tried to change createjs.Ticker timing mode before it was loaded");
+
+                return;
+            }
+
+            if (value) {
+
+                createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+
+            } else {
+
+                createjs.Ticker.timingMode = null;
+
+            }
+
+        },
+        "default":true
+    });
+
+
+
+});
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -3060,6 +3010,147 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], fu
     };
 
 });
+X.registerModule(
+  "managers/prefix/displayObjectName",
+  ["managers/movie/children", "managers/utils"],
+  function() {
+    // Variables
+    var callbacks = {};
+    var alreadyCalledBack = {};
+
+    // Methods
+    X.registerDisplayObjectNamePrefix = function(prefix, callback) {
+      callbacks[prefix] = callback;
+      callbacks[prefix.toLowerCase()] = callback;
+    };
+
+    X.movie.children.newChildCallback.addCallback("*", function(movieClip) {
+      var name = movieClip.name;
+
+      // If we have already called a callback because of this
+      // movie clip, then we should not continue
+      if (alreadyCalledBack[name] === movieClip) {
+        return;
+      }
+
+      // Get prefix
+      var prefix = name.split("_")[0];
+
+      // If we have something registered for this prefix
+      if (callbacks.hasOwnProperty(prefix)) {
+        // Make a note in the alreadyCalledBack list
+        // so we don't call this again
+        alreadyCalledBack[name] = movieClip;
+
+        // Call the callback
+        callbacks[prefix](movieClip);
+      }
+    });
+  }
+);
+
+X.registerModule(
+  "managers/prefix/displayObjectNameAndVariable",
+  ["managers/prefix/displayObjectName"],
+  function() {
+    ///////// UTIL
+    function getVariableName(name) {
+      // xfoobar, my, var, name
+      var nameSplit = name.split("_");
+      // my, var, name
+      var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
+
+      var validVarName = loopThroughVarNames(nameSplitMinusStart);
+
+      if (validVarName) {
+        return validVarName;
+      } else {
+
+		  // If we are in Captivate we have not been able to locate
+		  // the variable
+        if (X.captivate.hasCpExtra()) {
+          X.error("PR001", name);
+
+			// If we are inside of an Animate preview then we need to
+			// create the variable
+        } else {
+          createVariableIfNotInCaptivate(nameSplitMinusStart);
+          return getVariableName(name);
+        }
+      }
+    }
+
+    function createVariableIfNotInCaptivate(nameSections) {
+      var varName = buildVariableNameFromArray(nameSections);
+      X.cpVariablesManager.setVariableValue(varName, "");
+    }
+
+    function loopThroughVarNames(nameSections) {
+      var i = nameSections.length - 1;
+      var workingSections;
+      var splicedSections;
+      var variableName;
+
+      while (i >= 0) {
+        workingSections = nameSections.concat();
+        splicedSections = workingSections.splice(0, i + 1);
+        variableName = buildVariableNameFromArray(splicedSections);
+
+        if (X.cpVariablesManager.hasVariable(variableName)) {
+          return variableName;
+        }
+
+        i--;
+      }
+
+      return null;
+    }
+
+    function buildVariableNameFromArray(varNameArray) {
+      var almostVariableName = X.utils.reduce(
+        makeVariableName,
+        "",
+        varNameArray
+      );
+      return almostVariableName.substring(1, almostVariableName.length);
+    }
+
+    function makeVariableName(value, acc) {
+      return acc + "_" + value;
+    }
+
+    ///////// ENTRY POINT
+    X.registerDisplayObjectNamePrefixAndVariable = function(prefix, callback) {
+      // Get informed when a movieClip matching our prefix appears
+      X.registerDisplayObjectNamePrefix(prefix, function(movieClip) {
+        /////////// ASSISTANT METHODS
+        function updateCallback() {
+          var value = X.cpVariablesManager.getVariableValue(variableName);
+          // Inform the originally passed in callback
+          callback(movieClip, value);
+        }
+
+        // Interpret variable name from movie clip name
+        var variableName = getVariableName(movieClip.name);
+
+        // If we can't find variable then stop here
+        if (!variableName) return;
+
+        // listen for variable change
+        X.cpVariablesManager.listenForVariableChange(
+          variableName,
+          updateCallback
+        );
+
+        // Update the callback now with the current variable value
+        var currentValue = X.cpVariablesManager.getVariableValue(variableName);
+
+        updateCallback(currentValue);
+      });
+    };
+  }
+);
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -3067,79 +3158,42 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], fu
  * Time: 11:23 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/movie/children", ["managers/movie/rootTimeline", "managers/utils"], function () {
-
+X.registerModule(
+  "managers/movie/children",
+  ["managers/hook", "managers/movie/rootTimeline", "managers/utils"],
+  function() {
     "use strict";
 
     X.movie.children = {
-        "list":{},
-        "changeCallback": new X.classes.Callback(),
-        "exist": false,
-        "getListMatchingSuffix": function (suffix) {
-
-            return X.utils.filter(X.movie.children.list, function (name, value) {
-
-                return X.utils.hasSuffix(name, suffix);
-
-            });
-
-        }
+      newChildCallback: new X.classes.Callback()
     };
 
-    function getDeepListOfChildren (timeline) {
+    ////////////////////////////////////////
+    ////// newChildCallback functionality
+    var existingChildIds = {};
 
-        var newChildren = {};
+    X.addHookAfter(
+      createjs.MovieClip.prototype,
+      "addChildAt",
+      X.utils.unless(
+		  // predicate
+        function(child) {
+          return X.utils.has(child.id, existingChildIds) || X.utils.isNil(child.name)
+        },
 
-        function addChild (child) {
-            if (child.name && !newChildren.hasOwnProperty(child.name)) {
-                newChildren[child.name] = child;
-            }
+		  // method
+        function(child) {
+          existingChildIds[child.id] = true;
+
+          X.movie.children.newChildCallback.sendToCallback(child.name, child);
+          X.movie.children.newChildCallback.sendToCallback("*", child);
         }
+      )
+    );
 
+  }
+);
 
-        function inspectChildren (parent) {
-
-            addChild(parent);
-
-            parent.children.forEach(function (child) {
-
-                if (child.children && child.children.length > 0) {
-
-                    inspectChildren(child);
-
-                } else {
-
-                    addChild(child);
-
-                }
-
-            })
-
-        }
-
-        if (timeline.children) {
-            inspectChildren(timeline);
-        }
-
-        return newChildren;
-
-    }
-
-
-
-    function handleNewTimeline (timeline) {
-
-        X.movie.children.list = getDeepListOfChildren(timeline);
-
-        X.movie.children.exist = !X.utils.isEmpty(X.movie.children.list);
-
-        X.movie.children.changeCallback.sendToCallback("*");
-
-    }
-
-    X.movie.rootTimeline.changeCallback.addCallback("*", X.utils.onNextTick(handleNewTimeline));
-
-});
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -3248,146 +3302,6 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
     };
 
 });
-
-X.registerModule("managers/prefix/displayObjectName", ["managers/movie/children", "managers/utils"], function () {
-	
-	// Variables
-	var callbacks = {};
-	var alreadyCalledBack = {};
-
-	// Methods
-	X.registerDisplayObjectNamePrefix = function (prefix, callback) {
-		callbacks[prefix] = callback;
-		callbacks[prefix.toLowerCase()] = callback;
-	}
-
-	function onChildListUpdate () {
-
-		X.utils.forEach(X.movie.children.list, function (name, movieClip) {
-
-			// If we have already called a callback because of this
-			// movie clip, then we should not continue
-			if (alreadyCalledBack[name] === movieClip) {
-				return;
-			}
-
-			// Get prefix
-			var prefix = name.split("_")[0];
-
-			// If we have something registered for this prefix
-			if (callbacks.hasOwnProperty(prefix)) {
-
-				// Make a note in the alreadyCalledBack list
-				// so we don't call this again
-				alreadyCalledBack[name] = movieClip;
-
-				// Call the callback
-				callbacks[prefix](movieClip);
-			}
-
-		});
-
-	}
-
-	X.movie.children.changeCallback.addCallback("*", onChildListUpdate);
-
-	
-});
-
-X.registerModule(
-  "managers/prefix/displayObjectNameAndVariable",
-  ["managers/prefix/displayObjectName"],
-  function() {
-    ///////// UTIL
-    function getVariableName(name) {
-      // xfoobar, my, var, name
-      var nameSplit = name.split("_");
-      // my, var, name
-      var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
-
-      createVariableIfNotInCaptivate(nameSplitMinusStart);
-
-      var validVarName = loopThroughVarNames(nameSplitMinusStart);
-
-      if (validVarName) {
-        return validVarName;
-      } else {
-        X.error("PR001", name);
-      }
-    }
-
-    function createVariableIfNotInCaptivate(nameSections) {
-      if (!X.captivate.hasCpExtra()) {
-        var varName = buildVariableNameFromArray(nameSections);
-        X.cpVariablesManager.setVariableValue(varName, "");
-      }
-    }
-
-    function loopThroughVarNames(nameSections) {
-      var i = nameSections.length - 1;
-      var workingSections;
-      var splicedSections;
-      var variableName;
-
-      while (i >= 0) {
-        workingSections = nameSections.concat();
-        splicedSections = workingSections.splice(0, i + 1);
-        variableName = buildVariableNameFromArray(splicedSections);
-
-        if (X.cpVariablesManager.hasVariable(variableName)) {
-          return variableName;
-        }
-
-        i--;
-      }
-
-      return null;
-    }
-
-    function buildVariableNameFromArray(varNameArray) {
-      var almostVariableName = X.utils.reduce(
-        makeVariableName,
-        "",
-        varNameArray
-      );
-      return almostVariableName.substring(1, almostVariableName.length);
-    }
-
-    function makeVariableName(value, acc) {
-      return acc + "_" + value;
-    }
-
-    ///////// ENTRY POINT
-    X.registerDisplayObjectNamePrefixAndVariable = function(prefix, callback) {
-      // Get informed when a movieClip matching our prefix appears
-      X.registerDisplayObjectNamePrefix(prefix, function(movieClip) {
-        /////////// ASSISTANT METHODS
-        function updateCallback() {
-          var value = X.cpVariablesManager.getVariableValue(variableName);
-          // Inform the originally passed in callback
-          callback(movieClip, value);
-        }
-
-        // Interpret variable name from movie clip name
-        var variableName = getVariableName(movieClip.name);
-
-        // If we can't find variable then stop here
-        if (!variableName) return;
-
-        // listen for variable change
-        X.cpVariablesManager.listenForVariableChange(
-          variableName,
-          updateCallback
-        );
-
-        // Update the callback now with the current variable value
-        var currentValue = X.cpVariablesManager.getVariableValue(variableName);
-
-        updateCallback(currentValue);
-      });
-    };
-  }
-);
 
 X.registerModule("managers/components/slider/controller", ["managers/utils", "managers/components/slider/validator"], function () {
 
@@ -4229,6 +4143,31 @@ X.registerModule("managers/prefixes/registees/xBind", ["managers/prefix/displayO
 	X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
 
 });
+
+X.registerModule(
+  "managers/prefixes/registees/xPause",
+  ["managers/prefix/displayObjectName"],
+  function() {
+    function xPause(movieClip, value) {
+
+      X.movie.changeCallback.addCallback("play", function () {
+
+      	movieClip.play();
+
+      });
+
+      X.movie.changeCallback.addCallback("stop", function () {
+
+      	movieClip.stop();
+
+      });
+
+    }
+
+    // Register for updates
+    X.registerDisplayObjectNamePrefixAndVariable("xPause", xPause);
+  }
+);
 
 X.registerModule("managers/components/slider/evaluateMethods/equal", ["managers/components/slider/registerEvaluateMethod"], function () {
 	
