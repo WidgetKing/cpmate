@@ -13,7 +13,7 @@
 
     window.X = {
         "version":"0.0.2",
-        "build":"2545"
+        "build":"2572"
     };
 
     var moduleRegistry = {},
@@ -521,42 +521,54 @@ X.registerModule("classes/DisplayObjectProxy", ["managers/classes"], function ()
 
 }, "class");
 
-X.registerModule("classes/MovieClipProxy", ["managers/classes"], function () {
-	
-	function MovieClipProxy (base) {
+X.registerModule(
+  "classes/MovieClipProxy",
+  ["managers/classes"],
+  function() {
+    function MovieClipProxy(base) {
+      this._original = base;
+    }
 
-		this._original = base;
+    X.classes.register("MovieClipProxy", MovieClipProxy);
 
-	}
-	
+    MovieClipProxy.prototype = {
+      get labels() {
+        return this._original.timeline._labels;
+      },
 
-	X.classes.register("MovieClipProxy", MovieClipProxy);
+      hasLabel: function(labelName) {
+        return this.labels.hasOwnProperty(labelName);
+      },
 
+      getLabelFrame: function(labelName) {
+        return this.labels[labelName];
+      },
 
-	MovieClipProxy.prototype = {
-		get labels() {
+      gotoAndStop: function(location) {
+        this._original.gotoAndStop(location);
+      },
 
-			return this._original.timeline._labels;
+      gotoAndPlay: function(location) {
+        this._original.gotoAndPlay(location);
+      },
 
-		},
+      stop: function() {
+        this._original.stop();
+      },
 
-		hasLabel: function (labelName) {
-			return this.labels.hasOwnProperty(labelName);
-		},
+      callOnNextTick: function(method) {
+		  var that = this;
+        function handler() {
+          that._original.removeEventListener("tick", handler);
+          method();
+        }
 
-		getLabelFrame: function (labelName) {
-			return this.labels[labelName];
-		},
-
-		gotoAndStop: function (location) {
-
-			this._original.gotoAndStop(location);
-
-		}
-	};
-
-
-}, "class");
+        this._original.addEventListener("tick", handler);
+      }
+    };
+  },
+  "class"
+);
 
 /**
  * Created with IntelliJ IDEA.
@@ -2972,8 +2984,34 @@ X.registerModule("managers/debugging/errors", function () {
  */
 X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], function () {
 
+	////////////////////////////////////////
+	////// ON SCREEN LOGGING
+	
+	var onScreenLog;
+
+	X.activateOnScreenLogging = function () {
+		var para = document.createElement("P");                       // Create a <p> node
+		var t = document.createTextNode("On screen logging activated");      // Create a text node
+		para.appendChild(t);                                          // Append the text to <p>
+		document.body.appendChild(para); 
+
+		onScreenLog = function (message) {
+
+			t.textContent = message;
+
+		}
+
+	}
+
+	////////////////////////////////////////
+	////// GENERAL FUNCTIONS
+	
     X.log = function (message) {
-        console.log(message);
+		if (onScreenLog) {
+			onScreenLog(message);
+		} else {
+			console.log(message);
+		}
     };
 
     X.alert = function (message, title) {
@@ -3010,146 +3048,6 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], fu
     };
 
 });
-X.registerModule(
-  "managers/prefix/displayObjectName",
-  ["managers/movie/children", "managers/utils"],
-  function() {
-    // Variables
-    var callbacks = {};
-    var alreadyCalledBack = {};
-
-    // Methods
-    X.registerDisplayObjectNamePrefix = function(prefix, callback) {
-      callbacks[prefix] = callback;
-      callbacks[prefix.toLowerCase()] = callback;
-    };
-
-    X.movie.children.newChildCallback.addCallback("*", function(movieClip) {
-      var name = movieClip.name;
-
-      // If we have already called a callback because of this
-      // movie clip, then we should not continue
-      if (alreadyCalledBack[name] === movieClip) {
-        return;
-      }
-
-      // Get prefix
-      var prefix = name.split("_")[0];
-
-      // If we have something registered for this prefix
-      if (callbacks.hasOwnProperty(prefix)) {
-        // Make a note in the alreadyCalledBack list
-        // so we don't call this again
-        alreadyCalledBack[name] = movieClip;
-
-        // Call the callback
-        callbacks[prefix](movieClip);
-      }
-    });
-  }
-);
-
-X.registerModule(
-  "managers/prefix/displayObjectNameAndVariable",
-  ["managers/prefix/displayObjectName"],
-  function() {
-    ///////// UTIL
-    function getVariableName(name) {
-      // xfoobar, my, var, name
-      var nameSplit = name.split("_");
-      // my, var, name
-      var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
-
-      var validVarName = loopThroughVarNames(nameSplitMinusStart);
-
-      if (validVarName) {
-        return validVarName;
-      } else {
-
-		  // If we are in Captivate we have not been able to locate
-		  // the variable
-        if (X.captivate.hasCpExtra()) {
-          X.error("PR001", name);
-
-			// If we are inside of an Animate preview then we need to
-			// create the variable
-        } else {
-          createVariableIfNotInCaptivate(nameSplitMinusStart);
-          return getVariableName(name);
-        }
-      }
-    }
-
-    function createVariableIfNotInCaptivate(nameSections) {
-      var varName = buildVariableNameFromArray(nameSections);
-      X.cpVariablesManager.setVariableValue(varName, "");
-    }
-
-    function loopThroughVarNames(nameSections) {
-      var i = nameSections.length - 1;
-      var workingSections;
-      var splicedSections;
-      var variableName;
-
-      while (i >= 0) {
-        workingSections = nameSections.concat();
-        splicedSections = workingSections.splice(0, i + 1);
-        variableName = buildVariableNameFromArray(splicedSections);
-
-        if (X.cpVariablesManager.hasVariable(variableName)) {
-          return variableName;
-        }
-
-        i--;
-      }
-
-      return null;
-    }
-
-    function buildVariableNameFromArray(varNameArray) {
-      var almostVariableName = X.utils.reduce(
-        makeVariableName,
-        "",
-        varNameArray
-      );
-      return almostVariableName.substring(1, almostVariableName.length);
-    }
-
-    function makeVariableName(value, acc) {
-      return acc + "_" + value;
-    }
-
-    ///////// ENTRY POINT
-    X.registerDisplayObjectNamePrefixAndVariable = function(prefix, callback) {
-      // Get informed when a movieClip matching our prefix appears
-      X.registerDisplayObjectNamePrefix(prefix, function(movieClip) {
-        /////////// ASSISTANT METHODS
-        function updateCallback() {
-          var value = X.cpVariablesManager.getVariableValue(variableName);
-          // Inform the originally passed in callback
-          callback(movieClip, value);
-        }
-
-        // Interpret variable name from movie clip name
-        var variableName = getVariableName(movieClip.name);
-
-        // If we can't find variable then stop here
-        if (!variableName) return;
-
-        // listen for variable change
-        X.cpVariablesManager.listenForVariableChange(
-          variableName,
-          updateCallback
-        );
-
-        // Update the callback now with the current variable value
-        var currentValue = X.cpVariablesManager.getVariableValue(variableName);
-
-        updateCallback(currentValue);
-      });
-    };
-  }
-);
 
 /**
  * Created with IntelliJ IDEA.
@@ -3303,31 +3201,175 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 
 });
 
+X.registerModule(
+  "managers/prefix/displayObjectName",
+  ["managers/movie/children", "managers/utils"],
+  function() {
+    // Variables
+    var callbacks = {};
+    var alreadyCalledBack = {};
+
+    // Methods
+    X.registerDisplayObjectNamePrefix = function(prefix, callback) {
+      callbacks[prefix] = callback;
+      callbacks[prefix.toLowerCase()] = callback;
+    };
+
+    X.movie.children.newChildCallback.addCallback("*", function(movieClip) {
+      var name = movieClip.name;
+
+      // If we have already called a callback because of this
+      // movie clip, then we should not continue
+      if (alreadyCalledBack[name] === movieClip) {
+        return;
+      }
+
+      // Get prefix
+      var prefix = name.split("_")[0];
+
+      // If we have something registered for this prefix
+      if (callbacks.hasOwnProperty(prefix)) {
+        // Make a note in the alreadyCalledBack list
+        // so we don't call this again
+        alreadyCalledBack[name] = movieClip;
+
+        // Call the callback
+        callbacks[prefix](movieClip);
+      }
+    });
+  }
+);
+
+X.registerModule(
+  "managers/prefix/displayObjectNameAndVariable",
+  ["managers/prefix/displayObjectName"],
+  function() {
+    ///////// UTIL
+    function getVariableName(name) {
+      // xfoobar, my, var, name
+      var nameSplit = name.split("_");
+      // my, var, name
+      var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
+
+      var validVarName = loopThroughVarNames(nameSplitMinusStart);
+
+      if (validVarName) {
+        return validVarName;
+      } else {
+
+		  // If we are in Captivate we have not been able to locate
+		  // the variable
+        if (X.captivate.hasCpExtra()) {
+          X.error("PR001", name);
+
+			// If we are inside of an Animate preview then we need to
+			// create the variable
+        } else {
+          createVariableIfNotInCaptivate(nameSplitMinusStart);
+          return getVariableName(name);
+        }
+      }
+    }
+
+    function createVariableIfNotInCaptivate(nameSections) {
+      var varName = buildVariableNameFromArray(nameSections);
+      X.cpVariablesManager.setVariableValue(varName, "");
+    }
+
+    function loopThroughVarNames(nameSections) {
+      var i = nameSections.length - 1;
+      var workingSections;
+      var splicedSections;
+      var variableName;
+
+      while (i >= 0) {
+        workingSections = nameSections.concat();
+        splicedSections = workingSections.splice(0, i + 1);
+        variableName = buildVariableNameFromArray(splicedSections);
+
+        if (X.cpVariablesManager.hasVariable(variableName)) {
+          return variableName;
+        }
+
+        i--;
+      }
+
+      return null;
+    }
+
+    function buildVariableNameFromArray(varNameArray) {
+      var almostVariableName = X.utils.reduce(
+        makeVariableName,
+        "",
+        varNameArray
+      );
+      return almostVariableName.substring(1, almostVariableName.length);
+    }
+
+    function makeVariableName(value, acc) {
+      return acc + "_" + value;
+    }
+
+    ///////// ENTRY POINT
+    X.registerDisplayObjectNamePrefixAndVariable = function(prefix, callback) {
+      // Get informed when a movieClip matching our prefix appears
+      X.registerDisplayObjectNamePrefix(prefix, function(movieClip) {
+        /////////// ASSISTANT METHODS
+        function updateCallback() {
+          var value = X.cpVariablesManager.getVariableValue(variableName);
+          // Inform the originally passed in callback
+          callback(movieClip, value);
+        }
+
+        // Interpret variable name from movie clip name
+        var variableName = getVariableName(movieClip.name);
+
+        // If we can't find variable then stop here
+        if (!variableName) return;
+
+        // listen for variable change
+        X.cpVariablesManager.listenForVariableChange(
+          variableName,
+          updateCallback
+        );
+
+        // Update the callback now with the current variable value
+        var currentValue = X.cpVariablesManager.getVariableValue(variableName);
+
+        updateCallback(currentValue);
+      });
+    };
+  }
+);
+
 X.registerModule("managers/components/slider/controller", ["managers/utils", "managers/components/slider/validator"], function () {
 
   X.slider.controller = function (view, model, data) {
 
-	////////////////////// 
+	//////////////////////
 	////// Variable
 	var evaluateManager;
 	var lastHandleX = data.handle.x;
 	var lastHandleY = data.handle.y;
-	
-	////////////////////// 
+
+	// Constant
+	var pixelRatio = window.devicePixelRatio || 1;
+
+	//////////////////////
 	////// Assistant methods
 	function gtx () {
-		return X.animate.stage.mouseX;
+		return X.animate.stage.mouseX / pixelRatio;
 	}
 
 	function gty () {
-		return X.animate.stage.mouseY;
+		return X.animate.stage.mouseY / pixelRatio;
 	}
 
 	function hasHandleMoved () {
 
 		if (lastHandleX === data.handle.x &&
 		    lastHandleY === data.handle.y) {
-			
+
 			return false;
 
 		}
@@ -3348,13 +3390,13 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 	}
 
 	function addHandlers() {
-		
+
 		var safeMouseMove = X.events.getSafeEvent('mousemove');
 		var safeMouseUp = X.events.getSafeEvent('mouseup');
 		var safeMouseDown = X.events.getSafeEvent('mousedown');
 
 		view.listenToTrack(safeMouseDown, function () {
-			
+
 		});
 
 
@@ -3389,25 +3431,25 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 	function addEvaluate () {
 
 		if (data.evaluate) {
-		
+
 			evaluateManager = X.slider.evaluate(data.evaluate, data.variable);
-		
+
 		} else {
-		
+
 			// Create a dummy so we don't have to define a heap of if statements
 			evaluateManager = {
 				"dragMove": function () {},
 				"dragEnd": function () {}
 			}
-		
+
 		}
 
 	}
-	
+
 	init();
 
     return {
-	
+
 	};
   }
 
@@ -4116,33 +4158,33 @@ X.registerModule(
   }
 );
 
-X.registerModule("managers/prefixes/registees/xBind", ["managers/prefix/displayObjectNameAndVariable"], function () {
-	
-	function xBind (movieClip, value) {
+X.registerModule(
+  "managers/prefixes/registees/xBind",
+  ["managers/prefix/displayObjectNameAndVariable"],
+  function() {
+    function xBind(movieClip, value) {
+      var proxy = new X.classes.MovieClipProxy(movieClip);
 
-		var proxy = new X.classes.MovieClipProxy(movieClip);
+	  // We do this to prevent the error where calling
+	  // gotoAndStop too soon will cause the movie clip to play instead
+	  // Weird, right?
+      proxy.callOnNextTick(function() {
+        // If the label is present
+        if (proxy.hasLabel(value)) {
+          var frame = proxy.getLabelFrame(value);
 
-		// If the label is present
-		if (proxy.hasLabel(value)) {
-		
-			var frame = proxy.getLabelFrame(value);
+          proxy.gotoAndStop(frame);
+        } else {
+          // If there is no matching label, then stop at the first frame
+          proxy.gotoAndStop(0);
+        }
+      });
+    }
 
-			proxy.gotoAndStop(frame);
-		
-		} else {
-			
-			// If there is no matching label, then stop at the first frame
-			proxy.gotoAndStop(0);
-		
-		}
-
-	}
-	
-
-	// Register for updates
-	X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
-
-});
+    // Register for updates
+    X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
+  }
+);
 
 X.registerModule(
   "managers/prefixes/registees/xPause",

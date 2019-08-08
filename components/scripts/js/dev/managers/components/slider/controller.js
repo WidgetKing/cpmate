@@ -2,27 +2,30 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 
   X.slider.controller = function (view, model, data) {
 
-	////////////////////// 
+	//////////////////////
 	////// Variable
 	var evaluateManager;
 	var lastHandleX = data.handle.x;
 	var lastHandleY = data.handle.y;
-	
-	////////////////////// 
+
+	// Constant
+	var pixelRatio = window.devicePixelRatio || 1;
+
+	//////////////////////
 	////// Assistant methods
 	function gtx () {
-		return X.animate.stage.mouseX;
+		return X.animate.stage.mouseX / pixelRatio;
 	}
 
 	function gty () {
-		return X.animate.stage.mouseY;
+		return X.animate.stage.mouseY / pixelRatio;
 	}
 
 	function hasHandleMoved () {
 
 		if (lastHandleX === data.handle.x &&
 		    lastHandleY === data.handle.y) {
-			
+
 			return false;
 
 		}
@@ -43,13 +46,13 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 	}
 
 	function addHandlers() {
-		
+
 		var safeMouseMove = X.events.getSafeEvent('mousemove');
 		var safeMouseUp = X.events.getSafeEvent('mouseup');
 		var safeMouseDown = X.events.getSafeEvent('mousedown');
 
 		view.listenToTrack(safeMouseDown, function () {
-			
+
 		});
 
 
@@ -84,25 +87,25 @@ X.registerModule("managers/components/slider/controller", ["managers/utils", "ma
 	function addEvaluate () {
 
 		if (data.evaluate) {
-		
+
 			evaluateManager = X.slider.evaluate(data.evaluate, data.variable);
-		
+
 		} else {
-		
+
 			// Create a dummy so we don't have to define a heap of if statements
 			evaluateManager = {
 				"dragMove": function () {},
 				"dragEnd": function () {}
 			}
-		
+
 		}
 
 	}
-	
+
 	init();
 
     return {
-	
+
 	};
   }
 
