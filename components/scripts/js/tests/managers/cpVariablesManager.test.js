@@ -24,8 +24,8 @@ describe("managers/cpVariablesManager", () => {
 
     window.X = {
       "classes": unitTests.classes,
-	  "cpExtraActions": {
-		"register": (key, callback) => {
+	  "broadcast": {
+		"addCallback": (key, callback) => {
 			moduleUnload = callback;
 		}
 	  },
@@ -152,6 +152,27 @@ describe("managers/cpVariablesManager", () => {
 		
 		expect(spy).not.toHaveBeenCalled();
 	});
+	  
+	it("should unload multiple listeners to the same event", function () {
 
+		// 1: SETUP
+		module();
+
+		var spy1 = jasmine.createSpy("spy1"),
+			spy2 = jasmine.createSpy("spy2"); 
+
+		X.cpVariablesManager.listenForVariableChange("var", spy1);
+		X.cpVariablesManager.listenForVariableChange("var", spy2);
+
+		// 2: TEST
+		moduleUnload();
+		X.cpVariablesManager.setVariableValue("var", "foobar");
+
+		// 3: ASSERT
+		expect(spy1).not.toHaveBeenCalled();
+		expect(spy2).not.toHaveBeenCalled();
+
+	});
+	
   });
 });

@@ -13,7 +13,7 @@
 
     window.X = {
         "version":"0.0.2",
-        "build":"2572"
+        "build":"2631"
     };
 
     var moduleRegistry = {},
@@ -564,6 +564,33 @@ X.registerModule(
         }
 
         this._original.addEventListener("tick", handler);
+      }
+    };
+  },
+  "class"
+);
+
+X.registerModule(
+  "classes/TextFieldProxy",
+  ["managers/classes"],
+  function() {
+    function TextFieldProxy(base) {
+      this._original = base;
+    }
+
+    X.classes.register("TextFieldProxy", TextFieldProxy);
+
+    TextFieldProxy.prototype = {
+      get text() {
+        return this._original.text;
+      },
+
+      set text(value) {
+        this._original.text = value;
+      },
+
+      get valid() {
+        return this._original.constructor === createjs.Text;
       }
     };
   },
@@ -1152,58 +1179,77 @@ X.registerModule("managers/cpExtraActions", ["elements/captivate", "elements/sli
 
 
 });
-X.registerModule("managers/cpVariablesManager", ["managers/utils", "managers/hook", "elements/captivate", "managers/cpExtraActions"], function () {
+X.registerModule(
+  "managers/cpVariablesManager",
+  [
+    "managers/utils",
+    "managers/hook",
+    "elements/captivate",
+    "managers/cpExtraActions"
+  ],
+  function() {
+    /////////////////////////////
+    ////////// Variables
+    var hasCpExtra = X.captivate.hasCpExtra();
+    var fakeVariables = new X.classes.CallbackObject();
 
-  /////////////////////////////
-  ////////// Variables
-  var hasCpExtra = X.captivate.hasCpExtra();
-  var fakeVariables = new X.classes.CallbackObject();
+    X.cpVariablesManager = {
+      listenForVariableChange: hasCpExtra
+        ? X.captivate.extra.variableManager.listenForVariableChange
+        : fakeVariables.callback,
 
-  X.cpVariablesManager = {
+      setVariableValue: hasCpExtra
+        ? X.captivate.extra.variableManager.setVariableValue
+        : fakeVariables.setProp,
 
-    "listenForVariableChange": (hasCpExtra) ? X.captivate.extra.variableManager.listenForVariableChange
-                                              : fakeVariables.callback,
+      getVariableValue: hasCpExtra
+        ? X.captivate.extra.variableManager.getVariableValue
+        : fakeVariables.getProp,
 
-    "setVariableValue": (hasCpExtra) ? X.captivate.extra.variableManager.setVariableValue
-                                       : fakeVariables.setProp,
+      hasVariable: hasCpExtra
+        ? X.captivate.extra.variableManager.getVariableValue
+        : fakeVariables.hasProp,
 
-    "getVariableValue": (hasCpExtra) ? X.captivate.extra.variableManager.getVariableValue
-                                       : fakeVariables.getProp,
+      stopListeningForVariableChange: hasCpExtra
+        ? X.captivate.extra.variableManager.stopListeningForVariableChange
+        : fakeVariables.removeCallback
+    };
 
-    "hasVariable": (hasCpExtra) ? X.captivate.extra.variableManager.getVariableValue
-                                  : fakeVariables.hasProp,
+    /////////////////////////////////////////
+    ///////////////// UNLOAD
+    //
+    //
+    // We want to make sure we unload all the variable listeners when the iframe
+    // is unloaded. This is so that we don't get an error where CpExtra
+    // calls code in an already unloaded iFrame
+    var listenerList = {};
 
-	"stopListeningForVariableChange": (hasCpExtra) ? X.captivate.extra.variableManager.stopListeningForVariableChange
-									               : fakeVariables.removeCallback
+    // So first we need to spy on all the listeners being added and record them
+    // in a list
+    X.addHook(X.cpVariablesManager, "listenForVariableChange", function(
+      key,
+      value
+    ) {
+      if (!listenerList[key]) {
+        listenerList[key] = [];
+      }
+      listenerList[key].push(value);
+    });
+
+    // Then when we are informed of the movie unload we will
+    // loop through the list and unload all the listeners.
+    X.broadcast.addCallback("unload", function() {
+      X.utils.forEach(listenerList, function(key, list) {
+        list.forEach(function(callback) {
+          X.cpVariablesManager.stopListeningForVariableChange(key, callback);
+        });
+      });
+
+      // Reset
+      listenerList = {};
+    });
   }
-
-	/////////////////////////////////////////
-	///////////////// UNLOAD
-	//
-	//
-	// We want to make sure we unload all the variable listeners when the iframe
-	// is unloaded. This is so that we don't get an error where CpExtra
-	// calls code in an already unloaded iFrame
-	var listenerList = {};
-	
-	// So first we need to spy on all the listeners being added and record them
-	// in a list
-	X.addHook(X.cpVariablesManager, "listenForVariableChange", function (key, value) {
-		listenerList[key] = value;
-	});
-	
-	// Then when we are informed of the movie unload we will
-	// loop through the list and unload all the listeners.
-    X.cpExtraActions.register("unload", function () {
-
-		X.utils.forEach(listenerList, function (key, value) {
-
-			X.cpVariablesManager.stopListeningForVariableChange(key, value);
-
-		});
-	
-	});
-});
+);
 
 /**
  * Created with IntelliJ IDEA.
@@ -2904,6 +2950,7 @@ X.registerModule("managers/actions/playAndStop", ["managers/cpExtraActions"], fu
 
 
 });
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -2936,43 +2983,72 @@ X.registerModule("managers/actions/unload", ["managers/cpExtraActions"], functio
  * Time: 9:48 AM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/debugging/errors", function () {
+X.registerModule("managers/debugging/errors", function() {
+  X.errors = {
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// GENERAL ERRORS (GE)
+    ///////////////////////////////////////////////////////////////////////
 
-    X.errors = {
+    GE001: function() {
+      return "You have not loaded CpExtra into Captivate. CpMate cannot work if CpExtra is not installed in Captivate. Either install CpExtra or remove CpMate.";
+    },
 
-        ///////////////////////////////////////////////////////////////////////
-        /////////////// GENERAL ERRORS (GE)
-        ///////////////////////////////////////////////////////////////////////
+    GE002: function(currentVersion, minimumVersion) {
+      return (
+        "CPEXTRA NEEDS TO BE UPGRADED. The current version of CpExtra is " +
+        currentVersion +
+        ". But the minimum version of CpExtra needed to work with CpMate is " +
+        minimumVersion +
+        ". PLEASE UPGRADE CPEXTRA NOW."
+      );
+    },
 
-        "GE001":function () {
-            return "You have not loaded CpExtra into Captivate. CpMate cannot work if CpExtra is not installed in Captivate. Either install CpExtra or remove CpMate.";
-        },
+    ////////////////////////////////////////
+    ////////// COMPONENT ERRORS
+    ////////////////////////////////////////
+    CO001: function(property) {
+      return (
+        "The required property for slider/dial data ''" +
+        property +
+        "'' was not provided"
+      );
+    },
+    CO002: function(name) {
+      return (
+        "The variable defined for the slider/dial interaction '" +
+        name +
+        "' does not exist'"
+      );
+    },
+    CO003: function(propertyName) {
+      return (
+        "The evaluate settings for a slider/dial interaction did not have the required '" +
+        propertyName +
+        "' property defined."
+      );
+    },
 
-        "GE002": function (currentVersion, minimumVersion) {
-            return "CPEXTRA NEEDS TO BE UPGRADED. The current version of CpExtra is " + currentVersion + ". But the minimum version of CpExtra needed to work with CpMate is " + minimumVersion + ". PLEASE UPGRADE CPEXTRA NOW."
-        },
+    ////////////////////////////////////////
+    ////////// PREFIX ERRORS
+    ////////////////////////////////////////
+    PR001: function(clipName) {
+      return (
+        "Could not find a matching variable for movie clip named: '" +
+        clipName +
+        "'"
+      );
+    },
 
-        ////////////////////////////////////////
-        ////////// COMPONENT ERRORS
-        ////////////////////////////////////////
-        "CO001": function (property) {
-            return "The required property for slider/dial data ''" + property + "'' was not provided";
-        },
-        "CO002": function (name) {
-            return "The variable defined for the slider/dial interaction '" + name + "' does not exist'";
-        },
-		"CO003": function (propertyName) {
-			return "The evaluate settings for a slider/dial interaction did not have the required '" + propertyName + "' property defined.";
-		},
-
-		////////////////////////////////////////
-		////////// PREFIX ERRORS
-		////////////////////////////////////////
-		"PR001": function (clipName) {
-			return "Could not find a matching variable for movie clip named: '" + clipName + "'";
-		}
-    };
-
+    PR002: function(clipName, prefix, name) {
+      return (
+        "Prefix " +
+        prefix +
+        " can only work with a Dynamic Text object. Please ensure the object named " +
+        name +
+        "is a text object and not a MovieClip that contains a text object."
+      );
+    }
+  };
 });
 
 /**
@@ -4160,29 +4236,40 @@ X.registerModule(
 
 X.registerModule(
   "managers/prefixes/registees/xBind",
-  ["managers/prefix/displayObjectNameAndVariable"],
+  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
   function() {
-    function xBind(movieClip, value) {
-      var proxy = new X.classes.MovieClipProxy(movieClip);
+    // The main business logic is here which works for
+    // - xBind
+    // - xBindStop
+    // - xBindPlay
+    function createBindHandler(methodName) {
+      return function(movieClip, value) {
+        var proxy = new X.classes.MovieClipProxy(movieClip);
 
-	  // We do this to prevent the error where calling
-	  // gotoAndStop too soon will cause the movie clip to play instead
-	  // Weird, right?
-      proxy.callOnNextTick(function() {
         // If the label is present
         if (proxy.hasLabel(value)) {
           var frame = proxy.getLabelFrame(value);
 
-          proxy.gotoAndStop(frame);
+          proxy[methodName](frame);
         } else {
           // If there is no matching label, then stop at the first frame
-          proxy.gotoAndStop(0);
+          proxy[methodName](0);
         }
-      });
+      };
     }
+
+    // We call the bind handler on next tick to prevent the error where calling
+    // gotoAndStop too soon will cause the movie clip to play instead
+    // Weird, right?
+    var xBind = X.utils.onNextTick(createBindHandler("gotoAndStop"));
+    var xBindPlay = createBindHandler("gotoAndPlay");
 
     // Register for updates
     X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
+    X.registerDisplayObjectNamePrefixAndVariable("xBindStop", xBind);
+
+    // Register xBindPlay
+    X.registerDisplayObjectNamePrefixAndVariable("xBindPlay", xBindPlay);
   }
 );
 
@@ -4208,6 +4295,28 @@ X.registerModule(
 
     // Register for updates
     X.registerDisplayObjectNamePrefixAndVariable("xPause", xPause);
+  }
+);
+
+X.registerModule(
+  "managers/prefixes/registees/xTextFromVariable",
+  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
+  function() {
+    var PREFIX = "xTextFromVariable";
+
+    function xTextFromVariable(textField, value) {
+
+      var proxy = new X.classes.TextFieldProxy(textField);
+
+      if (proxy.valid) {
+        proxy.text = value;
+      } else {
+        X.error("PR002", PREFIX, textField.name);
+      }
+    }
+
+    // Register xTextFromVariable
+    X.registerDisplayObjectNamePrefixAndVariable(PREFIX, xTextFromVariable);
   }
 );
 

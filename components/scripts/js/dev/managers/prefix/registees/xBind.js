@@ -1,27 +1,38 @@
 X.registerModule(
   "managers/prefixes/registees/xBind",
-  ["managers/prefix/displayObjectNameAndVariable"],
+  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
   function() {
-    function xBind(movieClip, value) {
-      var proxy = new X.classes.MovieClipProxy(movieClip);
+    // The main business logic is here which works for
+    // - xBind
+    // - xBindStop
+    // - xBindPlay
+    function createBindHandler(methodName) {
+      return function(movieClip, value) {
+        var proxy = new X.classes.MovieClipProxy(movieClip);
 
-	  // We do this to prevent the error where calling
-	  // gotoAndStop too soon will cause the movie clip to play instead
-	  // Weird, right?
-      proxy.callOnNextTick(function() {
         // If the label is present
         if (proxy.hasLabel(value)) {
           var frame = proxy.getLabelFrame(value);
 
-          proxy.gotoAndStop(frame);
+          proxy[methodName](frame);
         } else {
           // If there is no matching label, then stop at the first frame
-          proxy.gotoAndStop(0);
+          proxy[methodName](0);
         }
-      });
+      };
     }
+
+    // We call the bind handler on next tick to prevent the error where calling
+    // gotoAndStop too soon will cause the movie clip to play instead
+    // Weird, right?
+    var xBind = X.utils.onNextTick(createBindHandler("gotoAndStop"));
+    var xBindPlay = createBindHandler("gotoAndPlay");
 
     // Register for updates
     X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
+    X.registerDisplayObjectNamePrefixAndVariable("xBindStop", xBind);
+
+    // Register xBindPlay
+    X.registerDisplayObjectNamePrefixAndVariable("xBindPlay", xBindPlay);
   }
 );
