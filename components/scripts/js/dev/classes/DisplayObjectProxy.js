@@ -12,7 +12,6 @@ X.registerModule("classes/DisplayObjectProxy", ["managers/classes"], function ()
 
 	function DisplayObjectProxy(org) {
 		this.original = org;
-		this.bounds = org.getBounds();
 		this.switchBoundsProps = org.rotation === 90 || org.rotation === -90;
 	}
 
@@ -26,6 +25,23 @@ X.registerModule("classes/DisplayObjectProxy", ["managers/classes"], function ()
 			}
 
 			return this.bounds[propName];
+		},
+		get bounds() {
+		
+			var bounds = this.original.getBounds();
+
+			if (!bounds) {
+			
+				bounds = {
+					"x": this.original.x,
+					"y": this.original.y,
+					"width": 0,
+					"height": 0
+				}
+
+			}
+
+			return bounds;
 		},
 		get x() {
 

@@ -152,6 +152,7 @@
 
     gulp.task("updateTests-CpMate", ["compilejs"], function () {
 
+		console.log("updateTests-CpMate")
         return updateOnGlob("tests/output/**/@(Infosemantics_CpMate.js)", compiledFileLocation + "/" + compiledFileName);
 
     });

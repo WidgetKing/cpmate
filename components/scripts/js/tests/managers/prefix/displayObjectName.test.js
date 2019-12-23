@@ -106,7 +106,7 @@ describe("managers/prefix/displayObjectName", function () {
 
 		});		
 
-		it("should not recall any objects that have already been called", function () {
+		it("should recall an object even if it has been called before", function () {
 
 			// 1: SETUP
 			var spy_foobar = jasmine.createSpy("xFooBar registered method");

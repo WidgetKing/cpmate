@@ -13,7 +13,7 @@
 
     window.X = {
         "version":"0.0.2",
-        "build":"2631"
+        "build":"2777"
     };
 
     var moduleRegistry = {},
@@ -203,399 +203,6 @@
     });
 
 }());
-
-/* global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/26/18
- * Time: 3:41 PM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("classes/Callback", ["managers/classes"], function () {
-
-    "use strict";
-
-    X.classes.register("Callback", function () {
-
-        this.data = {};
-        var that = this;
-
-        function validateDataIndex (index) {
-
-            if (!that.data[index]) {
-
-                that.data[index] = {
-                    "overwritable": null,
-                    "regular": []
-                };
-
-            }
-
-        }
-
-        this.addCallback = function (index, callback, overwritable) {
-
-            // If this is the first callback we're adding.
-            validateDataIndex(index);
-
-            if (overwritable) {
-                that.data[index].overwritable = callback;
-            } else {
-                that.data[index].regular.push(callback);
-            }
-        };
-
-        that.addCallbackToFront = function (index, callback) {
-            // If this is the first callback we're adding.
-            validateDataIndex(index);
-
-            that.data[index].regular.unshift(callback);
-        };
-
-        this.hasCallbackFor = function (index) {
-            return that.data[index] !== undefined;
-        };
-
-        this.sendToCallback = function (index,parameter) {
-            var returnValue,
-                tempReturnValue,
-                data = that.data[index];
-
-            if (data) {
-
-                // Trigger overwritable callback
-                if (data.overwritable) {
-                    data.overwritable(parameter);
-                }
-
-                // Trigger regular callbacks
-                var a = data.regular;
-
-                for (var i = 0; i < a.length; i += 1) {
-
-                    // If the callback returns a value, then we'll return it at the end (assuming noting overrides it before then)
-                    tempReturnValue = a[i](parameter);
-
-                    if (tempReturnValue !== undefined) {
-                        returnValue = tempReturnValue;
-                    }
-
-                }
-            }
-
-            return returnValue;
-        };
-
-        this.forEach = function (method) {
-
-            var a;
-
-            for (var index in that.data) {
-                if (that.data.hasOwnProperty(index)) {
-
-                    if (that.data[index].overwritable) {
-                        method(index, that.data[index].overwritable);
-                    }
-
-                    a = that.data[index].regular;
-                    for (var i = 0; i < a.length; i += 1) {
-                        method(index,a[i]);
-                    }
-
-                }
-            }
-        };
-
-        this.removeCallback = function (index, callbackToRemove) {
-
-            var data = that.data[index];
-
-            if (data) {
-
-                // Check overwrite first
-                if (data.overwritable && data.overwritable === callbackToRemove) {
-                    delete data.overwritable;
-                    return;
-                }
-
-                var a = data.regular,
-                    registeredCallback;
-
-
-                for (var i = 0; i < a.length; i += 1) {
-
-                    registeredCallback = a[i];
-
-                    if (callbackToRemove === registeredCallback) {
-                        a.splice(i,1);
-
-                        // If we have just deleted the last callback for this index, then we'll delete the array so that
-                        // hasCallbackFor() will be able to respond accurately.
-                        if (a.length <= 0) {
-                            delete that.data[index];
-                        }
-                        break;
-                    }
-
-                }
-            }
-        };
-
-        this.removeIndex = function(index) {
-            delete that.data[index];
-        };
-
-        this.clear = function () {
-            that.data = {};
-        };
-
-    });
-}, "class");
-
-/* global _extra*/
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/26/18
- * Time: 3:41 PM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("classes/CallbackObject", ["managers/classes"], function () {
-
-    "use strict";
-
-    X.classes.register("CallbackObject", function () {
-
-		var CallbackClass;
-
-		// Yes, it's not good that we're making a reference to the unit tests
-		// in the main code but... does this save a lot of time in bug hunting
-		// do I tell you.
-		if (window.X) {
-			CallbackClass = X.classes.Callback;
-		} else {
-			CallbackClass = unitTests.classes.Callback;	
-		}
-
-        var callback = new CallbackClass();
-        var obj = {};
-
-        this.callback = callback.addCallback;
-
-        /**
-         * When a property is changed it will send a message to any
-         * callbacks associated with that property.
-         *
-         * @param  {string} key the property to be changed
-         * @param  {*} value the value for the property to be changed to
-         */
-        this.setProp = function (key, value) {
-
-          obj[key] = value;
-
-          callback.sendToCallback(key, value);
-          callback.sendToCallback("*", value);
-
-        }
-
-        this.getProp = function (key) {
-          return obj[key];
-        }
-
-        this.hasProp = function (key) {
-          return obj.hasOwnProperty(key);
-        }
-
-		this.removeCallback = callback.removeCallback;
-
-    });
-
-}, "class");
-
-X.registerModule("classes/DisplayObjectProxy", ["managers/classes"], function () {
-
-	function invertProp(propName) {
-
-		if (propName === "x") propName = "y"
-		else if (propName === "y") propName = "x"
-		else if (propName === "width") propName = "height"
-		else if (propName === "height") propName = "width"
-		return propName
-
-	}		
-
-	function DisplayObjectProxy(org) {
-		this.original = org;
-		this.bounds = org.getBounds();
-		this.switchBoundsProps = org.rotation === 90 || org.rotation === -90;
-	}
-
-	DisplayObjectProxy.prototype = {
-		getBoundsProp: function (propName) {
-
-			if (this.switchBoundsProps) {
-
-				propName = invertProp(propName);
-
-			}
-
-			return this.bounds[propName];
-		},
-		get x() {
-
-			return this.original.x + this.getBoundsProp('x');
-
-		},
-		set x(val) {
-
-			this.original.x = val - this.getBoundsProp('x');			
-			
-		},
-		get y() {
-
-			return this.original.y + this.getBoundsProp('y');			
-
-		},
-		set y(val) {
-
-			this.original.y = val - this.getBoundsProp('y');			
-			
-		},
-		get width() {
-
-			return this.getBoundsProp('width');			
-
-		},
-		get height() {
-
-			return this.getBoundsProp('height');			
-
-
-		},
-		get rotation() {
-			return this.original.rotation;
-		},
-
-		get primary() {
-			return this._pa;
-		},
-
-		set primary(val) {
-			this._pa = val;
-
-			if (val === "x") {
-				this._pl = "width";		
-			} else {
-				this._pl = "height";		
-			}
-
-			this._sl = invertProp(this._pl);
-			this._sa = invertProp(this._pa);
-		},
-
-		get primaryAxis() {
-			return this[this._pa];
-		},
-
-		set primaryAxis(val) {
-			this[this._pa] = val;
-		},
-
-		get primaryLength() {
-			return this[this._pl];
-		},
-
-		get secondaryAxis() {
-			return this[this._sa];
-		},
-		set secondaryAxis(val) {
-			this[this._sa] = val;
-		},
-		get secondaryLength() {
-			return this[this._sl];
-		}
-	}
-
-    X.classes.register("DisplayObjectProxy", DisplayObjectProxy);
-
-}, "class");
-
-X.registerModule(
-  "classes/MovieClipProxy",
-  ["managers/classes"],
-  function() {
-    function MovieClipProxy(base) {
-      this._original = base;
-    }
-
-    X.classes.register("MovieClipProxy", MovieClipProxy);
-
-    MovieClipProxy.prototype = {
-      get labels() {
-        return this._original.timeline._labels;
-      },
-
-      hasLabel: function(labelName) {
-        return this.labels.hasOwnProperty(labelName);
-      },
-
-      getLabelFrame: function(labelName) {
-        return this.labels[labelName];
-      },
-
-      gotoAndStop: function(location) {
-        this._original.gotoAndStop(location);
-      },
-
-      gotoAndPlay: function(location) {
-        this._original.gotoAndPlay(location);
-      },
-
-      stop: function() {
-        this._original.stop();
-      },
-
-      callOnNextTick: function(method) {
-		  var that = this;
-        function handler() {
-          that._original.removeEventListener("tick", handler);
-          method();
-        }
-
-        this._original.addEventListener("tick", handler);
-      }
-    };
-  },
-  "class"
-);
-
-X.registerModule(
-  "classes/TextFieldProxy",
-  ["managers/classes"],
-  function() {
-    function TextFieldProxy(base) {
-      this._original = base;
-    }
-
-    X.classes.register("TextFieldProxy", TextFieldProxy);
-
-    TextFieldProxy.prototype = {
-      get text() {
-        return this._original.text;
-      },
-
-      set text(value) {
-        this._original.text = value;
-      },
-
-      get valid() {
-        return this._original.constructor === createjs.Text;
-      }
-    };
-  },
-  "class"
-);
 
 /**
  * Created with IntelliJ IDEA.
@@ -852,6 +459,415 @@ X.registerModule("elements/slideObject", ["elements/captivate", "managers/broadc
     });
 
 });
+
+/* global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/26/18
+ * Time: 3:41 PM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("classes/Callback", ["managers/classes"], function () {
+
+    "use strict";
+
+    X.classes.register("Callback", function () {
+
+        this.data = {};
+        var that = this;
+
+        function validateDataIndex (index) {
+
+            if (!that.data[index]) {
+
+                that.data[index] = {
+                    "overwritable": null,
+                    "regular": []
+                };
+
+            }
+
+        }
+
+        this.addCallback = function (index, callback, overwritable) {
+
+            // If this is the first callback we're adding.
+            validateDataIndex(index);
+
+            if (overwritable) {
+                that.data[index].overwritable = callback;
+            } else {
+                that.data[index].regular.push(callback);
+            }
+        };
+
+        that.addCallbackToFront = function (index, callback) {
+            // If this is the first callback we're adding.
+            validateDataIndex(index);
+
+            that.data[index].regular.unshift(callback);
+        };
+
+        this.hasCallbackFor = function (index) {
+            return that.data[index] !== undefined;
+        };
+
+        this.sendToCallback = function (index,parameter) {
+            var returnValue,
+                tempReturnValue,
+                data = that.data[index];
+
+            if (data) {
+
+                // Trigger overwritable callback
+                if (data.overwritable) {
+                    data.overwritable(parameter);
+                }
+
+                // Trigger regular callbacks
+                var a = data.regular;
+
+                for (var i = 0; i < a.length; i += 1) {
+
+                    // If the callback returns a value, then we'll return it at the end (assuming noting overrides it before then)
+                    tempReturnValue = a[i](parameter);
+
+                    if (tempReturnValue !== undefined) {
+                        returnValue = tempReturnValue;
+                    }
+
+                }
+            }
+
+            return returnValue;
+        };
+
+        this.forEach = function (method) {
+
+            var a;
+
+            for (var index in that.data) {
+                if (that.data.hasOwnProperty(index)) {
+
+                    if (that.data[index].overwritable) {
+                        method(index, that.data[index].overwritable);
+                    }
+
+                    a = that.data[index].regular;
+                    for (var i = 0; i < a.length; i += 1) {
+                        method(index,a[i]);
+                    }
+
+                }
+            }
+        };
+
+        this.removeCallback = function (index, callbackToRemove) {
+
+            var data = that.data[index];
+
+            if (data) {
+
+                // Check overwrite first
+                if (data.overwritable && data.overwritable === callbackToRemove) {
+                    delete data.overwritable;
+                    return;
+                }
+
+                var a = data.regular,
+                    registeredCallback;
+
+
+                for (var i = 0; i < a.length; i += 1) {
+
+                    registeredCallback = a[i];
+
+                    if (callbackToRemove === registeredCallback) {
+                        a.splice(i,1);
+
+                        // If we have just deleted the last callback for this index, then we'll delete the array so that
+                        // hasCallbackFor() will be able to respond accurately.
+                        if (a.length <= 0) {
+                            delete that.data[index];
+                        }
+                        break;
+                    }
+
+                }
+            }
+        };
+
+        this.removeIndex = function(index) {
+            delete that.data[index];
+        };
+
+        this.clear = function () {
+            that.data = {};
+        };
+
+    });
+}, "class");
+
+/* global _extra*/
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/26/18
+ * Time: 3:41 PM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("classes/CallbackObject", ["managers/classes"], function () {
+
+    "use strict";
+
+    X.classes.register("CallbackObject", function () {
+
+		var CallbackClass;
+
+		// Yes, it's not good that we're making a reference to the unit tests
+		// in the main code but... does this save a lot of time in bug hunting
+		// do I tell you.
+		if (window.X) {
+			CallbackClass = X.classes.Callback;
+		} else {
+			CallbackClass = unitTests.classes.Callback;	
+		}
+
+        var callback = new CallbackClass();
+        var obj = {};
+
+        this.callback = callback.addCallback;
+
+        /**
+         * When a property is changed it will send a message to any
+         * callbacks associated with that property.
+         *
+         * @param  {string} key the property to be changed
+         * @param  {*} value the value for the property to be changed to
+         */
+        this.setProp = function (key, value) {
+
+          obj[key] = value;
+
+          callback.sendToCallback(key, value);
+          callback.sendToCallback("*", value);
+
+        }
+
+        this.getProp = function (key) {
+          return obj[key];
+        }
+
+        this.hasProp = function (key) {
+          return obj.hasOwnProperty(key);
+        }
+
+		this.removeCallback = callback.removeCallback;
+
+    });
+
+}, "class");
+
+X.registerModule("classes/DisplayObjectProxy", ["managers/classes"], function () {
+
+	function invertProp(propName) {
+
+		if (propName === "x") propName = "y"
+		else if (propName === "y") propName = "x"
+		else if (propName === "width") propName = "height"
+		else if (propName === "height") propName = "width"
+		return propName
+
+	}		
+
+	function DisplayObjectProxy(org) {
+		this.original = org;
+		this.switchBoundsProps = org.rotation === 90 || org.rotation === -90;
+	}
+
+	DisplayObjectProxy.prototype = {
+		getBoundsProp: function (propName) {
+
+			if (this.switchBoundsProps) {
+
+				propName = invertProp(propName);
+
+			}
+
+			return this.bounds[propName];
+		},
+		get bounds() {
+		
+			var bounds = this.original.getBounds();
+
+			if (!bounds) {
+			
+				bounds = {
+					"x": this.original.x,
+					"y": this.original.y,
+					"width": 0,
+					"height": 0
+				}
+
+			}
+
+			return bounds;
+		},
+		get x() {
+
+			return this.original.x + this.getBoundsProp('x');
+
+		},
+		set x(val) {
+
+			this.original.x = val - this.getBoundsProp('x');			
+			
+		},
+		get y() {
+
+			return this.original.y + this.getBoundsProp('y');			
+
+		},
+		set y(val) {
+
+			this.original.y = val - this.getBoundsProp('y');			
+			
+		},
+		get width() {
+
+			return this.getBoundsProp('width');			
+
+		},
+		get height() {
+
+			return this.getBoundsProp('height');			
+
+
+		},
+		get rotation() {
+			return this.original.rotation;
+		},
+
+		get primary() {
+			return this._pa;
+		},
+
+		set primary(val) {
+			this._pa = val;
+
+			if (val === "x") {
+				this._pl = "width";		
+			} else {
+				this._pl = "height";		
+			}
+
+			this._sl = invertProp(this._pl);
+			this._sa = invertProp(this._pa);
+		},
+
+		get primaryAxis() {
+			return this[this._pa];
+		},
+
+		set primaryAxis(val) {
+			this[this._pa] = val;
+		},
+
+		get primaryLength() {
+			return this[this._pl];
+		},
+
+		get secondaryAxis() {
+			return this[this._sa];
+		},
+		set secondaryAxis(val) {
+			this[this._sa] = val;
+		},
+		get secondaryLength() {
+			return this[this._sl];
+		}
+	}
+
+    X.classes.register("DisplayObjectProxy", DisplayObjectProxy);
+
+}, "class");
+
+X.registerModule(
+  "classes/MovieClipProxy",
+  ["managers/classes"],
+  function() {
+    function MovieClipProxy(base) {
+      this._original = base;
+    }
+
+    X.classes.register("MovieClipProxy", MovieClipProxy);
+
+    MovieClipProxy.prototype = {
+      get labels() {
+        return this._original.timeline._labels;
+      },
+
+      hasLabel: function(labelName) {
+        return this.labels.hasOwnProperty(labelName);
+      },
+
+      getLabelFrame: function(labelName) {
+        return this.labels[labelName];
+      },
+
+      gotoAndStop: function(location) {
+        this._original.gotoAndStop(location);
+      },
+
+      gotoAndPlay: function(location) {
+        this._original.gotoAndPlay(location);
+      },
+
+      stop: function() {
+        this._original.stop();
+      },
+
+      callOnNextTick: function(method) {
+		  var that = this;
+        function handler() {
+          that._original.removeEventListener("tick", handler);
+          method();
+        }
+
+        this._original.addEventListener("tick", handler);
+      }
+    };
+  },
+  "class"
+);
+
+X.registerModule(
+  "classes/TextFieldProxy",
+  ["managers/classes"],
+  function() {
+    function TextFieldProxy(base) {
+      this._original = base;
+    }
+
+    X.classes.register("TextFieldProxy", TextFieldProxy);
+
+    TextFieldProxy.prototype = {
+      get text() {
+        return this._original.text;
+      },
+
+      set text(value) {
+        this._original.text = value;
+      },
+
+      get valid() {
+        return this._original.constructor === createjs.Text;
+      }
+    };
+  },
+  "class"
+);
 
 /**
  * Created with IntelliJ IDEA.
@@ -1793,712 +1809,553 @@ X.registerModule("managers/runInCaptivateWindow", ["elements/captivate"], functi
  * Time: 12:19 PM
  * To change this template use File | Settings | File Templates.
  */
-X.registerModule("managers/utils", function () {
+X.registerModule("managers/utils", function() {
+  "use strict";
 
-    "use strict";
+  function curry(numParams, method) {
+    function mergeParams(oldParams, newParams) {
+      var params = [];
 
-	function curry (numParams, method) {
+      oldParams.forEach(function(param) {
+        if (param === X.utils.__ && newParams.length > 0) {
+          params.push(newParams.shift());
+        } else {
+          params.push(param);
+        }
+      });
 
-		function mergeParams (oldParams, newParams) {
+      return params.concat(newParams);
+    }
 
-			var params = [];
+    function getTrueParamsLength(params) {
+      return X.utils.reduce(
+        function(value, acc) {
+          if (value === X.utils.__) {
+            return acc;
+          } else {
+            return acc + 1;
+          }
+        },
+        0,
+        params
+      );
+    }
 
-			oldParams.forEach(function (param) {
+    function innerCurry(params, args) {
+      var argumentsArray = Array.prototype.slice.call(args);
+      params = mergeParams(params, argumentsArray);
 
-				if (param === X.utils.__ &&
-					newParams.length > 0) {
+      if (getTrueParamsLength(params) >= numParams) {
+        return method.apply(null, params);
+      } else {
+        return callInnerCurry(params);
+      }
+    }
 
-					params.push(newParams.shift());
+    function callInnerCurry(params) {
+      return function() {
+        return innerCurry(params, arguments);
+      };
+    }
 
-				} else {
+    return callInnerCurry([]);
+  }
 
-					params.push(param);
+  X.utils = {
+    isMobile: "ontouchstart" in document.documentElement,
 
-				}
+    callIfDefined: function(method) {
+      if (method) {
+        var args = Array.prototype.slice.call(arguments);
+        args = args.splice(1, args.length);
 
-			})
+        return method.apply(null, args);
+      }
+    },
 
-			return params.concat(newParams);
+    onNextTick: function(func) {
+      return function() {
+        var args = arguments;
 
-		}
+        if (!createjs || !createjs.Ticker) {
+          return;
+        }
 
-		function getTrueParamsLength (params) {
+        createjs.Ticker.on(
+          "tick",
+          function() {
+            func.apply(null, args);
+          },
+          null,
+          true
+        );
+      };
+    },
 
-			return X.utils.reduce(function (value, acc) {
+    singleton: function(func) {
+      var hasBeenCalled = false;
 
-				if (value === X.utils.__) {
-					return acc;
-				} else {
-					return acc + 1;
-				}
+      return function() {
+        if (!hasBeenCalled) {
+          func.apply(null, arguments);
+          hasBeenCalled = true;
+        }
+      };
+    },
 
-			}, 0, params);
-		}
+    hasSuffix: function(string, suffix) {
+      var ending = string.substring(
+        string.length - suffix.length,
+        string.length
+      );
+      return ending === suffix;
+    },
 
-		function innerCurry (params, args) {
+    callByType: function(parameter, methods) {
+      switch (typeof parameter) {
+        case "string":
+          return X.utils.callIfDefined(methods.string, parameter);
 
-			var argumentsArray = Array.prototype.slice.call(args);
-			params = mergeParams(params, argumentsArray);
-			
-			if (getTrueParamsLength(params) >= numParams) {
-				return method.apply(null, params);
-			} else {
-				return callInnerCurry(params);
-			}
+        case "number":
+          return X.utils.callIfDefined(methods.number, parameter);
 
-		}
+        case "object":
+          if (parameter.constructor === Array) {
+            return X.utils.callIfDefined(methods.array, parameter);
+          } else {
+            return X.utils.callIfDefined(methods.object, parameter);
+          }
+      }
+    },
 
-		function callInnerCurry (params) {
+    isEmpty: function(parameter) {
+      return X.utils.callByType(parameter, {
+        object: function(p) {
+          return Object.keys(p).length <= 0;
+        },
 
-			return function () {
+        array: function(p) {
+          return p.length <= 0;
+        }
+      });
+    },
 
-				return innerCurry(params, arguments);
+    filter: function(sequence, condition) {
+      var types = {
+        array: function(array) {
+          var newArray = [];
 
-			}
-
-		}
-
-		return callInnerCurry([]);
-
-	};
-
-    X.utils = {
-
-      "isMobile": 'ontouchstart' in document.documentElement,
-
-        "callIfDefined": function (method) {
-            if (method) {
-                var args = Array.prototype.slice.call(arguments);
-                args = args.splice(1, args.length);
-
-                return method.apply(null, args);
+          array.forEach(function(element) {
+            if (condition(element)) {
+              newArray.push(element);
             }
-        },
-
-        "onNextTick": function (func) {
-
-            return function () {
-
-                var args = arguments;
-
-                if (!createjs || !createjs.Ticker) {
-                    return;
-                }
-
-                createjs.Ticker.on("tick", function () {
-                    func.apply(null, args);
-                }, null, true);
-
-            };
-        },
-
-        "singleton": function (func) {
-            var hasBeenCalled = false;
-
-            return function () {
-
-                if (!hasBeenCalled) {
-                    func.apply(null, arguments);
-                    hasBeenCalled = true;
-                }
-
-            }
-        },
-
-        "hasSuffix": function (string, suffix) {
-            var ending = string.substring(string.length - suffix.length , string.length);
-            return ending === suffix;
-        },
-
-        "callByType": function (parameter, methods) {
-
-            switch (typeof parameter) {
-
-                case "string":
-                    return X.utils.callIfDefined(methods.string, parameter);
-
-                case "number":
-                    return X.utils.callIfDefined(methods.number, parameter);
-
-                case "object":
-
-                    if (parameter.constructor === Array) {
-                        return X.utils.callIfDefined(methods.array, parameter);
-                    } else {
-                        return X.utils.callIfDefined(methods.object, parameter);
-                    }
-
-            }
-
-        },
-
-
-        "isEmpty": function (parameter) {
-            return X.utils.callByType(parameter, {
-
-                "object": function (p) {
-                    return Object.keys(p).length <= 0;
-                },
-
-                "array": function (p) {
-                    return p.length <= 0;
-                }
-
-            })
-        },
-
-        "filter": function (sequence, condition) {
-
-
-            var types = {
-
-
-                "array": function (array) {
-
-                    var newArray = [];
-
-                    array.forEach(function (element) {
-
-                        if (condition(element)) {
-                            newArray.push(element);
-                        }
-
-                    });
-
-                    return newArray;
-
-                },
-
-
-
-                "object": function (object) {
-
-                    var newObject = {};
-
-                    for (var key in object) {
-                        if (object.hasOwnProperty(key)) {
-
-                            if (condition(key, object[key])) {
-
-                                newObject[key] = object[key];
-
-                            }
-
-                        }
-                    }
-
-                    return newObject;
-
-                },
-
-
-
-                "string": function (string) {
-
-                    var newString = "",
-                        letter;
-
-                    for (var i = 0; i < string.length; i += 1) {
-
-                        letter = string[i];
-
-                        if (condition(letter)) {
-                            newString += letter
-                        }
-                    }
-
-                    return newString;
-
-                }
-            };
-
-
-
-            return X.utils.callByType(sequence, types);
-
-        },
-
-        "forEach": function (sequence, method) {
-            X.utils.callByType(sequence, {
-
-                "array":function (array) {
-
-                    array.forEach(method);
-
-                },
-
-                "object":function (object) {
-
-                    for (var key in object) {
-                        if (object.hasOwnProperty(key)) {
-
-                            method(key, object[key]);
-
-                        }
-                    }
-
-                }
-
-            });
-        },
-
-		"forEachUntil": curry(3, function (predicate, loop, list) {
-
-            return X.utils.callByType(list, {
-
-				"array": function () {
-
-					for (var i = 0; i < list.length; i += 1) {
-
-						var result = loop(list[i]);
-
-						if (predicate(result)) {
-							return result;
-						}
-
-					}
-
-				},
-
-
-
-				"object": function () {
-
-					for (var key in list) {
-						if (list.hasOwnProperty(key)) {
-
-							var result = loop(list[key]);
-
-							if (predicate(result)) {
-							
-								return result;
-
-							}
-
-						}
-					}
-
-				}
-
-			});
-
-		}),
-
-		"forEachUntilResult": function (loop, list) {
-
-			function predicate (value) {
-
-				return value !== undefined;
-
-			}
-			
-
-			return X.utils.forEachUntil(predicate, loop, list);
-
-		},
-
-		"identity": function (value) {
-
-			return value;
-
-		},
-
-		"T": function () {
-
-			return true;
-
-		},
-
-		"F": function () {
-
-			return false;
-
-		},
-
-		"pipeLog": function (value) {
-
-			console.log(value);
-
-			return value;
-
-		},
-
-		"any": curry(2, function (predicate, list) {
-
-			return X.utils.pipe(
-				X.utils.forEachUntil(
-					X.utils.identity,
-					predicate
-				),
-				X.utils.when(
-					X.utils.isNil,
-					X.utils.F
-				)
-			)(list);
-
-		}),
-
-        "defaultTo": function (def, obj) {
-
-            X.utils.forEach(def, function (key, value) {
-
-                if (value !== null &&
-                    typeof value === "object") {
-
-                  var originalObj = obj[key];
-
-                  if (!originalObj) {
-                    originalObj = {};
-                  }
-
-                  obj[key] = X.utils.defaultTo(value, originalObj);
-
-                } else if (!obj.hasOwnProperty(key)) {
-                  obj[key] = value;
-                }
-
-            });
-
-            return obj;
-
-        },
-
-        "getMissingProps": function (props, obj) {
-
-          var result = [];
-
-          X.utils.forEach(props, function (value) {
-
-            if (!obj.hasOwnProperty(value)) {
-              result.push(value);
-            }
-
           });
 
-            return result;
+          return newArray;
         },
 
-		"ifElse": function (predicate, trueF, falseF) {
-			
-			return function () {
-				if (predicate.apply(null, arguments)) {
-					return trueF.apply(null, arguments);
-				} else {
-					return falseF.apply(null, arguments);
-				}
-			}
-
-		},	
-
-		"when": function (predicate, method) {
-			
-			return X.utils.ifElse(predicate, method, X.utils.identity);
-
-		},
-
-		
-		"unless": function (predicate, method) {
-			
-			return X.utils.ifElse(predicate, X.utils.identity, method);
-
-		},
-
-		"getPercent": function (min, max, value) {
-			
-			var range = max - min;
-			var diffFromMin = value - min;
-			return diffFromMin / range;
-
-		},
-
-		"minMax": function (min, max, value) {
-			
-			value = Math.min(value, max);
-			value = Math.max(value, min);
-			return value;
-
-		},
-
-		"calculatePercentInRange": function (min, max, percent) {
-			
-			var range = max - min;
-			var value = range * percent;
-			return value + min;
-
-		},
-
-		"reduce": function (method, initialValue, list) {
-
-			X.utils.forEach(list, function(value) {
-
-					initialValue = method(value, initialValue);
-
-				}
-			);
-
-			return initialValue;
-
-		},
-
-		"within": curry(3, function (start, end, value) {
-
-			return value >= start && value <= end;
-
-		}),
-			
-		"both": function (predicateA, predicateB) {
-
-			return function (value) {
-
-				return predicateA(value) && predicateB(value);
-
-			}
-
-		},
-
-		"either": function (predicateA, predicateB) {
-
-			return function (value) {
-
-				return predicateA(value) || predicateB(value);
-
-			}
-
-		},
-
-		"map": curry(2, function (method, data) {
-
-            return X.utils.callByType(data, {
-
-
-
-
-				"array": function () {
-
-					var returnArray = [];
-
-					X.utils.forEach(data, function (item) {
-
-						var result = method(item);
-						returnArray.push(result);
-
-					})
-
-					return returnArray;
-				},
-
-
-
-
-				"object": function () {
-
-					var returnObject = {};
-
-					X.utils.forEach(data, function (key, item) {
-
-						var result = method(item);
-						returnObject[key] = result;
-
-					});
-
-					return returnObject;
-
-				}
-
-
-
-
-
-			});
-
-		}),
-
-		"__": {},
-
-		"curry": curry, 
-
-		"pipe":function () {
-
-			var argumentsArray = Array.prototype.slice.call(arguments);
-
-			return function (input) {
-
-				return X.utils.reduce(function (method, input) {
-
-					return method(input);
-
-				}, input, argumentsArray);
-
-			}
-				
-
-		},
-
-		"complement": function (method) {
-
-			return function () {
-
-				var result = method.apply(null, arguments); 
-
-				if (typeof result === "function") {
-					return X.utils.complement(result);	
-				} else {
-					return !result;
-				}
-
-			}
-
-		},
-
-		"removeWhiteSpace": function (string) {
-
-			if (typeof string === "string") {
-			
-				return string.replace(/\s/g, "");
-
-			}
-
-		},
-
-		"split": curry(2, function (character, string) {
-
-			if (character && string) {
-			
-				return string.split(character);
-			
-			}
-
-		}),
-
-		"isType": curry(2, function (type, data) {
-
-			return typeof data === type;
-
-		}),
-
-		"isNil": function (value) {
-
-			return value === "" || value === null || value === undefined || 
-				   (isNaN(value) && typeof value === "number");
-
-		},
-
-		"invert": function (value) {
-
-			return !value;
-
-		},
-
-		"isIndexEmpty": curry(2, function (index, array) {
-
-			return X.utils.isNil(array[index]);
-
-		}),
-
-		"isRange": function (string) {
-
-			return X.utils.pipe(
-				X.utils.getRangeObject,
-				X.utils.isNil,
-				X.utils.invert
-			)(string);
-
-		},
-
-		"getRangeObject": function (string) {
-
-			return X.utils.pipe(
-
-				X.utils.removeWhiteSpace,
-
-				X.utils.split("-"),
-
-				X.utils.map(parseInt),
-
-				function (rangeArray) {
-
-					var isMinus = X.utils.isIndexEmpty(X.utils.__, rangeArray);
-
-					switch (rangeArray.length) {
-
-						
-						// case 2:
-							// This is not needed.
-							// It's just here so that default
-							// won't stop the function
-							// break;
-
-						case 3:
-
-							if (isMinus(0)) {
-
-								rangeArray = [
-									rangeArray[1] * -1,
-									rangeArray[2]
-								];
-
-							} else if (isMinus(1)) {
-								
-								rangeArray = [
-									rangeArray[0],
-									rangeArray[2] * -1
-								]
-
-							} else {
-								rangeArray = null
-							}
-
-							break;
-
-						case 4 :
-							
-							if (isMinus(0) && isMinus(2)) {
-								rangeArray = [
-									rangeArray[1] * -1,
-									rangeArray[3] * -1
-								];
-							}
-
-							break;
-					}
-
-					if (rangeArray === null) return [NaN];
-					
-					return {
-						"start": rangeArray[0],
-						"end": rangeArray[1]
-					}
-
-				},
-				
-
-				X.utils.when( 
-					X.utils.any(X.utils.isNil),
-					X.utils.always(null)
-				)
-
-
-			)(string);
-
-		},
-
-		"always": function (value) {
-
-			return function () {
-
-				return value;
-
-			}
-
-		},
-
-		"has": curry(2, function (property, object) {
-
-			return object.hasOwnProperty(property)
-
-		})
-    };
-
+        object: function(object) {
+          var newObject = {};
+
+          for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+              if (condition(key, object[key])) {
+                newObject[key] = object[key];
+              }
+            }
+          }
+
+          return newObject;
+        },
+
+        string: function(string) {
+          var newString = "",
+            letter;
+
+          for (var i = 0; i < string.length; i += 1) {
+            letter = string[i];
+
+            if (condition(letter)) {
+              newString += letter;
+            }
+          }
+
+          return newString;
+        }
+      };
+
+      return X.utils.callByType(sequence, types);
+    },
+
+    forEach: function(sequence, method) {
+      X.utils.callByType(sequence, {
+        array: function(array) {
+          array.forEach(method);
+        },
+
+        object: function(object) {
+          for (var key in object) {
+            if (object.hasOwnProperty(key)) {
+              method(key, object[key]);
+            }
+          }
+        }
+      });
+    },
+
+    forEachUntil: curry(3, function(predicate, loop, list) {
+      return X.utils.callByType(list, {
+        array: function() {
+          for (var i = 0; i < list.length; i += 1) {
+            var result = loop(list[i]);
+
+            if (predicate(result)) {
+              return result;
+            }
+          }
+        },
+
+        object: function() {
+          for (var key in list) {
+            if (list.hasOwnProperty(key)) {
+              var result = loop(list[key]);
+
+              if (predicate(result)) {
+                return result;
+              }
+            }
+          }
+        }
+      });
+    }),
+
+    forEachUntilResult: function(loop, list) {
+      function predicate(value) {
+        return value !== undefined;
+      }
+
+      return X.utils.forEachUntil(predicate, loop, list);
+    },
+
+    identity: function(value) {
+      return value;
+    },
+
+    T: function() {
+      return true;
+    },
+
+    F: function() {
+      return false;
+    },
+
+    pipeLog: function(value) {
+      console.log(value);
+
+      return value;
+    },
+
+    any: curry(2, function(predicate, list) {
+      return X.utils.pipe(
+        X.utils.forEachUntil(X.utils.identity, predicate),
+        X.utils.when(X.utils.isNil, X.utils.F)
+      )(list);
+    }),
+
+    defaultTo: function(def, obj) {
+      X.utils.forEach(def, function(key, value) {
+        if (value !== null && typeof value === "object") {
+          var originalObj = obj[key];
+
+          if (!originalObj) {
+            originalObj = {};
+          }
+
+          obj[key] = X.utils.defaultTo(value, originalObj);
+        } else if (!obj.hasOwnProperty(key)) {
+          obj[key] = value;
+        }
+      });
+
+      return obj;
+    },
+
+    getMissingProps: function(props, obj) {
+      var result = [];
+
+      X.utils.forEach(props, function(value) {
+        if (!obj.hasOwnProperty(value)) {
+          result.push(value);
+        }
+      });
+
+      return result;
+    },
+
+    complement: function(method) {
+      return function() {
+        return !method.apply(null, arguments);
+      };
+    },
+
+    ifElse: function(predicate, trueF, falseF) {
+      return function() {
+        if (predicate.apply(null, arguments)) {
+          return trueF.apply(null, arguments);
+        } else {
+          return falseF.apply(null, arguments);
+        }
+      };
+    },
+
+    when: function(predicate, method) {
+      return X.utils.ifElse(predicate, method, X.utils.identity);
+    },
+
+    unless: function(predicate, method) {
+      return X.utils.ifElse(predicate, X.utils.identity, method);
+    },
+
+    getPercent: function(min, max, value) {
+      var range = max - min;
+      var diffFromMin = value - min;
+      return diffFromMin / range;
+    },
+
+    minMax: function(min, max, value) {
+      value = Math.min(value, max);
+      value = Math.max(value, min);
+      return value;
+    },
+
+    calculatePercentInRange: function(min, max, percent) {
+      var range = max - min;
+      var value = range * percent;
+      return value + min;
+    },
+
+    reduce: function(method, initialValue, list) {
+      X.utils.forEach(list, function(value) {
+        initialValue = method(value, initialValue);
+      });
+
+      return initialValue;
+    },
+
+    within: curry(3, function(start, end, value) {
+      return value >= start && value <= end;
+    }),
+
+    both: function(predicateA, predicateB) {
+      return function(value) {
+        return predicateA(value) && predicateB(value);
+      };
+    },
+
+    either: function(predicateA, predicateB) {
+      return function(value) {
+        return predicateA(value) || predicateB(value);
+      };
+    },
+
+    map: curry(2, function(method, data) {
+      return X.utils.callByType(data, {
+        array: function() {
+          var returnArray = [];
+
+          X.utils.forEach(data, function(item) {
+            var result = method(item);
+            returnArray.push(result);
+          });
+
+          return returnArray;
+        },
+
+        object: function() {
+          var returnObject = {};
+
+          X.utils.forEach(data, function(key, item) {
+            var result = method(item);
+            returnObject[key] = result;
+          });
+
+          return returnObject;
+        }
+      });
+    }),
+
+    __: {},
+
+    curry: curry,
+
+    pipe: function() {
+      var argumentsArray = Array.prototype.slice.call(arguments);
+
+      return function(input) {
+        return X.utils.reduce(
+          function(method, input) {
+            return method(input);
+          },
+          input,
+          argumentsArray
+        );
+      };
+    },
+
+    complement: function(method) {
+      return function() {
+        var result = method.apply(null, arguments);
+
+        if (typeof result === "function") {
+          return X.utils.complement(result);
+        } else {
+          return !result;
+        }
+      };
+    },
+
+    removeWhiteSpace: function(string) {
+      if (typeof string === "string") {
+        return string.replace(/\s/g, "");
+      }
+    },
+
+    split: curry(2, function(character, string) {
+      if (character && string) {
+        return string.split(character);
+      }
+    }),
+
+    isType: curry(2, function(type, data) {
+      return typeof data === type;
+    }),
+
+    isNil: function(value) {
+      return (
+        value === "" ||
+        value === null ||
+        value === undefined ||
+        (isNaN(value) && typeof value === "number")
+      );
+    },
+
+    isNotNil: function(value) {
+      return !X.utils.isNil(value);
+    },
+
+    invert: function(value) {
+      return !value;
+    },
+
+    isIndexEmpty: curry(2, function(index, array) {
+      return X.utils.isNil(array[index]);
+    }),
+
+    isRange: function(string) {
+      return X.utils.pipe(
+        X.utils.getRangeObject,
+        X.utils.isNil,
+        X.utils.invert
+      )(string);
+    },
+
+    getRangeObject: function(string) {
+      return X.utils.pipe(
+        X.utils.removeWhiteSpace,
+
+        X.utils.split("-"),
+
+        X.utils.map(parseInt),
+
+        function(rangeArray) {
+          var isMinus = X.utils.isIndexEmpty(X.utils.__, rangeArray);
+
+          switch (rangeArray.length) {
+            // case 2:
+            // This is not needed.
+            // It's just here so that default
+            // won't stop the function
+            // break;
+
+            case 3:
+              if (isMinus(0)) {
+                rangeArray = [rangeArray[1] * -1, rangeArray[2]];
+              } else if (isMinus(1)) {
+                rangeArray = [rangeArray[0], rangeArray[2] * -1];
+              } else {
+                rangeArray = null;
+              }
+
+              break;
+
+            case 4:
+              if (isMinus(0) && isMinus(2)) {
+                rangeArray = [rangeArray[1] * -1, rangeArray[3] * -1];
+              }
+
+              break;
+          }
+
+          if (rangeArray === null) return [NaN];
+
+          return {
+            start: rangeArray[0],
+            end: rangeArray[1]
+          };
+        },
+
+        X.utils.when(X.utils.any(X.utils.isNil), X.utils.always(null))
+      )(string);
+    },
+
+    always: function(value) {
+      return function() {
+        return value;
+      };
+    },
+
+    tap: curry(2, function(method, value) {
+      method(value);
+      return value;
+    }),
+
+    allPass: curry(2, function(predicateList, input) {
+      for (var i = 0; i < predicateList.length; i += 1) {
+        if (!predicateList[i](input)) return false;
+      }
+
+      return true;
+    }),
+
+    prop: curry(2, function(property, object) {
+      return object[property];
+    }),
+
+    propEq: curry(3, function(property, value, object) {
+      return object[property] === value;
+    }),
+
+    has: curry(2, function(property, object) {
+      return X.utils.callByType(object, {
+        // OBJECT
+        object: function(obj) {
+          return obj.hasOwnProperty(property);
+        },
+
+        // ARRAY
+        array: function() {
+          // loop
+          for (var i = 0; i < object.length; i += 1) {
+            // Is this item identical?
+            if (object[i] === property) {
+              return true;
+            }
+          }
+          return false;
+        }
+      });
+    })
+  };
 });
 
 /**
@@ -3125,6 +2982,137 @@ X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], fu
 
 });
 
+X.registerModule(
+  "managers/prefix/displayObjectName",
+  ["managers/movie/children", "managers/utils"],
+  function() {
+    // Variables
+    var callbacks = {};
+
+    // Methods
+    X.registerDisplayObjectNamePrefix = function(prefix, callback) {
+      callbacks[prefix] = callback;
+      callbacks[prefix.toLowerCase()] = callback;
+    };
+
+    X.movie.children.newChildCallback.addCallback("*", function(movieClip) {
+      var name = movieClip.name;
+
+      // Get prefix
+      var prefix = name.split("_")[0];
+
+      // If we have something registered for this prefix
+      if (callbacks.hasOwnProperty(prefix)) {
+
+        // Call the callback
+        callbacks[prefix](movieClip);
+      }
+    });
+  }
+);
+
+X.registerModule(
+  "managers/prefix/displayObjectNameAndVariable",
+  ["managers/prefix/displayObjectName"],
+  function() {
+    ///////// UTIL
+    function getVariableName(name) {
+      // xfoobar, my, var, name
+      var nameSplit = name.split("_");
+      // my, var, name
+      var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
+
+      var validVarName = loopThroughVarNames(nameSplitMinusStart);
+
+      if (validVarName) {
+        return validVarName;
+      } else {
+
+		  // If we are in Captivate we have not been able to locate
+		  // the variable
+        if (X.captivate.hasCpExtra()) {
+          X.error("PR001", name);
+
+			// If we are inside of an Animate preview then we need to
+			// create the variable
+        } else {
+          createVariableIfNotInCaptivate(nameSplitMinusStart);
+          return getVariableName(name);
+        }
+      }
+    }
+
+    function createVariableIfNotInCaptivate(nameSections) {
+      var varName = buildVariableNameFromArray(nameSections);
+      X.cpVariablesManager.setVariableValue(varName, "");
+    }
+
+    function loopThroughVarNames(nameSections) {
+      var i = nameSections.length - 1;
+      var workingSections;
+      var splicedSections;
+      var variableName;
+
+      while (i >= 0) {
+        workingSections = nameSections.concat();
+        splicedSections = workingSections.splice(0, i + 1);
+        variableName = buildVariableNameFromArray(splicedSections);
+
+        if (X.cpVariablesManager.hasVariable(variableName)) {
+          return variableName;
+        }
+
+        i--;
+      }
+
+      return null;
+    }
+
+    function buildVariableNameFromArray(varNameArray) {
+      var almostVariableName = X.utils.reduce(
+        makeVariableName,
+        "",
+        varNameArray
+      );
+      return almostVariableName.substring(1, almostVariableName.length);
+    }
+
+    function makeVariableName(value, acc) {
+      return acc + "_" + value;
+    }
+
+    ///////// ENTRY POINT
+    X.registerDisplayObjectNamePrefixAndVariable = function(prefix, callback) {
+      // Get informed when a movieClip matching our prefix appears
+      X.registerDisplayObjectNamePrefix(prefix, function(movieClip) {
+        /////////// ASSISTANT METHODS
+        function updateCallback() {
+          var value = X.cpVariablesManager.getVariableValue(variableName);
+          // Inform the originally passed in callback
+          callback(movieClip, value);
+        }
+
+        // Interpret variable name from movie clip name
+        var variableName = getVariableName(movieClip.name);
+
+        // If we can't find variable then stop here
+        if (!variableName) return;
+
+        // listen for variable change
+        X.cpVariablesManager.listenForVariableChange(
+          variableName,
+          updateCallback
+        );
+
+        // Update the callback now with the current variable value
+        var currentValue = X.cpVariablesManager.getVariableValue(variableName);
+
+        updateCallback(currentValue);
+      });
+    };
+  }
+);
+
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
@@ -3143,28 +3131,86 @@ X.registerModule(
     };
 
     ////////////////////////////////////////
-    ////// newChildCallback functionality
-    var existingChildIds = {};
+    ////// existingChildren functionality
+    var existingChildren = {};
 
-    X.addHookAfter(
-      createjs.MovieClip.prototype,
-      "addChildAt",
-      X.utils.unless(
-		  // predicate
-        function(child) {
-          return X.utils.has(child.id, existingChildIds) || X.utils.isNil(child.name)
-        },
+    /**
+     * Adds display object to the existingChildren list
+     */
+    function addChildToList(child) {
+      if (!existingChildren[child.name]) {
+        existingChildren[child.name] = [];
+      }
+      existingChildren[child.name].push(child);
+    }
 
-		  // method
-        function(child) {
-          existingChildIds[child.id] = true;
+    function removeChildFromList(child) {
+      var list = existingChildren[child.name];
+      if (!list) return;
+      var index = list.indexOf(child);
+      list.splice(index, 1);
+    }
 
-          X.movie.children.newChildCallback.sendToCallback(child.name, child);
-          X.movie.children.newChildCallback.sendToCallback("*", child);
-        }
-      )
+    var hasName = X.utils.pipe(
+      X.utils.prop("name"),
+      X.utils.isNotNil
     );
 
+    var hasNoName = X.utils.complement(hasName);
+
+
+    var isInList = function(child) {
+      return X.utils.has(child, existingChildren[child.name]);
+    };
+
+    var isNotInList = X.utils.complement(isInList);
+
+
+    var childShouldBeAnnounced = X.utils.allPass([
+      hasName,
+      X.utils.propEq("_off", false),
+      isNotInList
+    ]);
+
+    var childShouldBeRemoved = X.utils.allPass([
+      hasName,
+      X.utils.propEq("_off", true),
+      isInList
+	]);
+
+    var handleAnnoucement = X.utils.when(
+      // predicate
+      childShouldBeAnnounced,
+
+      // method
+      function(child) {
+        addChildToList(child);
+        X.movie.children.newChildCallback.sendToCallback(child.name, child);
+        X.movie.children.newChildCallback.sendToCallback("*", child);
+      }
+    );
+
+    var removeFromListIfOff = X.utils.when(
+      // predicate
+      childShouldBeRemoved,
+      // method
+      removeChildFromList
+    );
+
+    var handleNewChild = X.utils.pipe(
+      X.utils.tap(handleAnnoucement),
+      removeFromListIfOff
+    );
+
+    ////////////////////////////////////////
+    ////// addChildAt latch
+
+    // X.addHookAfter(createjs.MovieClip.prototype, "addChildAt", handleNewChild);
+    X.addHookAfter(
+      createjs.MovieClip.prototype,
+      "_addManagedChild",
+      handleNewChild
+    );
   }
 );
 
@@ -3276,147 +3322,6 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
     };
 
 });
-
-X.registerModule(
-  "managers/prefix/displayObjectName",
-  ["managers/movie/children", "managers/utils"],
-  function() {
-    // Variables
-    var callbacks = {};
-    var alreadyCalledBack = {};
-
-    // Methods
-    X.registerDisplayObjectNamePrefix = function(prefix, callback) {
-      callbacks[prefix] = callback;
-      callbacks[prefix.toLowerCase()] = callback;
-    };
-
-    X.movie.children.newChildCallback.addCallback("*", function(movieClip) {
-      var name = movieClip.name;
-
-      // If we have already called a callback because of this
-      // movie clip, then we should not continue
-      if (alreadyCalledBack[name] === movieClip) {
-        return;
-      }
-
-      // Get prefix
-      var prefix = name.split("_")[0];
-
-      // If we have something registered for this prefix
-      if (callbacks.hasOwnProperty(prefix)) {
-        // Make a note in the alreadyCalledBack list
-        // so we don't call this again
-        alreadyCalledBack[name] = movieClip;
-
-        // Call the callback
-        callbacks[prefix](movieClip);
-      }
-    });
-  }
-);
-
-X.registerModule(
-  "managers/prefix/displayObjectNameAndVariable",
-  ["managers/prefix/displayObjectName"],
-  function() {
-    ///////// UTIL
-    function getVariableName(name) {
-      // xfoobar, my, var, name
-      var nameSplit = name.split("_");
-      // my, var, name
-      var nameSplitMinusStart = nameSplit.splice(1, nameSplit.length - 1);
-
-      var validVarName = loopThroughVarNames(nameSplitMinusStart);
-
-      if (validVarName) {
-        return validVarName;
-      } else {
-
-		  // If we are in Captivate we have not been able to locate
-		  // the variable
-        if (X.captivate.hasCpExtra()) {
-          X.error("PR001", name);
-
-			// If we are inside of an Animate preview then we need to
-			// create the variable
-        } else {
-          createVariableIfNotInCaptivate(nameSplitMinusStart);
-          return getVariableName(name);
-        }
-      }
-    }
-
-    function createVariableIfNotInCaptivate(nameSections) {
-      var varName = buildVariableNameFromArray(nameSections);
-      X.cpVariablesManager.setVariableValue(varName, "");
-    }
-
-    function loopThroughVarNames(nameSections) {
-      var i = nameSections.length - 1;
-      var workingSections;
-      var splicedSections;
-      var variableName;
-
-      while (i >= 0) {
-        workingSections = nameSections.concat();
-        splicedSections = workingSections.splice(0, i + 1);
-        variableName = buildVariableNameFromArray(splicedSections);
-
-        if (X.cpVariablesManager.hasVariable(variableName)) {
-          return variableName;
-        }
-
-        i--;
-      }
-
-      return null;
-    }
-
-    function buildVariableNameFromArray(varNameArray) {
-      var almostVariableName = X.utils.reduce(
-        makeVariableName,
-        "",
-        varNameArray
-      );
-      return almostVariableName.substring(1, almostVariableName.length);
-    }
-
-    function makeVariableName(value, acc) {
-      return acc + "_" + value;
-    }
-
-    ///////// ENTRY POINT
-    X.registerDisplayObjectNamePrefixAndVariable = function(prefix, callback) {
-      // Get informed when a movieClip matching our prefix appears
-      X.registerDisplayObjectNamePrefix(prefix, function(movieClip) {
-        /////////// ASSISTANT METHODS
-        function updateCallback() {
-          var value = X.cpVariablesManager.getVariableValue(variableName);
-          // Inform the originally passed in callback
-          callback(movieClip, value);
-        }
-
-        // Interpret variable name from movie clip name
-        var variableName = getVariableName(movieClip.name);
-
-        // If we can't find variable then stop here
-        if (!variableName) return;
-
-        // listen for variable change
-        X.cpVariablesManager.listenForVariableChange(
-          variableName,
-          updateCallback
-        );
-
-        // Update the callback now with the current variable value
-        var currentValue = X.cpVariablesManager.getVariableValue(variableName);
-
-        updateCallback(currentValue);
-      });
-    };
-  }
-);
 
 X.registerModule("managers/components/slider/controller", ["managers/utils", "managers/components/slider/validator"], function () {
 
@@ -4244,13 +4149,16 @@ X.registerModule(
     // - xBindPlay
     function createBindHandler(methodName) {
       return function(movieClip, value) {
+		  // console.log("binding: " + value);
         var proxy = new X.classes.MovieClipProxy(movieClip);
 
         // If the label is present
         if (proxy.hasLabel(value)) {
-          var frame = proxy.getLabelFrame(value);
 
+          var frame = proxy.getLabelFrame(value);
+			
           proxy[methodName](frame);
+
         } else {
           // If there is no matching label, then stop at the first frame
           proxy[methodName](0);

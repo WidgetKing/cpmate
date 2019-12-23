@@ -8,13 +8,16 @@ X.registerModule(
     // - xBindPlay
     function createBindHandler(methodName) {
       return function(movieClip, value) {
+		  // console.log("binding: " + value);
         var proxy = new X.classes.MovieClipProxy(movieClip);
 
         // If the label is present
         if (proxy.hasLabel(value)) {
-          var frame = proxy.getLabelFrame(value);
 
+          var frame = proxy.getLabelFrame(value);
+			
           proxy[methodName](frame);
+
         } else {
           // If there is no matching label, then stop at the first frame
           proxy[methodName](0);
