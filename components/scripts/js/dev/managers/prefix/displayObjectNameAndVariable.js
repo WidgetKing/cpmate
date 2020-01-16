@@ -14,14 +14,13 @@ X.registerModule(
       if (validVarName) {
         return validVarName;
       } else {
-
-		  // If we are in Captivate we have not been able to locate
-		  // the variable
+        // If we are in Captivate we have not been able to locate
+        // the variable
         if (X.captivate.hasCpExtra()) {
           X.error("PR001", name);
 
-			// If we are inside of an Animate preview then we need to
-			// create the variable
+          // If we are inside of an Animate preview then we need to
+          // create the variable
         } else {
           createVariableIfNotInCaptivate(nameSplitMinusStart);
           return getVariableName(name);

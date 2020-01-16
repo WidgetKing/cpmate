@@ -8,7 +8,6 @@ X.registerModule(
     // - xBindPlay
     function createBindHandler(methodName) {
       return function(movieClip, value) {
-		  // console.log("binding: " + value);
         var proxy = new X.classes.MovieClipProxy(movieClip);
 
         // If the label is present

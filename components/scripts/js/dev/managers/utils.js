@@ -550,6 +550,10 @@ X.registerModule("managers/utils", function() {
           return false;
         }
       });
+    }),
+
+    hasnt: curry(2, function(property, object) {
+      return !X.utils.has(property, object);
     })
   };
 });

@@ -43,25 +43,26 @@ X.registerModule(
 
     var hasNoName = X.utils.complement(hasName);
 
-
     var isInList = function(child) {
       return X.utils.has(child, existingChildren[child.name]);
     };
 
     var isNotInList = X.utils.complement(isInList);
 
+    var isNotOff = X.utils.either(
+      X.utils.hasnt("_off"),
+      X.utils.propEq("_off", false)
+    );
+
+    var isOff = X.utils.complement(isNotOff);
 
     var childShouldBeAnnounced = X.utils.allPass([
       hasName,
-      X.utils.propEq("_off", false),
+      isNotOff,
       isNotInList
     ]);
 
-    var childShouldBeRemoved = X.utils.allPass([
-      hasName,
-      X.utils.propEq("_off", true),
-      isInList
-	]);
+    var childShouldBeRemoved = X.utils.allPass([hasName, isOff, isInList]);
 
     var handleAnnoucement = X.utils.when(
       // predicate

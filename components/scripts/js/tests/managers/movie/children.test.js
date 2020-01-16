@@ -5,7 +5,7 @@
  * Time: 11:25 AM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for managers/movie/children", function() {
+describe("A test suite for managers/movie/children", function() {
   "use strict";
 
   var module = unitTests.requestModule("managers/movie/children"),
@@ -79,7 +79,7 @@ fdescribe("A test suite for managers/movie/children", function() {
       expect(spy).not.toHaveBeenCalled();
     });
 
-    fit("should not inform us if the same child is added at a different location", function() {
+    it("should not inform us if the same child is added at a different location", function() {
       // 1: SETUP
       var spyStar = jasmine.createSpy("newChildCallback.addCallback(*) result");
       var spyName = jasmine.createSpy(
@@ -185,6 +185,27 @@ fdescribe("A test suite for managers/movie/children", function() {
       createjs.MovieClip.prototype._addManagedChild(child);
 
       // 5: ASSERT
+      expect(spyStar).toHaveBeenCalled();
+      expect(spyName).toHaveBeenCalled();
+    });
+
+    it("should continue to announce child even if it does not have an _off property", function() {
+      // 1: SETUP
+      var spyStar = jasmine.createSpy("newChildCallback.addCallback(*) result");
+      var spyName = jasmine.createSpy(
+        "newChildCallback.addCallback('name') result"
+      );
+
+      X.movie.children.newChildCallback.addCallback("*", spyStar);
+      X.movie.children.newChildCallback.addCallback("foobar", spyName);
+
+      // 2: TEST
+      var child = {
+        name: "foobar"
+      };
+      createjs.MovieClip.prototype._addManagedChild(child);
+
+      // 3: ASSERT
       expect(spyStar).toHaveBeenCalled();
       expect(spyName).toHaveBeenCalled();
     });
