@@ -288,11 +288,11 @@ X.registerModule("managers/utils", function() {
       return result;
     },
 
-    complement: function(method) {
-      return function() {
-        return !method.apply(null, arguments);
-      };
-    },
+    // complement: function(method) {
+    //   return function() {
+    //     return !method.apply(null, arguments);
+    //   };
+    // },
 
     ifElse: function(predicate, trueF, falseF) {
       return function() {

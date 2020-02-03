@@ -8,4 +8,4 @@ tags
 coverage
 tests
 *.swp
-tests/**
+tests/

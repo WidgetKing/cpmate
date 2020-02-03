@@ -774,6 +774,37 @@ describe("A test suite for managers/utils", function() {
   });
 
   describe("X.utils.complement()", function() {
+    it("should change a 'true' result to a 'false' result and visa versa", function() {
+      // 1: SETUP
+      var obj = { a: true };
+      var objCheckFalse = X.utils.propEq("a", false);
+      var objCheckTrue = X.utils.complement(objCheckFalse);
+
+      // 2: TEST
+      var result1 = objCheckFalse(obj);
+      var result2 = objCheckTrue(obj);
+
+      // 3: ASSERT
+      expect(result1).toBe(false);
+      expect(result2).toBe(true);
+    });
+
+    it("should work with multiple arguments", function() {
+      // 1: SETUP
+      function equals(p1, p2) {
+        return p1 === p2;
+      }
+
+      var notEquals = X.utils.complement(equals);
+
+      // 2: TEST
+      var result1 = equals(1, 1);
+      var result2 = notEquals(1, 1);
+
+      // 3: ASSERT
+      expect(result1).toBe(true);
+      expect(result2).toBe(false);
+    });
     it("should return true when a function returns false", function() {
       // 1: SETUP
       var returnTrue = () => true;
@@ -1011,40 +1042,6 @@ describe("A test suite for managers/utils", function() {
       // 2: TEST
       var result1 = test("Passing Score");
       var result2 = test("foobar");
-
-      // 3: ASSERT
-      expect(result1).toBe(true);
-      expect(result2).toBe(false);
-    });
-  });
-
-  describe("X.utils.complement()", function() {
-    it("should change a 'true' result to a 'false' result and visa versa", function() {
-      // 1: SETUP
-      var obj = { a: true };
-      var objCheckFalse = X.utils.propEq("a", false);
-      var objCheckTrue = X.utils.complement(objCheckFalse);
-
-      // 2: TEST
-      var result1 = objCheckFalse(obj);
-      var result2 = objCheckTrue(obj);
-
-      // 3: ASSERT
-      expect(result1).toBe(false);
-      expect(result2).toBe(true);
-    });
-
-    it("should work with multiple arguments", function() {
-      // 1: SETUP
-      function equals(p1, p2) {
-        return p1 === p2;
-      }
-
-      var notEquals = X.utils.complement(equals);
-
-      // 2: TEST
-      var result1 = equals(1, 1);
-      var result2 = notEquals(1, 1);
 
       // 3: ASSERT
       expect(result1).toBe(true);
