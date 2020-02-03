@@ -22,7 +22,6 @@ X.registerModule(
     }
 
     function callCallWhenLoadedList() {
-		console.log("callCallWhenLoadedList");
       callWhenLoadedList.forEach(function(method) {
         method();
       });
@@ -68,7 +67,7 @@ X.registerModule(
       }
 
       // Now is the point where it is safe for the animation to play
-      dispatchAnimationReady();
+      // dispatchAnimationReady();
     });
 
     /**
@@ -86,7 +85,6 @@ X.registerModule(
     function dispatchAnimationReady() {
       if (X.captivate) {
         if (X.captivate.extra && X.captivate.extra.cpMate.notifyCpExtra) {
-          console.log("Notifying CpExtra of animationready");
           X.captivate.extra.cpMate.notifyCpExtra(
             X.slideObject.name,
             "animationready"
@@ -102,29 +100,6 @@ X.registerModule(
       // window.dispatchEvent(event);
     }
 
-    /*
-    var time = 0;
-
-    var interval = window.setInterval(function () {
-
-        if (window.stage) {
-
-            console.log("Ready: " + time);
-            console.log(stage)
-            window.clearInterval(interval);
-
-        }
-
-        time += 10;
-
-    }, 10);
-
-    window.addEventListener("load", function () {
-        console.log(stage);
-        X.animate = {
-            "mainTimeline": stage.children[0]
-        }
-    });
-*/
+    X.loadQueue.callback.addCallback("readytoplay", dispatchAnimationReady);
   }
 );

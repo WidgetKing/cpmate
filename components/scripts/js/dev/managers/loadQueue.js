@@ -4,9 +4,20 @@ X.registerModule(
   function() {
     var COMPLETE_TIMEOUT = 10;
 
+    X.addHook(createjs, "promote", function(thing, name) {
+      console.log(name);
+    });
     X.loadQueue = {
       callback: new X.classes.Callback()
     };
+
+    X.addOneTimeHook(
+      createjs.MovieClip.prototype,
+      "_updateTimeline",
+      function() {
+        X.loadQueue.callback.sendToCallback("readytoplay", null);
+      }
+    );
 
     function loadManifestHook() {
       var queue = this;
@@ -14,11 +25,7 @@ X.registerModule(
       ////////////////////////////////////////
       ////// Loading progress handlers
       function onComplete(event) {
-        // We'll give a little extra time to allow animate to set up
-        // As sometimes we still end up skipping the start of an animation
-        window.setTimeout(function() {
-          X.loadQueue.callback.sendToCallback("complete", queue);
-        }, COMPLETE_TIMEOUT);
+        X.loadQueue.callback.sendToCallback("complete", queue);
       }
 
       function onFileLoad() {
@@ -27,7 +34,11 @@ X.registerModule(
 
       function onError(error) {
         X.loadQueue.callback.sendToCallback("error", error);
-        alert(error.title +  "\nFailed to load Animate Sprite Sheet: " + error.data.id);
+        alert(
+          error.title +
+            "\nFailed to load Animate Sprite Sheet: " +
+            error.data.id
+        );
       }
 
       ////////////////////////////////////////

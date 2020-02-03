@@ -13,7 +13,7 @@
 
     window.X = {
         "version":"0.0.2",
-        "build":"2867"
+        "build":"2917"
     };
 
     var moduleRegistry = {},
@@ -637,7 +637,6 @@ X.registerModule(
     }
 
     function callCallWhenLoadedList() {
-		console.log("callCallWhenLoadedList");
       callWhenLoadedList.forEach(function(method) {
         method();
       });
@@ -683,7 +682,7 @@ X.registerModule(
       }
 
       // Now is the point where it is safe for the animation to play
-      dispatchAnimationReady();
+      // dispatchAnimationReady();
     });
 
     /**
@@ -701,7 +700,6 @@ X.registerModule(
     function dispatchAnimationReady() {
       if (X.captivate) {
         if (X.captivate.extra && X.captivate.extra.cpMate.notifyCpExtra) {
-          console.log("Notifying CpExtra of animationready");
           X.captivate.extra.cpMate.notifyCpExtra(
             X.slideObject.name,
             "animationready"
@@ -717,30 +715,7 @@ X.registerModule(
       // window.dispatchEvent(event);
     }
 
-    /*
-    var time = 0;
-
-    var interval = window.setInterval(function () {
-
-        if (window.stage) {
-
-            console.log("Ready: " + time);
-            console.log(stage)
-            window.clearInterval(interval);
-
-        }
-
-        time += 10;
-
-    }, 10);
-
-    window.addEventListener("load", function () {
-        console.log(stage);
-        X.animate = {
-            "mainTimeline": stage.children[0]
-        }
-    });
-*/
+    X.loadQueue.callback.addCallback("readytoplay", dispatchAnimationReady);
   }
 );
 
@@ -1458,9 +1433,20 @@ X.registerModule(
   function() {
     var COMPLETE_TIMEOUT = 10;
 
+    X.addHook(createjs, "promote", function(thing, name) {
+      console.log(name);
+    });
     X.loadQueue = {
       callback: new X.classes.Callback()
     };
+
+    X.addOneTimeHook(
+      createjs.MovieClip.prototype,
+      "_updateTimeline",
+      function() {
+        X.loadQueue.callback.sendToCallback("readytoplay", null);
+      }
+    );
 
     function loadManifestHook() {
       var queue = this;
@@ -1468,11 +1454,7 @@ X.registerModule(
       ////////////////////////////////////////
       ////// Loading progress handlers
       function onComplete(event) {
-        // We'll give a little extra time to allow animate to set up
-        // As sometimes we still end up skipping the start of an animation
-        window.setTimeout(function() {
-          X.loadQueue.callback.sendToCallback("complete", queue);
-        }, COMPLETE_TIMEOUT);
+        X.loadQueue.callback.sendToCallback("complete", queue);
       }
 
       function onFileLoad() {
@@ -1481,7 +1463,11 @@ X.registerModule(
 
       function onError(error) {
         X.loadQueue.callback.sendToCallback("error", error);
-        alert(error.title +  "\nFailed to load Animate Sprite Sheet: " + error.data.id);
+        alert(
+          error.title +
+            "\nFailed to load Animate Sprite Sheet: " +
+            error.data.id
+        );
       }
 
       ////////////////////////////////////////
@@ -2852,6 +2838,155 @@ X.registerModule("managers/actions/unload", ["managers/cpExtraActions"], functio
 /**
  * Created with IntelliJ IDEA.
  * User: Tristan
+ * Date: 11/1/18
+ * Time: 9:48 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("managers/debugging/errors", function() {
+  X.errors = {
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// GENERAL ERRORS (GE)
+    ///////////////////////////////////////////////////////////////////////
+
+    GE001: function() {
+      return "You have not loaded CpExtra into Captivate. CpMate cannot work if CpExtra is not installed in Captivate. Either install CpExtra or remove CpMate.";
+    },
+
+    GE002: function(currentVersion, minimumVersion) {
+      return (
+        "CPEXTRA NEEDS TO BE UPGRADED. The current version of CpExtra is " +
+        currentVersion +
+        ". But the minimum version of CpExtra needed to work with CpMate is " +
+        minimumVersion +
+        ". PLEASE UPGRADE CPEXTRA NOW."
+      );
+    },
+
+    ////////////////////////////////////////
+    ////////// COMPONENT ERRORS
+    ////////////////////////////////////////
+    CO001: function(property) {
+      return (
+        "The required property for slider/dial data ''" +
+        property +
+        "'' was not provided"
+      );
+    },
+    CO002: function(name) {
+      return (
+        "The variable defined for the slider/dial interaction '" +
+        name +
+        "' does not exist'"
+      );
+    },
+    CO003: function(propertyName) {
+      return (
+        "The evaluate settings for a slider/dial interaction did not have the required '" +
+        propertyName +
+        "' property defined."
+      );
+    },
+
+    ////////////////////////////////////////
+    ////////// PREFIX ERRORS
+    ////////////////////////////////////////
+    PR001: function(clipName) {
+      return (
+        "Could not find a matching variable for movie clip named: '" +
+        clipName +
+        "'"
+      );
+    },
+
+    PR002: function(clipName, prefix, name) {
+      return (
+        "Prefix " +
+        prefix +
+        " can only work with a Dynamic Text object. Please ensure the object named " +
+        name +
+        "is a text object and not a MovieClip that contains a text object."
+      );
+    }
+  };
+});
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
+ * Date: 11/1/18
+ * Time: 9:46 AM
+ * To change this template use File | Settings | File Templates.
+ */
+X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], function () {
+
+	////////////////////////////////////////
+	////// ON SCREEN LOGGING
+	
+	var onScreenLog;
+
+	X.activateOnScreenLogging = function () {
+		var para = document.createElement("P");                       // Create a <p> node
+		var t = document.createTextNode("On screen logging activated");      // Create a text node
+		para.appendChild(t);                                          // Append the text to <p>
+		document.body.appendChild(para); 
+
+		onScreenLog = function (message) {
+
+			t.textContent = message;
+
+		}
+
+	}
+
+	////////////////////////////////////////
+	////// GENERAL FUNCTIONS
+	
+    X.log = function (message) {
+		if (onScreenLog) {
+			onScreenLog(message);
+		} else {
+			console.log(message);
+		}
+    };
+
+    X.alert = function (message, title) {
+        if (X.captivate.isLoaded()) {
+            X.captivate.alert(message, title);
+        } else {
+            alert(message);
+        }
+    };
+
+    X.error = function (errorCode, message) {
+
+        var title = "CpMate Error";
+
+        if (X.errors.hasOwnProperty(errorCode)) {
+
+            // Get array of all arguments except the first one.
+            // We will need to pass this on to the error function.
+            var args = Array.prototype.slice.call(arguments);
+            args.splice(0,1);
+
+            message = X.errors[errorCode].apply(this, args);
+
+            title += ": " + errorCode;
+
+        } else {
+
+            message = errorCode;
+
+        }
+
+        X.alert(message, title);
+
+    };
+
+});
+
+/**
+ * Created with IntelliJ IDEA.
+ * User: Tristan
  * Date: 12/17/18
  * Time: 11:23 AM
  * To change this template use File | Settings | File Templates.
@@ -3060,155 +3195,6 @@ X.registerModule("managers/movie/rootTimeline", ["managers/movie", "classes/Call
 
 });
 
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/1/18
- * Time: 9:48 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("managers/debugging/errors", function() {
-  X.errors = {
-    ///////////////////////////////////////////////////////////////////////
-    /////////////// GENERAL ERRORS (GE)
-    ///////////////////////////////////////////////////////////////////////
-
-    GE001: function() {
-      return "You have not loaded CpExtra into Captivate. CpMate cannot work if CpExtra is not installed in Captivate. Either install CpExtra or remove CpMate.";
-    },
-
-    GE002: function(currentVersion, minimumVersion) {
-      return (
-        "CPEXTRA NEEDS TO BE UPGRADED. The current version of CpExtra is " +
-        currentVersion +
-        ". But the minimum version of CpExtra needed to work with CpMate is " +
-        minimumVersion +
-        ". PLEASE UPGRADE CPEXTRA NOW."
-      );
-    },
-
-    ////////////////////////////////////////
-    ////////// COMPONENT ERRORS
-    ////////////////////////////////////////
-    CO001: function(property) {
-      return (
-        "The required property for slider/dial data ''" +
-        property +
-        "'' was not provided"
-      );
-    },
-    CO002: function(name) {
-      return (
-        "The variable defined for the slider/dial interaction '" +
-        name +
-        "' does not exist'"
-      );
-    },
-    CO003: function(propertyName) {
-      return (
-        "The evaluate settings for a slider/dial interaction did not have the required '" +
-        propertyName +
-        "' property defined."
-      );
-    },
-
-    ////////////////////////////////////////
-    ////////// PREFIX ERRORS
-    ////////////////////////////////////////
-    PR001: function(clipName) {
-      return (
-        "Could not find a matching variable for movie clip named: '" +
-        clipName +
-        "'"
-      );
-    },
-
-    PR002: function(clipName, prefix, name) {
-      return (
-        "Prefix " +
-        prefix +
-        " can only work with a Dynamic Text object. Please ensure the object named " +
-        name +
-        "is a text object and not a MovieClip that contains a text object."
-      );
-    }
-  };
-});
-
-/**
- * Created with IntelliJ IDEA.
- * User: Tristan
- * Date: 11/1/18
- * Time: 9:46 AM
- * To change this template use File | Settings | File Templates.
- */
-X.registerModule("managers/debugging/logging", ["managers/debugging/errors"], function () {
-
-	////////////////////////////////////////
-	////// ON SCREEN LOGGING
-	
-	var onScreenLog;
-
-	X.activateOnScreenLogging = function () {
-		var para = document.createElement("P");                       // Create a <p> node
-		var t = document.createTextNode("On screen logging activated");      // Create a text node
-		para.appendChild(t);                                          // Append the text to <p>
-		document.body.appendChild(para); 
-
-		onScreenLog = function (message) {
-
-			t.textContent = message;
-
-		}
-
-	}
-
-	////////////////////////////////////////
-	////// GENERAL FUNCTIONS
-	
-    X.log = function (message) {
-		if (onScreenLog) {
-			onScreenLog(message);
-		} else {
-			console.log(message);
-		}
-    };
-
-    X.alert = function (message, title) {
-        if (X.captivate.isLoaded()) {
-            X.captivate.alert(message, title);
-        } else {
-            alert(message);
-        }
-    };
-
-    X.error = function (errorCode, message) {
-
-        var title = "CpMate Error";
-
-        if (X.errors.hasOwnProperty(errorCode)) {
-
-            // Get array of all arguments except the first one.
-            // We will need to pass this on to the error function.
-            var args = Array.prototype.slice.call(arguments);
-            args.splice(0,1);
-
-            message = X.errors[errorCode].apply(this, args);
-
-            title += ": " + errorCode;
-
-        } else {
-
-            message = errorCode;
-
-        }
-
-        X.alert(message, title);
-
-    };
-
-});
-
 X.registerModule(
   "managers/prefix/displayObjectName",
   ["managers/movie/children", "managers/utils"],
@@ -3336,6 +3322,94 @@ X.registerModule(
         updateCallback(currentValue);
       });
     };
+  }
+);
+
+X.registerModule(
+  "managers/prefixes/registees/xBind",
+  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
+  function() {
+    // The main business logic is here which works for
+    // - xBind
+    // - xBindStop
+    // - xBindPlay
+    function createBindHandler(methodName) {
+      return function(movieClip, value) {
+        var proxy = new X.classes.MovieClipProxy(movieClip);
+
+        // If the label is present
+        if (proxy.hasLabel(value)) {
+
+          var frame = proxy.getLabelFrame(value);
+			
+          proxy[methodName](frame);
+
+        } else {
+          // If there is no matching label, then stop at the first frame
+          proxy[methodName](0);
+        }
+      };
+    }
+
+    // We call the bind handler on next tick to prevent the error where calling
+    // gotoAndStop too soon will cause the movie clip to play instead
+    // Weird, right?
+    var xBind = X.utils.onNextTick(createBindHandler("gotoAndStop"));
+    var xBindPlay = createBindHandler("gotoAndPlay");
+
+    // Register for updates
+    X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
+    X.registerDisplayObjectNamePrefixAndVariable("xBindStop", xBind);
+
+    // Register xBindPlay
+    X.registerDisplayObjectNamePrefixAndVariable("xBindPlay", xBindPlay);
+  }
+);
+
+X.registerModule(
+  "managers/prefixes/registees/xPause",
+  ["managers/prefix/displayObjectName"],
+  function() {
+    function xPause(movieClip, value) {
+
+      X.movie.changeCallback.addCallback("play", function () {
+
+      	movieClip.play();
+
+      });
+
+      X.movie.changeCallback.addCallback("stop", function () {
+
+      	movieClip.stop();
+
+      });
+
+    }
+
+    // Register for updates
+    X.registerDisplayObjectNamePrefixAndVariable("xPause", xPause);
+  }
+);
+
+X.registerModule(
+  "managers/prefixes/registees/xTextFromVariable",
+  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
+  function() {
+    var PREFIX = "xTextFromVariable";
+
+    function xTextFromVariable(textField, value) {
+
+      var proxy = new X.classes.TextFieldProxy(textField);
+
+      if (proxy.valid) {
+        proxy.text = value;
+      } else {
+        X.error("PR002", PREFIX, textField.name);
+      }
+    }
+
+    // Register xTextFromVariable
+    X.registerDisplayObjectNamePrefixAndVariable(PREFIX, xTextFromVariable);
   }
 );
 
@@ -4152,94 +4226,6 @@ X.registerModule(
 
       return exports;
     };
-  }
-);
-
-X.registerModule(
-  "managers/prefixes/registees/xBind",
-  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
-  function() {
-    // The main business logic is here which works for
-    // - xBind
-    // - xBindStop
-    // - xBindPlay
-    function createBindHandler(methodName) {
-      return function(movieClip, value) {
-        var proxy = new X.classes.MovieClipProxy(movieClip);
-
-        // If the label is present
-        if (proxy.hasLabel(value)) {
-
-          var frame = proxy.getLabelFrame(value);
-			
-          proxy[methodName](frame);
-
-        } else {
-          // If there is no matching label, then stop at the first frame
-          proxy[methodName](0);
-        }
-      };
-    }
-
-    // We call the bind handler on next tick to prevent the error where calling
-    // gotoAndStop too soon will cause the movie clip to play instead
-    // Weird, right?
-    var xBind = X.utils.onNextTick(createBindHandler("gotoAndStop"));
-    var xBindPlay = createBindHandler("gotoAndPlay");
-
-    // Register for updates
-    X.registerDisplayObjectNamePrefixAndVariable("xBind", xBind);
-    X.registerDisplayObjectNamePrefixAndVariable("xBindStop", xBind);
-
-    // Register xBindPlay
-    X.registerDisplayObjectNamePrefixAndVariable("xBindPlay", xBindPlay);
-  }
-);
-
-X.registerModule(
-  "managers/prefixes/registees/xPause",
-  ["managers/prefix/displayObjectName"],
-  function() {
-    function xPause(movieClip, value) {
-
-      X.movie.changeCallback.addCallback("play", function () {
-
-      	movieClip.play();
-
-      });
-
-      X.movie.changeCallback.addCallback("stop", function () {
-
-      	movieClip.stop();
-
-      });
-
-    }
-
-    // Register for updates
-    X.registerDisplayObjectNamePrefixAndVariable("xPause", xPause);
-  }
-);
-
-X.registerModule(
-  "managers/prefixes/registees/xTextFromVariable",
-  ["managers/utils", "managers/prefix/displayObjectNameAndVariable"],
-  function() {
-    var PREFIX = "xTextFromVariable";
-
-    function xTextFromVariable(textField, value) {
-
-      var proxy = new X.classes.TextFieldProxy(textField);
-
-      if (proxy.valid) {
-        proxy.text = value;
-      } else {
-        X.error("PR002", PREFIX, textField.name);
-      }
-    }
-
-    // Register xTextFromVariable
-    X.registerDisplayObjectNamePrefixAndVariable(PREFIX, xTextFromVariable);
   }
 );
 
