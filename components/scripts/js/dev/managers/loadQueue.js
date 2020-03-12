@@ -4,9 +4,6 @@ X.registerModule(
   function() {
     var COMPLETE_TIMEOUT = 10;
 
-    X.addHook(createjs, "promote", function(thing, name) {
-      console.log(name);
-    });
     X.loadQueue = {
       callback: new X.classes.Callback()
     };
@@ -34,7 +31,7 @@ X.registerModule(
 
       function onError(error) {
         X.loadQueue.callback.sendToCallback("error", error);
-        alert(
+        console.error(
           error.title +
             "\nFailed to load Animate Sprite Sheet: " +
             error.data.id

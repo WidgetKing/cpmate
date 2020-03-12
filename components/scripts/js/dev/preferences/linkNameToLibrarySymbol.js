@@ -19,7 +19,7 @@ X.registerModule("preferences/linkNameToLibrarySymbol", ["managers/preferences",
             var name = getSlideObjectClassName();
 
             if (!name) {
-                X.log("Could not find a symbol by the name of '" + getSlideObjectClassName() +
+                X.log("Could not find a symbol by the name of '" + X.slideObject.name +
                       "'. Perhaps this animation is only included to preload other animations?");
 
                 return;

@@ -88,6 +88,24 @@ X.registerModule("managers/utils", function() {
       };
     },
 
+    add: curry(2, function(n1, n2) {
+      return n1 + n2;
+    }),
+
+    subtract: curry(2, function(n1, n2) {
+      return n1 - n2;
+    }),
+
+    converge: curry(3, function(converger, transformations, value) {
+      var a = [];
+
+      for (var i = 0; i < transformations.length; i += 1) {
+        a.push(transformations[i](value));
+      }
+
+      return converger.apply(null, a);
+    }),
+
     singleton: function(func) {
       var hasBeenCalled = false;
 
@@ -233,6 +251,30 @@ X.registerModule("managers/utils", function() {
       return X.utils.forEachUntil(predicate, loop, list);
     },
 
+    drop: curry(2, function(number, list) {
+      return X.utils.callByType(list, {
+        // STRING
+        string: function(string) {
+          return string.substring(number, string.length);
+        },
+
+        // ARRAY
+        array: function(array) {
+          var newArray = [];
+
+          for (var i = number; i < array.length; i += 1) {
+            newArray.push(array[i]);
+          }
+
+          return newArray;
+        }
+      });
+    }),
+
+    indexOf: curry(2, function(character, list) {
+      return list.indexOf(character);
+    }),
+
     identity: function(value) {
       return value;
     },
@@ -250,6 +292,18 @@ X.registerModule("managers/utils", function() {
 
       return value;
     },
+
+    whenAllParametersValid: curry(2, function() {
+      var argumentsArray = Array.prototype.slice.call(arguments);
+      var method = argumentsArray[0];
+      var argumentsForMethod = X.utils.drop(1, argumentsArray);
+
+      if (X.utils.any(X.utils.isNil, argumentsForMethod)) {
+        return argumentsArray[0];
+      } else {
+        return method.apply(null, argumentsForMethod);
+      }
+    }),
 
     any: curry(2, function(predicate, list) {
       return X.utils.pipe(

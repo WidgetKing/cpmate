@@ -1116,6 +1116,123 @@ describe("A test suite for managers/utils", function() {
     });
   });
 
+  describe("X.utils.add()", function() {
+    it("should add two numbers together", function() {
+      expect(X.utils.add(1, 2)).toBe(3);
+    });
+
+    it("should curry", function() {
+      // 1: SETUP
+      var add1 = X.utils.add(1);
+
+      // 2: TEST
+      expect(add1(4)).toBe(5);
+      expect(add1(10)).toBe(11);
+    });
+  });
+
+  fdescribe("X.utils.whenAllParametersValid()", function() {
+    it("should call a function when the value is not null", function() {
+      // 1: SETUP
+      var spy = jasmine.createSpy();
+
+      // 2: TEST
+      X.utils.whenAllParametersValid(spy, "foobar");
+
+      // 3: ASSERT
+      expect(spy).toHaveBeenCalledWith("foobar");
+    });
+
+    it("should not call the function when the value is null", function() {
+      // 1: SETUP
+      var spy = jasmine.createSpy();
+
+      // 2: TEST
+      X.utils.whenAllParametersValid(spy, null);
+
+      // 3: ASSERT
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+	  it("should check all parameters", function () {
+      // 1: SETUP
+      var spy = jasmine.createSpy();
+
+      // 2: TEST
+      X.utils.whenAllParametersValid(spy)(1, 2, 3);
+
+      // 3: ASSERT
+      expect(spy).toHaveBeenCalledWith(1, 2, 3)
+	  });
+	  
+  });
+
+  describe("X.utils.drop()", function() {
+    it("should remove X amount of items from start of list", function() {
+      // 1: SETUP
+      var string = "foobar";
+
+      // 2: TEST
+      var result = X.utils.drop(3, string);
+
+      // 3: ASSERT
+      expect(result).toBe("bar");
+    });
+
+	  it("should work on arrays", function () {
+
+	  	// 1: SETUP
+	  	var arr = [1, 2, 3, 4];
+
+	  	// 2: TEST
+	  	var result = X.utils.drop(2, arr);
+
+	  	// 3: ASSERT
+	  	expect(result).toEqual([3, 4])
+
+	  });
+	  
+  });
+  describe("X.utils.indexOf()", function() {
+    it("should for strings return what number letter first holds this character", function() {
+      // 1: SETUP
+      var name = "tristan_ward";
+
+      // 2: TEST
+      var result = X.utils.indexOf("_", name);
+
+      // 3: ASSERT
+      expect(result).toBe(7);
+    });
+
+    it("should for strings return the index in the array which holds the object", function() {
+      // 1: SETUP
+      var a = [1, 2, 3];
+
+      // 2: TEST
+      var result = X.utils.indexOf(2, a);
+
+      // 3: ASSERT
+      expect(result).toBe(1);
+    });
+  });
+  describe("X.utils.converge()", function() {
+    it(
+      "should accept (1) a converging function, (2) an array of functions equal length to" +
+        "parameters needed for converging function and (3) a value. The array of functions transforms" +
+        "the value and then passes it to the converging function",
+      function() {
+        // 1: SETUP
+        var transformations = [X.utils.add(5), X.utils.add(10)];
+
+        // 2: TEST
+        var result = X.utils.converge(X.utils.subtract, transformations)(0);
+
+        // 3: ASSERT
+        expect(result).toBe(-5);
+      }
+    );
+  });
   describe("X.utils.has()", function() {
     it("should tell us if an object has a property", function() {
       // 1: SETUP
