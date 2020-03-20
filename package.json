@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs:build": "vuepress build docs",
-	"docs:dev": "vuepress dev docs"
+    "docs:dev": "vuepress dev docs"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,8 @@
     "karma-coverage": "^1.1.2",
     "karma-jasmine": "^1.1.2",
     "path": "^0.12.7",
-    "vuepress": "^1.4.0"
+    "vuepress": "^1.4.0",
+    "vuepress-theme-default-prefers-color-scheme": "^1.0.6"
   },
   "prettier": {
     "trailingComma": "none"
