@@ -7,14 +7,27 @@ module.exports = {
     defaultTheme: "dark",
     nav: [
       { text: "Home", link: "/" },
-      { text: "Guide", link: "/guide/" },
-      { text: "Javascript API", link: "/javascript-api/" },
-      { text: "Buy", link: "/buy/" }
+      { text: "Getting Started", link: "/getting-started/" },
+      { text: "Features", link: "/features/" },
+      { text: "Troubleshooting", link: "/troubleshooting/" },
+      { text: "Buy", link: "/buy/" },
+      { text: "Video Training", link: "/video-training/" },
+      { text: "CpMate", link: "https://www.widgetking.github.io/cpextra/" }
     ],
     sidebar: {
-      "/guide/": ["", "installation"]
+      "/getting-started/": ["/", "installation", "license"],
+      "/troubleshooting/": ["/", "Interactivity"],
+      "/features/": ["/", "captivate-timeline-sync", "installation", "license"]
     }
   },
+  plugins: [
+    [
+      "@vuepress/search",
+      {
+        searchMaxSuggestions: 10
+      }
+    ]
+  ],
   postcss: {
     plugins: [
       require("css-prefers-color-scheme/postcss"),
