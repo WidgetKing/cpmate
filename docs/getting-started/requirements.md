@@ -1,4 +1,7 @@
-# Requirements TEST
+---
+title: Requirements
+---
+# Requirements
 CpMate is **not** a standalone program. It is a plugin, which means it enhances an existing software product. You must own and install the following programs for CpMate to work
 - Captivate 2019 (or later)
 - Adobe Animate 2020 (or later)

@@ -1,5 +1,5 @@
-# Installation
-Once you have bought CpMate you can install it in two steps.
+# Animate Config
+Once you have bought CpMate you can install it in three steps.
 
 ### Step #1
 Place the *Infosemantics_CpMate.js* file in a directory where you'll know you won't move or delete it.
@@ -8,16 +8,17 @@ Say you had two developers working on one course. Both will be editing and publi
 You will need to have the *Infosemantics_CpMate.js* file *installed in the same folder on both machines*.
 Therefore, we highly recommend creating a folder at the top of one of your drives (ideally the C Drive) and storing CpMate there.
 Something like: C:\_PROJECTS\_RESOURCES\Infosemantics_CpMate.js?
+:::
 
 ### Step #2
 Open up your Adobe Animate project.
 Go to the Actions Panel.
 Continue writing instructions.
 
-### Step #3 (recommended)
+### Step #3
 While not essential to installation, we highly recommend you **do the following otherwise mouse interaction with the Adobe Animate OAM will not work**
 1. Close Adobe Captivate.
-1. Go to your Captivate install folder. On windows that will likely be: C:\Program Files\Adobe\Adobe Captivate <VERSION> x64
+1. Go to your Captivate install folder. On windows that will likely be: C:\Program Files\Adobe\Adobe Captivate \<VERSION\> x64
 2. Duplicate the **AdobeCaptivate.ini** file and rename it **AdobeCaptivate_backup.ini**
 ::: tip
 If something goes wrong with this process you can always restore the old version of the AdobeCaptivate.ini file by deleting it and renaming this AdobeCaptivate_backup.ini back to AdobeCaptivate.ini

@@ -1,2 +1,1 @@
-# Troubleshooting
-This is the README for the troubleshooting page.
+This is the troubleshooting page README. You're either looking at this on GitHub or you're playing about with this site's URL's.
