@@ -1,4 +1,11 @@
 # Animation Playback
+
+::: danger Hosted libraries again! Darn it!
+We find very often these issues are caused by forgetting to turn off the hosted libraries option. Please ensure this is off.
+![Animate's Hosted Libraries Option](./img/playback_hosted-libraries.png)
+:::
+
+
 ## In Adobe Captivate
 ### Playback Fails
 #### Viewing from a file system

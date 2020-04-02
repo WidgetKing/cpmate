@@ -1,8 +1,33 @@
 # Captivate Config
+## Required Configurations
+### CpExtra
 The only **required** configuration of Captivate is that CpExtra is installed and working. To learn how to do that see the CpExtra help.
 
-However, there are other **recommended** steps you can take to make sure the animations load faster and work smoother.
+### Turn on UseWidget7
+This requires editing the AdobeCaptivate.ini file in your program files. If this edit is not made, you may be unable to interact with the Animate OAM in Captivate. Therefore, features such as sliders will fail to work.
+1. Close Adobe Captivate.
+1. Go to your Captivate install folder. On windows that will likely be: C:\Program Files\Adobe\Adobe Captivate \<VERSION\> x64
+2. Duplicate the **AdobeCaptivate.ini** file and rename it **AdobeCaptivate_backup.ini**
+::: tip
+If something goes wrong with this process you can always restore the old version of the AdobeCaptivate.ini file by deleting it and renaming this AdobeCaptivate_backup.ini back to AdobeCaptivate.ini
+:::
+3. Paste a copy of the AdobeCaptiate.ini file on your desktop and use a basic text editing program (such as Notepad on Windows) to open it.
+4. Find the line that says...
+```
+UseWidget7 = 0
+```
+...and change it to...
+```
+UseWidget7 = 1
+```
+5. Save and close the file.
+6. Move the AdobeCaptivate.ini on your desktop back into the Adobe Captivate install folder
 
+::: warning
+You will have to redo this every time you install a new version of Captivate, or Captivate updates itself to a new minor version.
+:::
+
+## Recommended Configurations
 ### Place an instance of the Animation OAM on the first slide of the project and set it to display for rest of project
 We are here assuming that all your animations are included in the same Adobe Animate file (thanks to X.preferences.linkNameToLibrarySymbol).
 The advantage of doing this means that all the Animation's OAM's required script and animation files are loaded at the start of the lesson and are **never unloaded**.

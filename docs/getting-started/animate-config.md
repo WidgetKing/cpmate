@@ -13,29 +13,13 @@ Something like: C:\_PROJECTS\_RESOURCES\Infosemantics_CpMate.js?
 ### Step #2
 Open up your Adobe Animate project.
 Go to the Actions Panel.
-Continue writing instructions.
+**Continue writing instructions Tristan**
 
-### Step #3
-While not essential to installation, we highly recommend you **do the following otherwise mouse interaction with the Adobe Animate OAM will not work**
-1. Close Adobe Captivate.
-1. Go to your Captivate install folder. On windows that will likely be: C:\Program Files\Adobe\Adobe Captivate \<VERSION\> x64
-2. Duplicate the **AdobeCaptivate.ini** file and rename it **AdobeCaptivate_backup.ini**
-::: tip
-If something goes wrong with this process you can always restore the old version of the AdobeCaptivate.ini file by deleting it and renaming this AdobeCaptivate_backup.ini back to AdobeCaptivate.ini
-:::
-3. Paste a copy of the AdobeCaptiate.ini file on your desktop and use a basic text editing program (such as Notepad on Windows) to open it.
-4. Find the line that says...
-```
-UseWidget7 = 0
-```
-...and change it to...
-```
-UseWidget7 = 1
-```
-5. Save and close the file.
-6. Move the AdobeCaptivate.ini on your desktop back into the Adobe Captivate install folder
+## Step #3
+Animate has a feature called 'hosted libraries' which means it downloads essential Javascript files from the internet every time the Animate OAM is run. This can cause a variety of problems, so to prevent future technical support please do the following:
+1. In Adobe Animate go to File > Publish Settings...
+2. Select the Javascript/HTML settings
+3. Move to the HTML/js tab
+4. Uncheck Hosted Libraries
 
-::: warning
-You will have to redo this every time you install a new version of Captivate, or Captivate updates itself to a new minor version.
-:::
-
+![The hosted libraries setting in Adobe Animate](./img/anim-config_hosted-libraries.png)
