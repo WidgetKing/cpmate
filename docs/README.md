@@ -17,3 +17,4 @@ footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 
 # Installation
 I should write some instructions about that.
+Hey, I got this working on my Raspberry Pi.
