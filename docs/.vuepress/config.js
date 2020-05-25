@@ -15,7 +15,10 @@ module.exports = {
         link: "/features/",
         items: [
           { text: "Animation Workflow", link: "/features/animation-workflow/" },
-          { text: "Javascript API", link: "/features/javascript-api/preferences" },
+          {
+            text: "Javascript API",
+            link: "/features/javascript-api/preferences"
+          },
           {
             text: "Smart Instance Names",
             link: "/features/smart-instance-names/"
@@ -40,8 +43,8 @@ module.exports = {
         "about",
         "animation-playback",
         "slow-playback",
-        "interactivity"
-        // ]
+        "interactivity",
+        "symbol-name-prefixes"
       ],
       "/features/animation-workflow/": ["/", "captivate-timeline-sync"],
       "/features/javascript-api/": [
