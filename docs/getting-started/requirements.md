@@ -8,4 +8,4 @@ CpMate is **not** a standalone program. It is a plugin, which means it enhances 
 - CpExtra 2.0 (or later)
 
 ## How do I get CpMate
-CpMate is not a free software. It is purchased through [www.infosemantics.com.au](www.infosemantics.com.au). After purchasing the product a file will be make available to you to download from the Infosemantics website.
+CpMate is not a free software. It is purchased through [www.infosemantics.com.au](www.infosemantics.com.au). After purchasing the product, a file will be make available to you to download from the Infosemantics website.
