@@ -2,7 +2,7 @@
 CpMate is extended under the following license:
 
 ```
-ADD IN LICESE HERE
+ADD IN LICENSE HERE
 ```
 
 ## Multi-user licenses

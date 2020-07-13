@@ -39,6 +39,9 @@ To fix this:
 4. By default the **Resolution** option is set to 2.0. This means that the graphics will look niiiiiice when the animation plays back on a mobile phone. However, it does make the image files MUCH bigger. If you're trying to fix this problem we recommend turning this down to 1.0
 5. The **Max Size** setting allows you to change the size of your sprite sheets. Sprite Sheets take all the images you've built in Adobe Animate and compile them into a single image. This allows them to load quicker. Knowing this you may be tempted to put everything into a few massive sprites sheets of 6000x6000 pixels or more. However, the bigger the sprite sheet the greater the risk it will take more than a minute to load on fabulously bad internet connections. So if you're encountering this issue, dial the size back until the animation plays reliably.
 
+### Animation not updating
+If you find you keep getting the 'old' version of your animation playing instead of the most recent, make sure you are updating your OAM [according to the instructions here.](../../getting-started/workflow.html#updating-animations) Especially the part about giving the OAM a unique name.
+
 ## In Adobe Animate
 ### Playback fails
 #### Try clicking

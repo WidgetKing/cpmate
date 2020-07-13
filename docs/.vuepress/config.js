@@ -4,7 +4,7 @@ module.exports = {
   base: "/cpmate/",
   theme: "default-prefers-color-scheme",
   themeConfig: {
-    sidebarDepth: 2,
+    sidebarDepth: 1,
     defaultTheme: "dark",
     nav: [
       { text: "Home", link: "/" },
@@ -14,7 +14,10 @@ module.exports = {
         ariaLabel: "language Menu",
         link: "/features/",
         items: [
-          { text: "Animation Workflow", link: "/features/animation-workflow/" },
+          {
+            text: "Building Animations",
+            link: "/features/building-animations/"
+          },
           {
             text: "Javascript API",
             link: "/features/javascript-api/preferences"
@@ -36,8 +39,9 @@ module.exports = {
         "requirements",
         "animate-config",
         "captivate-config",
+        "workflow",
         "license",
-        "release-notes"
+        "changelog"
       ],
       "/troubleshooting/": [
         "about",
@@ -46,7 +50,12 @@ module.exports = {
         "interactivity",
         "symbol-name-prefixes"
       ],
-      "/features/animation-workflow/": ["/", "captivate-timeline-sync"],
+      "/features/building-animations/": [
+        "/",
+        "multiple-animations",
+        "captivate-syncing",
+        "outer-rendering"
+      ],
       "/features/javascript-api/": [
         "preferences",
         "captivate",
