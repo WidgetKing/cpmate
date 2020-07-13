@@ -585,6 +585,10 @@ X.registerModule("managers/utils", function() {
       return object[property] === value;
     }),
 
+    propNotEq: curry(3, function(property, value, object) {
+      return object[property] !== value;
+    }),
+
     has: curry(2, function(property, object) {
       return X.utils.callByType(object, {
         // OBJECT

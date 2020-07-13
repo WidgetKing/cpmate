@@ -12,11 +12,9 @@ X.registerModule(
 
         // If the label is present
         if (proxy.hasLabel(value)) {
-
           var frame = proxy.getLabelFrame(value);
-			
-          proxy[methodName](frame);
 
+          proxy[methodName](frame);
         } else {
           // If there is no matching label, then stop at the first frame
           proxy[methodName](0);
@@ -27,7 +25,12 @@ X.registerModule(
     // We call the bind handler on next tick to prevent the error where calling
     // gotoAndStop too soon will cause the movie clip to play instead
     // Weird, right?
-    var xBind = X.utils.onNextTick(createBindHandler("gotoAndStop"));
+    // var xBind = X.utils.onNextTick(createBindHandler("gotoAndStop"));
+
+    // But then again, if we add the tick then the wrong frame will display
+    // For one render sequence, so I'm un-doing the on next tick.
+    // We'll need to find another way around this.
+    var xBind = createBindHandler("gotoAndStop");
     var xBindPlay = createBindHandler("gotoAndPlay");
 
     // Register for updates
