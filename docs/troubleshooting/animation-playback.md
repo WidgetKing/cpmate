@@ -42,8 +42,13 @@ To fix this:
 ### Animation not updating
 If you find you keep getting the 'old' version of your animation playing instead of the most recent, make sure you are updating your OAM [according to the instructions here.](../../getting-started/workflow.html#updating-animations) Especially the part about giving the OAM a unique name.
 
+### The last frame of animation-1 looks the same as animation-2, but there's a blip when you move from one slide to the next
+Unfortunately, this is a limit of the technology. As one animation ends it needs time to unload. When another animation begins it needs time to set up. In the time between the two nothing is displayed on slide. You might try getting around this by putting an image on the Captivate timeline which looks the same as this 'in-between' frame. However, at this moment in time there is no ideal work-around. In our animations, we always make sure the stage is clear before transitioning to a new slide.
+
 ## In Adobe Animate
+
 ### Playback fails
+
 #### Try clicking
 If you have a this.stop(); action at the start of your timeline, then clicking the screen will send a this.play(); command through to the timeline.
 
@@ -71,3 +76,18 @@ Is perhaps the following true:
 - A MovieClip is on the Animate Main Timeline.
 
 If that's the case, take the MovieClip off of the stage.
+
+## My this.gotoAndPlay() action is one frame off
+Please note that for HTML5 export this code:
+
+```
+this.gotoAndPlay(1);
+```
+
+Won't make the timeline move to the first frame but rather the **second**. If you want the timeline to move to the first frame you must write: 
+
+```
+this.gotoAndPlay(0);
+```
+
+This is because Adobe Animate's HTML5 export is built on top of the CreateJs library. CreateJs is **zero based**, which means it considers the first frame of the timeline to be frame '0' not frame '1'. This means that the second frame of the timeline is frame '1' and so on and so forth. This is a common concept in computer science. While humans prefer to start counting from 1, computers prefer to start counting from 0.

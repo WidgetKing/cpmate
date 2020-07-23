@@ -51,9 +51,9 @@ module.exports = {
         "symbol-name-prefixes"
       ],
       "/features/building-animations/": [
-        "/",
-        "multiple-animations",
+        "/README",
         "captivate-syncing",
+        "multiple-animations",
         "outer-rendering"
       ],
       "/features/javascript-api/": [
