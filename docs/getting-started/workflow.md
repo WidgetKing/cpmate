@@ -30,7 +30,8 @@ This feature allows you to use one animate document to hold multiple animations.
 
 2. This will bring up a file browser where you'll navigate to (you guessed it) the .oam file you exported from Animate.
 3. Place this animation where you desire it to appear on the Captivate stage.
-4. Preview or publish your Captivate project.
+4. (Optional) Select the Web Object. In the properties panel, turn off the scrollbar and border checkboxes. This will make the animation visually blend with the rest of the Captivate slide.
+5. Preview or publish your Captivate project.
 
 ::: danger
 The Animate OAM is essentially a webpage. This means Captivate will be displaying a webpage inside a webpage. Don't fret, this is a common technique in web development. However, web browsers are particularly observant of this practice. They monitor the communication between the parent web page and the child web page to make sure nothing unusual is happening. Generally speaking, as long as you're watching the Captivate project from a web server or local host server everything will be fine.
@@ -46,7 +47,7 @@ You can easily test from a local host server by choosing the correct Captivate p
 - Preview > Next # Slides
 :::
 
-10. Everything going well you should see the Animate OAM's animation playing back inside Captivate. If not, check out our extensive [troubleshooting](../../troubleshooting/about) section to track down your issue.
+Everything going well you should see the Animate OAM's animation playing back inside Captivate. If not, check out our extensive [troubleshooting](../../troubleshooting/about) section to track down your issue.
 
 ## Timing Animations
 This is a topic that deserves it's own page, and it has one! [Click here to learn more.](../../features/building-animations/captivate-syncing)

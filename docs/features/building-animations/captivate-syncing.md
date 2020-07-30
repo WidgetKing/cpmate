@@ -21,7 +21,7 @@ Keeping with the above example, let's say the opening 30 frames are all you need
 3. Open the Actions Panel by going to Window > Actions (Or press F9)
 4. Enter the following code:
 
-```
+``` js
 this.stop();
 ```
 
@@ -40,7 +40,7 @@ Of course, you want your animation to start playing again at some point. In the 
 2. On this layer add a black keyframe to frame 100. Select that keyframe
 3. In the properties panel add a label to this frame. Let's call this one: 10
 
-**IMAGE HERE**
+![Adding Frame Label](./img/frame-label.png)
 
 That's it! Now repeat steps 1 and 2 to make the next pause and kick-off points. Keep doing this until you reach the end of the animation.
 
@@ -64,7 +64,7 @@ In the previous step, Animate pauses it's playback and sets up a flag to let Cap
 
 Captivate Effects can be added to an object to describe the nature and timing of an animation. These effects will appear on the timeline underneath the object they are attached to.
 
-**IMAGE HERE**
+![effects on timeline](./img/effects-on-timeline.png)
 
 Captivate allows you to create and import custom effects. The **CpExtra** (Not CpMate) install files include a file called: **GotoLabel.xml**. This file is a custom effect and can be imported into Adobe Captivate in the following way:
 
@@ -87,21 +87,23 @@ Let's return to our example. Our Animate OAM has marked the next kick off point 
 2. Go to the Tming tab.
 3. Above the Effects selection area is a drop down menu that allows you to pick an effect category. By default it will say: Basic. Open that drop down menu a chose: Custom
 
-**IMAGE HERE**
+![pick effect](./img/custom-effect.png)
 
 4. Choose the GotoLabel Effect. Options for the GotoLabel effect should now appear below.
-5. In the effect options, enter the name of the slide label in the **slide label** field. In our example that would be 10.
+5. In the effect options, enter the name of the slide label in the **Frame Label** field. In our example that would be 10.
 
-**IMAGE HERE AND CHECK INSTRUCTIONS FOR ACCURACY**
+![effect configuration](./img/configure-effect.png)
 
 6. In the timeline panel, you should see this effect appear underneath the Web Object. Drag the effect so that it **starts** at the point in the voice-over that matches up with the animation you will trigger.
 
 If you have more than one kick-off point, add a new effects for each kick off point and repeat steps 3 - 6. You should now be able to test the Captivate slide and see the animation plays back, with the timing of each effect determining when each animation kick off point runs.
 
-::: warning Don't overlap effects
+::: warning Do not overlap effects
 It is very important that effects for one object do not overlap each other. Otherwise, CpExtra has difficulty telling when one effect starts and the other ends.
 
-**IMAGE HERE**
+![overlapping effects](./img/overlapping-effects.png)
+
+Don't do this :arrow_up:
 :::
 
 Congratulations! You now know how to ensure the Adobe Animate OAM will never lose sync with the voice-over in the Captivate timeline. Even if the Adobe Animate animation bogs down and plays back slower than exepcted, each kick-off point will serve as a refresh.

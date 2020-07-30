@@ -19,12 +19,16 @@ module.exports = {
             link: "/features/building-animations/"
           },
           {
-            text: "Javascript API",
-            link: "/features/javascript-api/preferences"
+            text: "Captivate Interaction",
+            link: "/features/captivate-interaction/"
           },
           {
-            text: "Smart Instance Names",
-            link: "/features/smart-instance-names/"
+            text: "Sliders",
+            link: "/features/sliders"
+          },
+          {
+            text: "Javascript API",
+            link: "/features/javascript-api/preferences"
           }
         ]
       },
@@ -51,10 +55,11 @@ module.exports = {
         "symbol-name-prefixes"
       ],
       "/features/building-animations/": [
-        "/README",
+        "/features/building-animations/",
         "captivate-syncing",
         "multiple-animations",
-        "outer-rendering"
+        "outer-rendering",
+        "custom-stage-size"
       ],
       "/features/javascript-api/": [
         "preferences",
@@ -62,10 +67,10 @@ module.exports = {
         "run-in-captivate-window",
         "sliders"
       ],
-      "/features/smart-instance-names/": [
-        "/",
-        "cp-enhanced-movie-clips",
-        "cp-enhanced-text-fields"
+      "/features/captivate-interaction/": [
+        "/features/captivate-interaction/",
+        "bound-movie-clips",
+        "bound-text-fields"
       ]
     }
   },
