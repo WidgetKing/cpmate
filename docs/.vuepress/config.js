@@ -24,7 +24,7 @@ module.exports = {
           },
           {
             text: "Sliders",
-            link: "/features/sliders"
+            link: "/features/sliders/"
           },
           {
             text: "Javascript API",
@@ -52,7 +52,8 @@ module.exports = {
         "animation-playback",
         "slow-playback",
         "interactivity",
-        "symbol-name-prefixes"
+        "symbol-name-prefixes",
+        "sliders"
       ],
       "/features/building-animations/": [
         "/features/building-animations/",
@@ -71,6 +72,11 @@ module.exports = {
         "/features/captivate-interaction/",
         "bound-movie-clips",
         "bound-text-fields"
+      ],
+      "/features/sliders/": [
+        "/features/sliders/",
+        "defining-a-slider",
+        "evaluate"
       ]
     }
   },

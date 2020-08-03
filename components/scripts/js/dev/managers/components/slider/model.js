@@ -24,9 +24,24 @@ X.registerModule(
         track.primary = "x";
       }
 
-      var topLimit =
-        track.primaryAxis + track.primaryLength - handle.primaryLength;
-      var bottomLimit = track.primaryAxis;
+		////////////////////////////////////////
+		////// Limit Calculation
+		function calculateTopLimit (track, handle) {
+
+			console.log(track);
+			return track.primaryAxis + track.primaryLength - handle.primaryLength;
+
+		}
+
+		function calculateBottomLimit (track) {
+
+			 return track.primaryAxis;
+
+		}
+		
+		
+      var topLimit = calculateTopLimit(track, handle);
+      var bottomLimit = calculateBottomLimit(track)
 
       /////////////////////////////
       ////////// util functions
