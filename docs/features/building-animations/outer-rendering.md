@@ -45,7 +45,7 @@ With this preference enabled, when you design your animations you will need to t
 ## Overriding Publish Settings
 To allow this process to work, CpMate must unavoidably override certain publish settings which are found under File > Publish Settings.
 
-IMAGE HERE AND DOUBLE CHECK BELOW
+![Overridden publish settings](./img/publish-settings.png)
 
 CpMate will by default use the following settings which we have found work very well for animations in responsive projects:
 

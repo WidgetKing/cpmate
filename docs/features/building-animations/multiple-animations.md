@@ -20,13 +20,13 @@ With linkNameToLibrarySymbol set up, you create new animations like so:
 1. Go to Insert > New Symbol
 2. In the Create New Symbol dialog box, name your symbol and give it a type of MovieClip.
 
-IMAGE HERE
+![New Symbol Dialog](./img/new-symbol.png)
 
 3. Configure any other settings as you so desire and click OK.
 4. Open the Library and find the symbol you just created.
 5. In the library's **Linkage** column this symbol should display an empty space. Double-click this space.
 
-IMAGE HERE
+![Library Linkage Column](./img/symbol-linkage.png)
 
 6. Enter a name. This name will be used to identify your animation in Captivate. This name can have no spaces or special characters. Underscores '\_' are allowed. Name must be unique.
 7. Press Enter.

@@ -65,8 +65,7 @@ module.exports = {
       "/features/javascript-api/": [
         "preferences",
         "captivate",
-        "run-in-captivate-window",
-        "sliders"
+        "run-in-captivate-window"
       ],
       "/features/captivate-interaction/": [
         "/features/captivate-interaction/",
