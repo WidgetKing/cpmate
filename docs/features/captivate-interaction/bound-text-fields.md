@@ -3,7 +3,7 @@ Sometimes you want a text field in Animate to display text that comes from Capti
 
 To give a text field an instance name, you'll need to make it a Dynamic Text Field.
 
-IMAGE HERE
+![selecting dynamic text field](./img/dynamic-text-field.png)
 
 You can bind a text field in several ways.
 
@@ -35,11 +35,17 @@ You'd give the corresponsing Animate text field the name: **xTextFromCaption_Tex
 ## xTextFromAccessibilityText
 Most Captivate objects allow you to input accessibility text, which can be read by a screen reader. You can insert that text like so:
 
-1. ???
-2. ???
+1. In the properties panel, click the options menu next to the slide object name field.
+![Finding accessibility settings](./img/accessibility-location.png)
+2. Choose Accessiblity from the drop down. This will open the **Item Accessibliity** dialog.
+![The accessibility dialog](./img/item-accessibility-1.png)
+3. Uncheck Auto Label
+4. Enter text in to the Accessibility Name or Accessibility Description field. It does not matter which one, as the contents of both fields will be combined in the output.
+![Entering accessibility text](./img/item-accessibility-2.png)
+
 
 IMAGE HERE AND UPDATE THE INSTRUCTIONS
 
-To link a dynamic text field's text with a Captivate object's accessiblity text, you'll name it: **xTextFromAccessibilityText\_\<INSERT VARIABLE NAME HERE\>**
+To link a dynamic text field's text with a Captivate object's accessibility text, you'll name it: **xTextFromAccessibilityText\_\<INSERT SLIDE OBJECT NAME HERE\>**
 
 Usually you'd only use this when you're in a non-responsive Captivate project and can't use xTextFromCaption.

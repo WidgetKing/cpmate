@@ -3,27 +3,21 @@ If you're using [X.preferences.linkNameToLibrarySymbol](./mutliple-animations) y
 
 For example, let's say on Captivate's **slide 1** you'll display Animate's **animation_1**. This animation takes up most of the slide real-estate.
 
-IMAGE HERE
+![animation 1 taking full stage](./img/stage-size-full.png)
 
 However, on Captivate's **slide 2** you'll display Animate's **animation_2**. This animation will take up only a small square space in one part of the slide.
 
-IMAGE HERE
+![animation 2 taking part of the stage](./img/stage-size-part.png)
 
 Your Animate document's stage size is set to match animation_1. Which is longer than it is wide.
 
-IMAGE HERE
+![Animate stage size](./img/stage-size-animate.png)
 
 However, you have build animation_2 to only take up a 1:1 ratio of screen size.
 
-IMAGE HERE
+![Individual animation size](./img/stage-size-single-animation.png)
 
-When you view the Captivate output, you'll find animation_1 looks quite good.
-
-IMAGE HERE
-
-Whereas, animation_2 looks squished.
-
-IMAGE HERE
+That is why when you view the Captivate output animation_1 looks quite good, but animation_2 looks squished
 
 The primary problem being that the ratios of expected stage size between these two animations are different, but Animate can only account for one.
 
@@ -44,6 +38,6 @@ X.preferences.stageHeight = 400;
 
 With that change when we re-publish and update in Captivate, we'll see the following result for animation_2
 
-IMAGE HERE
+![custom stage size set](./img/stage-size-custom.png)
 
 Like with [outer rendering](./outer-rendering), this setting overrides certain Animate publish settings. [See here for more information.](./outer-rendering.html#overriding-publish-settings)

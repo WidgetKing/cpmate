@@ -28,7 +28,6 @@ X.registerModule(
 		////// Limit Calculation
 		function calculateTopLimit (track, handle) {
 
-			console.log(track);
 			return track.primaryAxis + track.primaryLength - handle.primaryLength;
 
 		}

@@ -10,7 +10,7 @@ This can be useful when you have a MovieClip showing a looping animation. If tha
 
 To bind a MovieClip in such a way, just name it: xPause
 
-IMAGE HERE
+![Naming xPause](./img/xpause.png)
 
 ## xBindPlay
 This naming convention allows you to play a different portion of a MovieClip's timeline depending on the value of a Captivate Variable.
@@ -39,6 +39,8 @@ To make the MovieClip play the designated action on the designated frame you'd d
 - Frame 20 - Add the action: this.stop();
 - Frame 21 - Add the slide label: **Employee**
 - Frame 30 - Add the action: this.stop();
+
+![state of timeline](./img/xbindplay-timeline.png)
 
 Now, in Captivate, CpMate will ensure the correct animation will run for the correct value of the JobRole variable.
 

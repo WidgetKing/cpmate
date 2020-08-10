@@ -121,14 +121,12 @@ X.registerModule(
         ////////////////////////////////////////
 
         if (X.preferences.outerRendering) {
-
           // WIDTH
           if (sRatio === xRatio) {
-
-			  // You may be looking at this code and wondering why we never reference
-			  // pRatio which allows us to compensate for retina screens.
-			  // Well it seems this part of the code doesn't really need to deal with that.
-			  // Other parts will, but this part is safe.
+            // You may be looking at this code and wondering why we never reference
+            // pRatio which allows us to compensate for retina screens.
+            // Well it seems this part of the code doesn't really need to deal with that.
+            // Other parts will, but this part is safe.
             lib.properties.width = originalW;
             lib.properties.height = ih / sRatio;
 
@@ -149,22 +147,24 @@ X.registerModule(
 
           ////////////////////////////////////////
           ////// Reposistion stage in center
-          if (X.preferences.linkNameToLibrarySymbol) {
+          // Initially we thought this would be only applicable to linkNameToLibrarySymbols
+          // projects. However, later we found that even if the animation is on the main timeline
+          // This code is able to move the entire animation into the center of the screen
+          // Which is generally what you want to happen.
+          // if (X.preferences.linkNameToLibrarySymbol) {
+          var timeline = X.movie.rootTimeline.get();
+          timeline.y = lib.properties.height / 2 - originalH / 2;
+          timeline.x = lib.properties.width / 2 - originalW / 2;
+          // }
 
-            var timeline = X.movie.rootTimeline.get();
-            timeline.y = lib.properties.height / 2 - originalH / 2;
-            timeline.x = lib.properties.width / 2 - originalW / 2;
-
-          }
-
-			// If this has been enabled and then disabled
+          // If this has been enabled and then disabled
         } else {
-            lib.properties.width = originalW;
-            lib.properties.height = originalH;
-            var timeline = X.movie.rootTimeline.get();
-            timeline.y = 0;
-            timeline.x = 0;
-		}
+          lib.properties.width = originalW;
+          lib.properties.height = originalH;
+          var timeline = X.movie.rootTimeline.get();
+          timeline.y = 0;
+          timeline.x = 0;
+        }
 
         // The width of the stage (example: 400)
         var w = lib.properties.width,

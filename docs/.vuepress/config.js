@@ -22,10 +22,10 @@ module.exports = {
             text: "Captivate Interaction",
             link: "/features/captivate-interaction/"
           },
-          {
-            text: "Sliders",
-            link: "/features/sliders/"
-          },
+          // {
+          //   text: "Sliders",
+          //   link: "/features/sliders/"
+          // },
           {
             text: "Javascript API",
             link: "/features/javascript-api/preferences"
@@ -44,7 +44,7 @@ module.exports = {
         "animate-config",
         "captivate-config",
         "workflow",
-        "license",
+        // "license",
         "changelog"
       ],
       "/troubleshooting/": [
@@ -52,8 +52,8 @@ module.exports = {
         "animation-playback",
         "slow-playback",
         "interactivity",
-        "symbol-name-prefixes",
-        "sliders"
+        "symbol-name-prefixes"
+        // "sliders"
       ],
       "/features/building-animations/": [
         "/features/building-animations/",
@@ -71,12 +71,12 @@ module.exports = {
         "/features/captivate-interaction/",
         "bound-movie-clips",
         "bound-text-fields"
-      ],
-      "/features/sliders/": [
-        "/features/sliders/",
-        "defining-a-slider",
-        "evaluate"
       ]
+      // "/features/sliders/": [
+      //   "/features/sliders/",
+      //   "defining-a-slider",
+      //   "evaluate"
+      // ]
     }
   },
   plugins: [
