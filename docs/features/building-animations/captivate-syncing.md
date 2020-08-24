@@ -60,13 +60,13 @@ The idea being that if at a later time you realise you need to add another pause
 :::
 
 ## Step 2: Include the GotoLabel custom effect in your project
-In the previous step, Animate pauses it's playback and sets up a flag to let Captivate know where the animation can start playing again. As the Captivate timeline holds the voice-over clip, it knows at what point the animation should continue. But how do we mark that point? We can do so by using a custom effect.
+In the previous step, Animate pauses it's playback and sets up a flag to let Captivate know where the animation can start playing again. As the Captivate timeline holds the voice-over clip, from there we can tell when the animation should continue. But how do we mark that point? We can do so by using a custom effect.
 
 Captivate Effects can be added to an object to describe the nature and timing of an animation. These effects will appear on the timeline underneath the object they are attached to.
 
 ![effects on timeline](./img/effects-on-timeline.png)
 
-Captivate allows you to create and import custom effects. The **CpExtra** (Not CpMate) install files include a file called: **GotoLabel.xml**. This file is a custom effect and can be imported into Adobe Captivate in the following way:
+Captivate allows you to create and import custom effects. The CpMate install files include a file called: **GotoLabel.xml**. This file is a custom effect and can be imported into Adobe Captivate in the following way:
 
 1. Select the Animate OAM Web Object.
 2. Go to the Timing tab.
