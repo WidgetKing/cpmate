@@ -19,6 +19,6 @@ X.registerModule(
     }
 
     // Register for updates
-    X.registerDisplayObjectNamePrefixAndVariable("xPause", xPause);
+    X.registerDisplayObjectNamePrefix("xPause", xPause);
   }
 );
