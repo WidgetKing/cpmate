@@ -20,9 +20,11 @@
         grename = require("gulp-rename"),
         gconnect = require("gulp-connect"),
         gglob = require("glob"),
+		ginsert = require("gulp-insert"),
         uglify = require("gulp-uglify"),
         gjsoneditor = require("gulp-json-editor"),
 
+		generateCopyright = require("./workflow/copyright-notice.js").generate,
 
         jsonPackage = require("./package.json"),
 
@@ -33,6 +35,8 @@
 
     var compiledFileName = "Infosemantics_CpMate.js",
         compiledFileLocation = "builds/development",
+		productionFileLocation = "builds/production",
+		compiledFile = compiledFileLocation + "/" + compiledFileName,
         jsSources = [
             "components/scripts/js/dev/entrypoint.js",
             "components/scripts/js/dev/**/"
@@ -209,6 +213,20 @@
             singleRun: false
         }, cb);
     });
+
+    ///////////////////////////////////////////////////////////////////////
+    /////////////// PRODUCTION BUILD
+    ///////////////////////////////////////////////////////////////////////
+	gulp.task("compileForProduction", function () {
+	
+		const copyrightNotice = generateCopyright(jsonPackage.version, buildNumber);
+
+        return gulp.src(compiledFile)
+            .pipe(ginsert.prepend(copyrightNotice))
+            .pipe(gulp.dest(productionFileLocation));
+
+	});
+
     ///////////////////////////////////////////////////////////////////////
     /////////////// DEFAULT
     ///////////////////////////////////////////////////////////////////////
