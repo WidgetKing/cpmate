@@ -35,7 +35,7 @@ module.exports = {
       { text: "Troubleshooting", link: "/troubleshooting/about" },
       { text: "Training", link: "/training/" },
       { text: "Buy", link: "/buy/" },
-      { text: "CpExtra", link: "https://www.widgetking.github.io/cpextra/" }
+      { text: "CpExtra", link: "https://widgetking.github.io/cpextra/" }
     ],
     sidebar: {
       "/getting-started/": [
