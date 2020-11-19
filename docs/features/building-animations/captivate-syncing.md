@@ -1,9 +1,15 @@
 # Captivate Syncing
-This is the feature we use most often here at Infosemantics and is the primary reason why we developed CpMate in the first place.
+These are our most often used features here at Infosemantics. Allowing the Captivate movie and HTML5 animations to play in sync are the primary reasons why we developed CpMate in the first place.
 
+## Pause Animation when Captivate pauses
+This feature is **enabled by default**. When something causes the Captivate timeline to pause (whether the learner clicking the playbar, a button or anything else) CpMate will notice and pause the animation's timeline. Once the Captivate timeline resumes playing, CpMate will resume Animate's timeline.
+
+There is currently no way to turn this feature off.
+
+## Syncing to Animation Jump Points
 This feature allows Adobe Animate HTML5 exports to play back inside of Captivate without losing sync with the Captivate timeline. When implemented properly, even if Captivate and Animate are playing back at different frame rates, there will be certain **jump points** where Animate will be forced back into sync with the Captivate timeline.
 
-## Step 1: Setting Animation Pause Points
+### Step 1: Setting Animation Pause Points
 Let's say you're building an animation for a slide which has one minute of voice-over. Generally speaking, you would not need to have something moving on stage on every second of that minute. It's quite likely your animation will end up being something like this:
 - (0 to 10 seconds) Animate in the subject of the slide.
 - (10 to 20 seconds) An 'incident' happens to the subject. The animation for the incident takes only three seconds. But the voice-over will continue to talk about it for another 7.
@@ -13,7 +19,7 @@ Let's say you're building an animation for a slide which has one minute of voice
 
 Out of those 60 seconds there may be only 30-40 seconds of actual movement. The rest of the time the slide is still to allow the audience time to read what is happening. It's this 'still' time CpMate takes advantage of to make sure the animation stays in sync with the voice-over.
 
-### Mark still points with stop actions
+#### Mark still points with stop actions
 Keeping with the above example, let's say the opening 30 frames are all you need to animate your subject in. Thereafter, there is no movement on the slide until frame 100. In the intervening 70 frames there is potential for the animation to drift out of sync with the voice-over. So here's what we do:
 
 1. Add a layer called **Actions** to your timeline.
@@ -33,7 +39,7 @@ Due to these stop actions, if you preview your animation from Adobe Animate the 
 Just click anywhere on the stage to force the timeline to keep playing. That's another CpMate feature for your convenience.
 :::
 
-### Mark kick-off points with slide labels
+#### Mark kick-off points with slide labels
 Of course, you want your animation to start playing again at some point. In the above example we know this will be frame 100. So now we need to mark frame 100 as the next 'kick-off point' for our animation.
 
 1. Add a layer called **labels** to your timeline.
@@ -59,7 +65,7 @@ Therefore, in house we usually use the following naming method.
 The idea being that if at a later time you realise you need to add another pause and kick-off point in the middle of your animation (say between labels 20 and 30) you have space in the number spectrum to add a label (say: 25)
 :::
 
-## Step 2: Include the GotoLabel custom effect in your project
+### Step 2: Include the GotoLabel custom effect in your project
 In the previous step, Animate pauses it's playback and sets up a flag to let Captivate know where the animation can start playing again. As the Captivate timeline holds the voice-over clip, from there we can tell when the animation should continue. But how do we mark that point? We can do so by using a custom effect.
 
 Captivate Effects can be added to an object to describe the nature and timing of an animation. These effects will appear on the timeline underneath the object they are attached to.
@@ -78,7 +84,7 @@ Captivate allows you to create and import custom effects. The CpMate install fil
 
 You can now use this GotoLabel effect anywhere in this Captivate project. If you create a new Captivate project you will need to import it again.
 
-## Step 3: Time effects to sync with voice-over
+### Step 3: Time effects to sync with voice-over
 The GotoLabel effect has a special relationship with CpExtra. CpExtra can detect when this effect starts playing on the timeline. It can then read the instructions we include within the effect and based on that control the playback of the Animate Animation.
 
 Let's return to our example. Our Animate OAM has marked the next kick off point of the animation with the slide label: 10. As the name of the GotoLabel effect implies, we can use this effect to make the Animate OAM move to this frame and play. Here's how:
@@ -108,7 +114,7 @@ Don't do this :arrow_up:
 
 Congratulations! You now know how to ensure the Adobe Animate OAM will never lose sync with the voice-over in the Captivate timeline. Even if the Adobe Animate animation bogs down and plays back slower than exepcted, each kick-off point will serve as a refresh.
 
-## Notes
+### Notes
 - Of course with this method you don't have to have any 'still frames' on the Adobe Animate timeline at all. You can just include your animation content on the timeline, punctuated with stop actions and kick off labels, and then allow the Adobe Captivate effects to manage how much of a pause there would be from one point in the animation to another.
 - This feature is also very useful for multi-lingual projects. Previously, when you swapped to another language's voice-over clip you'd have to create a whole new animation because the amount of time it would take to say the same information would differ from language to language. With well thoughtout pause and kick-off points, you may be able to use the same Adobe Animate document for every language of your course.
 - It takes a bit of time to identify when it's worth creating a new pause and kick-off point and when it's better for the animation to just play through. Is one second of stillness long enough to justify a pause and kick-off point? Probably not. What about two seconds? I can't answer that. The more you get used to working with CpMate the more you'll 'get your eye in' for this process.
