@@ -1,5 +1,5 @@
 module.exports = {
-  title: "CpMate",
+  title: "CpMate Help",
   description: "The bridge between Adobe Captivate and Adobe Animate",
   base: "/cpmate/",
   theme: "default-prefers-color-scheme",
@@ -15,7 +15,7 @@ module.exports = {
         link: "/features/",
         items: [
           {
-            text: "Building Animations",
+            text: "Building Animations & Captivate Sync",
             link: "/features/building-animations/"
           },
           {

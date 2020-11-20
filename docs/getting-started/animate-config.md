@@ -44,5 +44,5 @@ Animate has a feature called **hosted libraries**. This feature is enabled by de
 
 ![The hosted libraries setting in Adobe Animate](./img/anim-config_hosted-libraries.png)
 
-## Next
+### Next
 Adobe Animate is now correctly configured. However, a few things must be configured in Adobe Captivate as well.

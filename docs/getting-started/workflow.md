@@ -13,7 +13,7 @@ You'll need to know how to do the following things:
 
 1. Build an animation inside of Adobe Animate.
 ::: tip
-We HIGHLY recommend you look into [X.preferences.linkNameToLibrarySymbol](../../features/javascript-api/preferences.html#x-preferences-linknametolibrarysymbol)
+We HIGHLY recommend you look into [X.preferences.linkNameToLibrarySymbol](../features/javascript-api/preferences.html#x-preferences-linknametolibrarysymbol)
 This feature allows you to use one animate document to hold multiple animations.
 :::
 2. Go to File > Publish Settings...
@@ -47,10 +47,10 @@ You can easily test from a local host server by choosing the correct Captivate p
 - Preview > Next # Slides
 :::
 
-Everything going well you should see the Animate OAM's animation playing back inside Captivate. If not, check out our extensive [troubleshooting](../../troubleshooting/about) section to track down your issue.
+Everything going well you should see the Animate OAM's animation playing back inside Captivate. If not, check out our extensive [troubleshooting](../troubleshooting/about) section to track down your issue.
 
 ## Timing Animations
-This is a topic that deserves it's own page, and it has one! [Click here to learn more.](../../features/building-animations/captivate-syncing)
+This is a topic that deserves it's own page, and it has one! [Click here to learn more.](../features/building-animations/captivate-syncing)
 
 ## Updating Animations
 Inevitably, we will find something about our animation that we want to change. When that happens, go back to Adobe Animate, change the animation and export a new OAM.
