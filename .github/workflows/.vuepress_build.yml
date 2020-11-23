@@ -3,17 +3,24 @@ on: [push]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@master
-      
-    - name: Install and Build
-      run: | 
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "8.12.0"
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Install and Build
+        run: |
           npm install && npm run-script docs:build # The build script the action should run prior to deploying.
 
-    - name: Build and Deploy
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: docs/.vuepress/dist/ # The folder, the action should deploy.
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: docs/.vuepress/dist/ # The folder, the action should deploy.
