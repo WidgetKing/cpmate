@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Defining A Slider | CpMate Help</title>
+    <meta name="description" content="The bridge between Adobe Captivate and Adobe Animate">
+    <meta name="generator" content="VuePress 1.4.0">
+    
+    
+    <link rel="preload" href="/cpmate/assets/css/0.styles.56261255.css" as="style"><link rel="preload" href="/cpmate/assets/js/app.eeb8b7ed.js" as="script"><link rel="preload" href="/cpmate/assets/js/2.9fe3539d.js" as="script"><link rel="preload" href="/cpmate/assets/js/28.89e1d297.js" as="script"><link rel="prefetch" href="/cpmate/assets/js/10.b6e002b9.js"><link rel="prefetch" href="/cpmate/assets/js/11.d70ac87a.js"><link rel="prefetch" href="/cpmate/assets/js/12.b18446a3.js"><link rel="prefetch" href="/cpmate/assets/js/13.0dc27d5a.js"><link rel="prefetch" href="/cpmate/assets/js/14.f07a77d6.js"><link rel="prefetch" href="/cpmate/assets/js/15.e54702c9.js"><link rel="prefetch" href="/cpmate/assets/js/16.67367960.js"><link rel="prefetch" href="/cpmate/assets/js/17.613913e4.js"><link rel="prefetch" href="/cpmate/assets/js/18.f93ae4d4.js"><link rel="prefetch" href="/cpmate/assets/js/19.70fd948e.js"><link rel="prefetch" href="/cpmate/assets/js/20.22d65e82.js"><link rel="prefetch" href="/cpmate/assets/js/21.e92776e0.js"><link rel="prefetch" href="/cpmate/assets/js/22.006f1a40.js"><link rel="prefetch" href="/cpmate/assets/js/23.974b4e0d.js"><link rel="prefetch" href="/cpmate/assets/js/24.9f28cfad.js"><link rel="prefetch" href="/cpmate/assets/js/25.ea1372e9.js"><link rel="prefetch" href="/cpmate/assets/js/26.83e39c10.js"><link rel="prefetch" href="/cpmate/assets/js/27.8a731455.js"><link rel="prefetch" href="/cpmate/assets/js/29.7aad82ac.js"><link rel="prefetch" href="/cpmate/assets/js/3.e6a2e26d.js"><link rel="prefetch" href="/cpmate/assets/js/30.f2fec7c8.js"><link rel="prefetch" href="/cpmate/assets/js/31.22ec9c15.js"><link rel="prefetch" href="/cpmate/assets/js/32.f84aa5f1.js"><link rel="prefetch" href="/cpmate/assets/js/33.9daf0e1e.js"><link rel="prefetch" href="/cpmate/assets/js/34.066c9303.js"><link rel="prefetch" href="/cpmate/assets/js/35.d777ef39.js"><link rel="prefetch" href="/cpmate/assets/js/36.babb6ca7.js"><link rel="prefetch" href="/cpmate/assets/js/37.777c6dbb.js"><link rel="prefetch" href="/cpmate/assets/js/38.ee73312c.js"><link rel="prefetch" href="/cpmate/assets/js/39.a63f76ae.js"><link rel="prefetch" href="/cpmate/assets/js/4.d0bcd9d2.js"><link rel="prefetch" href="/cpmate/assets/js/40.afeab834.js"><link rel="prefetch" href="/cpmate/assets/js/41.e502301f.js"><link rel="prefetch" href="/cpmate/assets/js/42.86ba937d.js"><link rel="prefetch" href="/cpmate/assets/js/43.03bfcfc8.js"><link rel="prefetch" href="/cpmate/assets/js/44.71c9131c.js"><link rel="prefetch" href="/cpmate/assets/js/45.463a8fa7.js"><link rel="prefetch" href="/cpmate/assets/js/5.30fcbcd5.js"><link rel="prefetch" href="/cpmate/assets/js/6.b986757f.js"><link rel="prefetch" href="/cpmate/assets/js/7.9ceec5d3.js"><link rel="prefetch" href="/cpmate/assets/js/8.0b62dd97.js"><link rel="prefetch" href="/cpmate/assets/js/9.2088f5f5.js">
+    <link rel="stylesheet" href="/cpmate/assets/css/0.styles.56261255.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/cpmate/" class="home-link router-link-active"><!----> <span class="site-name">CpMate Help</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/cpmate/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/cpmate/getting-started/purpose.html" class="nav-link">
+  Getting Started
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="language Menu" class="dropdown-title"><span class="title">Features</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/cpmate/features/building-animations/" class="nav-link">
+  Building Animations &amp; Captivate Sync
+</a></li><li class="dropdown-item"><!----> <a href="/cpmate/features/captivate-interaction/" class="nav-link">
+  Captivate Interaction
+</a></li><li class="dropdown-item"><!----> <a href="/cpmate/features/javascript-api/preferences.html" class="nav-link">
+  Javascript API
+</a></li></ul></div></div><div class="nav-item"><a href="/cpmate/troubleshooting/about.html" class="nav-link">
+  Troubleshooting
+</a></div><div class="nav-item"><a href="/cpmate/training/" class="nav-link">
+  Training
+</a></div><div class="nav-item"><a href="/cpmate/buy/" class="nav-link">
+  Buy
+</a></div><div class="nav-item"><a href="https://widgetking.github.io/cpextra/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  CpExtra
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/cpmate/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/cpmate/getting-started/purpose.html" class="nav-link">
+  Getting Started
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="language Menu" class="dropdown-title"><span class="title">Features</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/cpmate/features/building-animations/" class="nav-link">
+  Building Animations &amp; Captivate Sync
+</a></li><li class="dropdown-item"><!----> <a href="/cpmate/features/captivate-interaction/" class="nav-link">
+  Captivate Interaction
+</a></li><li class="dropdown-item"><!----> <a href="/cpmate/features/javascript-api/preferences.html" class="nav-link">
+  Javascript API
+</a></li></ul></div></div><div class="nav-item"><a href="/cpmate/troubleshooting/about.html" class="nav-link">
+  Troubleshooting
+</a></div><div class="nav-item"><a href="/cpmate/training/" class="nav-link">
+  Training
+</a></div><div class="nav-item"><a href="/cpmate/buy/" class="nav-link">
+  Buy
+</a></div><div class="nav-item"><a href="https://widgetking.github.io/cpextra/" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  CpExtra
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <!----> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="defining-a-slider"><a href="#defining-a-slider" class="header-anchor">#</a> Defining A Slider</h1> <p>To define a slider you must have:</p> <ol><li>A MovieClip for the slider's <strong>handle</strong>.
+<ul><li>This symbol's registration point is expected to be positioned in it's <strong>center</strong></li></ul></li> <li>A MovieClip for the slider's <strong>track</strong> <ul><li>This symbol's registration point is expected to be positioned in the <strong>top left</strong></li></ul></li></ol> <div class="custom-block warning"><p class="custom-block-title">Registration Points are Important</p> <p>The slider will <strong>not</strong> work as expected if the registration points are not in their expected locations.</p> <p>In a perfect world, CpExtra would be able to do some math to work out where the registration point is located within the shape and take that into account. However, Adobe Animate does not provide enough information for us to make that calculation. So, we have to work on the trust system.</p></div> <p>Both these MovieClips must:</p> <ul><li>Be on the same timeline. They can't be spread across different symbol's timelines.</li> <li>Be visible at the same time. You can't have the track appear for frames 1 - 10 and the handle appear from frames 11 - 20.</li> <li>Have instance names. (For the rest of this page, we will assume you name the track <strong>'track'</strong> and the handle <strong>'handle'</strong>)</li></ul> <h2 id="the-javascript"><a href="#the-javascript" class="header-anchor">#</a> The Javascript</h2> <p>In the timeline that houses the handle and track MovieClips, create a layer to hold your actions. At the point the handle and track are visible on stage, add a keyframe. It's in this keyframe we will include the javascript to define a slider.</p> <p>We'll use the <strong>X.slider()</strong> method to define a slider. This function takes a single parameter: A javascript object which describes the slider.</p> <p>To create a slider, three pieces of information are required:</p> <ul><li>handle</li> <li>track</li> <li>variable</li></ul> <p>You could define the javascript object separate and pass it into the X.slider() function like so:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">var</span> sliderData <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Like we said above, we assume you've named the handle MovieClip 'handle'...</span>
+sliderData<span class="token punctuation">.</span>handle <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handle<span class="token punctuation">;</span>
+<span class="token comment">// ...and the track 'track'</span>
+sliderData<span class="token punctuation">.</span>track <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>track<span class="token punctuation">;</span>
+sliderData<span class="token punctuation">.</span>variable <span class="token operator">=</span> <span class="token string">&quot;myVar&quot;</span><span class="token punctuation">;</span>
+
+<span class="token constant">X</span><span class="token punctuation">.</span><span class="token function">slider</span><span class="token punctuation">(</span>sliderData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>Or you can define the javascript object <em>as</em> you pass it in to X.slider().</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token constant">X</span><span class="token punctuation">.</span><span class="token function">slider</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  handle<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handle<span class="token punctuation">,</span>
+  track<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>track<span class="token punctuation">,</span>
+  variable<span class="token operator">:</span> <span class="token string">&quot;myVar&quot;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>Both these methods are fine. But nowadays most programmers prefer the second method. Therefore, for the rest of the help we will define the slider data object as we pass it in to X.slider().</p> <p>If you test the Adobe Animate movie now, you should find the slider works!</p> <h3 id="captivate-variable"><a href="#captivate-variable" class="header-anchor">#</a> Captivate Variable</h3> <p>When you pull the Animate OAM into Captivate and publish, you will find when you move slider it will change the value of the slider.
+By default CpMate will report the slider's location as between 0 and 100. For a horizontal slider, all the way to the left would be considered 0, while all the way to the right would be considered 100.</p> <p>You can change the value of the Captivate variable to update the slider's location. For example, if the handle is presently all the way to the left, Captivate can change the variable's value to 100 to move it all the way to the right.</p> <p>You can change the 0 - 100 range using the <strong>Min and Max</strong> parameters discussed below.</p> <p>::: note Multiple sliders, one variable
+You can connect multiple sliders to the same Captivate Variable. Updating the Captivate Variable will change the location of both sliders. Also, dragging one slider will automatically move the other slider to match.
+:::</p> <h2 id="extra-parameters"><a href="#extra-parameters" class="header-anchor">#</a> Extra Parameters</h2> <p>CpMate provides a number of optional, but useful parameters.</p> <h3 id="orientation"><a href="#orientation" class="header-anchor">#</a> Orientation</h3> <p>By default, CpMate will assume you're making a <strong>horizontal</strong> slider. If, however, you are making a vertical slider, you will need to state that explicitly with the <strong>orientation</strong> parameter.</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token constant">X</span><span class="token punctuation">.</span><span class="token function">slider</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  handle<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handle<span class="token punctuation">,</span>
+  track<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>track<span class="token punctuation">,</span>
+  variable<span class="token operator">:</span> <span class="token string">&quot;myVar&quot;</span><span class="token punctuation">,</span>
+
+  <span class="token comment">// For an up and down slider</span>
+  orientation<span class="token operator">:</span> <span class="token string">&quot;vertical&quot;</span>
+
+  <span class="token comment">// To explicitly state a left to right slider</span>
+  <span class="token comment">// orientation: &quot;horizontal&quot;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="min-and-max"><a href="#min-and-max" class="header-anchor">#</a> Min and Max</h3> <p>When CpMate reports the slider's position to the linked Captivate Variable, it will report it in a range between 0 and 100.</p> <p>You can change this range using the min and max parameters. For example, the above code will report the slider's position in a range between 1 and 10.</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token constant">X</span><span class="token punctuation">.</span><span class="token function">slider</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  handle<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>handle<span class="token punctuation">,</span>
+  track<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>track<span class="token punctuation">,</span>
+  variable<span class="token operator">:</span> <span class="token string">&quot;myVar&quot;</span><span class="token punctuation">,</span>
+
+  min<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  max<span class="token operator">:</span> <span class="token number">10</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/cpmate/assets/js/app.eeb8b7ed.js" defer></script><script src="/cpmate/assets/js/2.9fe3539d.js" defer></script><script src="/cpmate/assets/js/28.89e1d297.js" defer></script>
+  </body>
+</html>
