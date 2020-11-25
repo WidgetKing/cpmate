@@ -9,6 +9,8 @@ Convert any code that you have to a string and then pass it into X.runInCaptivat
 X.runInCaptivateWindow("alert('Captivate code here!')");
 ```
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0xnez4HEDP0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Preventing Code Running Twice
 Imagine slides 1 and 2 of your Captivate project display the same Adobe Animate OAM with the following code:
 
