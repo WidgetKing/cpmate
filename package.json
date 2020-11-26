@@ -41,6 +41,5 @@
   },
   "prettier": {
     "trailingComma": "none"
-  },
-  "buildNumber": null
+  }
 }
