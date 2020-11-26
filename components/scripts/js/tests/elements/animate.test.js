@@ -5,7 +5,7 @@
  * Time: 4:04 PM
  * To change this template use File | Settings | File Templates.
  */
-fdescribe("A test suite for X.animate", function() {
+describe("A test suite for X.animate", function() {
   "use strict";
 
   var module = unitTests.requestModule("elements/animate");
