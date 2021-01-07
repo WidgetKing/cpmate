@@ -51,6 +51,7 @@ module.exports = {
         "about",
         "animation-playback",
         "slow-playback",
+        "updating",
         "interactivity",
         "symbol-name-prefixes"
         // "sliders"
