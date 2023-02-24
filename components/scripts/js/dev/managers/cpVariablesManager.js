@@ -6,7 +6,7 @@ X.registerModule(
     "elements/captivate",
     "managers/cpExtraActions"
   ],
-  function() {
+  function () {
     /////////////////////////////
     ////////// Variables
     var hasCpExtra = X.captivate.hasCpExtra();
@@ -26,7 +26,7 @@ X.registerModule(
         : fakeVariables.getProp,
 
       hasVariable: hasCpExtra
-        ? X.captivate.extra.variableManager.getVariableValue
+        ? X.captivate.extra.variableManager.hasVariable
         : fakeVariables.hasProp,
 
       stopListeningForVariableChange: hasCpExtra
@@ -45,7 +45,7 @@ X.registerModule(
 
     // So first we need to spy on all the listeners being added and record them
     // in a list
-    X.addHook(X.cpVariablesManager, "listenForVariableChange", function(
+    X.addHook(X.cpVariablesManager, "listenForVariableChange", function (
       key,
       value
     ) {
@@ -57,9 +57,9 @@ X.registerModule(
 
     // Then when we are informed of the movie unload we will
     // loop through the list and unload all the listeners.
-    X.broadcast.addCallback("unload", function() {
-      X.utils.forEach(listenerList, function(key, list) {
-        list.forEach(function(callback) {
+    X.broadcast.addCallback("unload", function () {
+      X.utils.forEach(listenerList, function (key, list) {
+        list.forEach(function (callback) {
           X.cpVariablesManager.stopListeningForVariableChange(key, callback);
         });
       });
