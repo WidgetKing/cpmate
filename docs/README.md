@@ -7,6 +7,12 @@ actionLink: /getting-started/
 footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 ---
 
+CpMate is compatible with Adobe Captivate versions from Captivate 9 - 11 (2019). **It is not compatible with Captivate versions 12 and above.** See the video below for more details.
+
+<div style="flex align-items:center"><iframe width="560" height="315" src="https://www.youtube.com/embed/csGCXwnkpTM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+----
+
 <div class="features">
 	<div class="feature hero">
 		<h2>Sync Animations with Captivate Timeline</h2>
@@ -30,8 +36,8 @@ footer: All rights reserved Infosemantics | Copyright 2020-present Infosemantics
 		</a>
 	</div>
 	<div class="feature hero">
-		<h2>Load your Javascript code into Captivate</h2>
-		<p style="text-align:left;">CpMate can act as a platform to load your own Javascript Libraries directly into Captivate. Need to update the code? Just republish the Adobe Animate project and update it in Captivate. No more tinkering with Captivate's HTML templates!</p>
+		<h2>Load your JavaScript code into Captivate</h2>
+		<p style="text-align:left;">CpMate can act as a platform to load your own JavaScript Libraries directly into Captivate. Need to update the code? Just republish the Adobe Animate project and update it in Captivate. No more tinkering with Captivate's HTML templates!</p>
 		<a href="/cpmate/features/javascript-api/run-in-captivate-window.html" class="nav-link action-button">
 			See how
 		</a>
